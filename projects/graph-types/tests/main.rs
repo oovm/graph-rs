@@ -1,4 +1,3 @@
-use isomer::SymmetricGroupCache;
 
 #[test]
 fn ready() {
