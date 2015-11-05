@@ -1,4 +1,9 @@
-pub mod simple;
+mod simple;
+mod indexed;
+mod get_iter;
+
+pub use self::indexed::NodeIndex;
+pub use self::simple::PureNode;
 
 pub trait Node {
     fn index(&self) -> NodeIndex;
@@ -10,5 +15,5 @@ pub trait IntoNode {
 }
 
 
-pub type NodeIndex = usize;
+
 

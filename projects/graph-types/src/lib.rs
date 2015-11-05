@@ -1,7 +1,10 @@
+#![feature(associated_type_defaults)]
+#![feature(generic_associated_types)]
+
 mod edges;
 mod vertexes;
 mod graphs;
 
-pub use crate::edges::{Edge, EdgeDirection, PureEdge};
-pub use crate::vertexes::{NodeIndex, Node, simple::PureNode};
-pub use crate::graphs::{Graph};
+pub use crate::edges::*;
+pub use crate::vertexes::*;
+pub use crate::graphs::*;

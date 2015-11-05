@@ -1,5 +1,6 @@
+use std::borrow::Cow;
 use ndarray::Array2;
-use graph_types::{Graph, PureEdge, PureNode};
+use graph_types::{Graph, NodeIndex, PureEdge};
 
 pub struct AdjacencyMatrix {
     matrix: Array2<usize>,
@@ -7,20 +8,18 @@ pub struct AdjacencyMatrix {
 
 
 impl Graph for AdjacencyMatrix {
-    type Node = PureNode<()>;
+    type Node = NodeIndex;
     type Edge = PureEdge<()>;
 
-    fn get_nodes<I>(&self) -> I where I: Iterator<Item=Self::Node> {
-        self.matrix
-            .outer_iter()
-            .enumerate()
-            .map(|(index, _)| PureNode::new(index, ()) )
+    fn count_nodes(&self) -> usize {
+        todo!()
     }
 
-    fn mut_nodes<I>(&mut self) -> I where I: Iterator<Item=Self::Node> {
-        self.matrix
-            .outer_iter_mut()
-            .enumerate()
-            .map(|(index, _)| PureNode::new(index, ()) )
+    fn get_node(&self, index: usize) -> Option<Cow<'_, Self::Node>> {
+        Some(Cow::Owned(index))
+    }
+
+    fn mut_node(&mut self, index: usize) -> Option<&mut Self::Node> {
+        None
     }
 }
