@@ -1,0 +1,20 @@
+[package]
+name = "distantia"
+version = "0.0.0"
+authors = ["Aster <192607617@qq.com>"]
+description = "Away from"
+repository = "https://github.com/oovm/distantia"
+documentation = "https://docs.rs/distantia"
+readme = "Readme.md"
+license = "MPL-2.0"
+edition = "2021"
+
+[dependencies]
+itertools = "0.10.1"
+ndarray = "0.15.6"
+num = "0.4.0"
+
+[dev-dependencies]
+
+[features]
+default = []
