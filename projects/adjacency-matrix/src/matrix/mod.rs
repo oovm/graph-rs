@@ -1,68 +1,134 @@
-use std::borrow::Cow;
+use std::cmp::{max, min};
 use std::collections::LinkedList;
-use ndarray::Array2;
-use graph_types::{Graph, NodeIndex, PureEdge, PureNode};
+use std::fmt::{Debug, Display};
+use std::ops::Range;
+use graph_types::{EdgeDirection, GraphResult, PureEdge};
 
-pub struct AdjacencyGraph<V> {
-    edges: AdjacencyMatrix,
+#[derive(Clone, Debug)]
+pub struct StaticUndirected<V = (), E = ()> {
     /// metadata of vertexes
     vertexes: Vec<V>,
+    /// edges, lower triangular matrix
+    edges: Vec<AdjacencyEdge<E>>,
 }
 
-pub struct AdjacencyEdge {
-    /// index of the source node
-    source: usize,
-    /// index of the target node
-    target: usize,
+impl<V, E> Display for StaticUndirected<V, E> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let size = self.min_degree().to_string().len();
+        let max = self.vertexes.len();
+        for i in 0..max {
+            for j in 0..max {
+                if j > i {
+                    write!(f, "{:width$} ", ".", width = size)?;
+                } else {
+                    let index = i * (i + 1) / 2 + j;
+                    let edge = self.edges.get(index).unwrap();
+                    write!(f, "{:width$} ", edge.degree, width = size)?;
+                }
+            }
+            writeln!(f)?;
+        }
+        Ok(())
+    }
 }
 
-enum AdjacencyMatrix {
-    /// A matrix that is symmetric along the diagonal.
-    Undirected {
-        /// lower triangular matrix
-        symmetric: LinkedList<usize>,
-    },
-    /// A matrix that is not symmetric along the diagonal.
-    Directed {
-        /// full matrix
-        asymmetric: LinkedList<usize>,
-    },
+#[derive(Clone, Debug, Default)]
+pub struct AdjacencyEdge<M> {
+    degree: usize,
+    metadata: M,
 }
 
-impl<V> AdjacencyGraph<V> {
-    pub fn new() -> Self {
+impl<V, E> StaticUndirected<V, E> {
+    pub fn max_degree(&self) -> usize {
+        self.edges.iter().map(|edge| edge.degree).max().unwrap_or(0)
+    }
+    pub fn min_degree(&self) -> usize {
+        0
+    }
+}
+
+impl<V, E> StaticUndirected<V, E> where V: Default, E: Default {
+    pub fn new(size: usize) -> Self {
+        let mut vertexes = Vec::with_capacity(size);
+        vertexes.resize_with(size, V::default);
+        let mut edges = Vec::with_capacity((size + 1) * size / 2);
+        edges.resize_with((size + 1) * size / 2, AdjacencyEdge::default);
         Self {
-            matrix: Array2::zeros((0, 0)),
-            vertexes: Vec::new(),
+            vertexes,
+            edges,
         }
     }
+    pub fn get_connection(&self, edge: FastEdge) -> GraphResult<&E> {
+        let min_index = edge.min_index();
+        let max_index = edge.max_index();
+        let index = max_index * (max_index + 1) / 2 + min_index;
+        match edge.two_way {
+            true => {
+                match self.edges.get(index) {
+                    Some(s) => {
+                        Ok(&s.metadata)
+                    }
+                    None => { unreachable!("{}", index) }
+                }
+            }
+            false => { unreachable!() }
+        }
+    }
+
+
+    pub fn set_connection<F>(&mut self, edge: FastEdge, edit: F) -> GraphResult<usize>
+        where F: Fn(&mut AdjacencyEdge<E>)
+    {
+        let min_index = edge.min_index();
+        let max_index = edge.max_index();
+        let index = max_index * (max_index + 1) / 2 + min_index;
+        match edge.two_way {
+            true => {
+                match self.edges.get_mut(index) {
+                    Some(s) => {
+                        edit(s);
+                        Ok(s.degree)
+                    }
+                    None => { unreachable!("{}", index) }
+                }
+            }
+            false => { unreachable!() }
+        }
+    }
+    pub fn connect(&mut self, edge: FastEdge) -> GraphResult<usize> {
+        self.set_connection(edge, |e| e.degree = e.degree.saturating_add(1))
+    }
+    pub fn disconnect(&mut self, edge: FastEdge) -> GraphResult<usize> {
+        self.set_connection(edge, |e| e.degree = e.degree.saturating_sub(1))
+    }
 }
 
-impl<V> Graph for AdjacencyGraph<V> where V: Clone {
-    type Node = PureNode<V>;
-    type Edge = PureEdge<()>;
+pub struct FastEdge {
+    pub two_way: bool,
+    pub from: usize,
+    pub goto: usize,
+}
 
-    fn count_nodes(&self) -> usize {
-        self.matrix.shape()[0]
+impl FastEdge {
+    pub fn max_index(&self) -> usize {
+        max(self.from, self.goto)
     }
+    pub fn min_index(&self) -> usize {
+        min(self.from, self.goto)
+    }
+    pub fn as_range(&self) -> Range<usize> {
+        self.min_index()..self.max_index()
+    }
+}
 
-    fn get_node(&self, index: usize) -> Option<Cow<Self::Node>> {
-        let item = self.vertexes.get(index)?;
-        let borrowed = PureNode::re_ref(PureNode::new(index, item));
-        Some(Cow::Borrowed(borrowed))
-    }
-
-    fn mut_node(&mut self, index: usize) -> Option<&mut Self::Node> {
-        let item = self.vertexes.get_mut(index)?;
-        let borrowed = PureNode::re_mut(PureNode::new(index, item));
-        Some(borrowed)
-    }
-    fn insert_node(&mut self, node: Self::Node) -> NodeIndex {
-        let index = self.vertexes.len();
-        self.vertexes.push(node.item.clone());
-        self.matrix = self.matrix.insert_axis(0);
-        self.matrix = self.matrix.insert_axis(1);
-        self.matrix[[index, index]] = 0;
-        index
-    }
+#[test]
+fn test() {
+    let mut graph = StaticUndirected::<(), ()>::new(5);
+    graph.connect(FastEdge {
+        two_way: true,
+        from: 4,
+        goto: 4,
+    }).unwrap();
+    println!("{}", graph.edges.len());
+    println!("{}", graph);
 }

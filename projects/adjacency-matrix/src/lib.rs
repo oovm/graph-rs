@@ -6,5 +6,6 @@
 
 mod errors;
 mod matrix;
+mod graphs;
 
 pub use crate::errors::{Error, Result};
