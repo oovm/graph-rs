@@ -1,9 +1,11 @@
-mod simple;
-mod indexed;
-mod get_iter;
+pub mod simple;
+pub mod indexed;
+pub mod get_iter;
+pub mod mut_iter;
 
-pub use self::indexed::NodeIndex;
-pub use self::simple::PureNode;
+use std::borrow::Cow;
+use crate::Graph;
+use crate::NodeIndex;
 
 pub trait Node {
     fn index(&self) -> NodeIndex;

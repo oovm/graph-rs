@@ -1,14 +1,12 @@
-use std::borrow::Cow;
-use crate::Graph;
 use super::*;
 
-pub struct GetNodeIterator<'a, G: Graph> {
-    graph: &'a G,
+pub struct GetNodesVisitor<'i, G: Graph + ?Sized> {
+    graph: &'i G,
     index: usize,
 }
 
-impl <'a, G: Graph> Iterator for GetNodeIterator<'a, G> {
-    type Item = Cow<'a, G::Node>;
+impl<'i, G: Graph> Iterator for GetNodesVisitor<'i, G> {
+    type Item = Cow<'i, G::Node>;
 
     fn next(&mut self) -> Option<Self::Item> {
         if self.index < self.graph.count_nodes() {
@@ -21,21 +19,23 @@ impl <'a, G: Graph> Iterator for GetNodeIterator<'a, G> {
     }
 }
 
-pub struct MutNodeIterator<'a, G: Graph> {
-    graph: &'a mut G,
-    index: usize,
-}
-
-impl <'a, G: Graph> Iterator for MutNodeIterator<'a, G> {
-    type Item = &'a mut G::Node;
-
-    fn next(&mut self) -> Option<Self::Item> {
+impl<'i, G: Graph> DoubleEndedIterator for GetNodesVisitor<'i, G> {
+    fn next_back(&mut self) -> Option<Self::Item> {
         if self.index < self.graph.count_nodes() {
-            let index = self.index;
+            let index = self.graph.count_nodes() - self.index - 1;
             self.index += 1;
-            self.graph.mut_node(index)
+            self.graph.get_node(index)
         } else {
             None
+        }
+    }
+}
+
+impl<'i, G: Graph + ?Sized> GetNodesVisitor<'i, G> {
+    pub fn new(graph: &'i G) -> Self {
+        Self {
+            graph,
+            index: 0,
         }
     }
 }
