@@ -2,7 +2,7 @@ use std::cmp::{max, min};
 use std::collections::LinkedList;
 use std::fmt::{Debug, Display};
 use std::ops::Range;
-use graph_types::{EdgeDirection, GraphResult, PureEdge};
+use graph_types::{EdgeDirection, GraphError, GraphResult};
 
 #[derive(Clone, Debug)]
 pub struct StaticUndirected<V = (), E = ()> {
@@ -58,58 +58,50 @@ impl<V, E> StaticUndirected<V, E> where V: Default, E: Default {
             edges,
         }
     }
-    pub fn get_connection(&self, edge: FastEdge) -> GraphResult<&E> {
-        let min_index = edge.min_index();
-        let max_index = edge.max_index();
-        let index = max_index * (max_index + 1) / 2 + min_index;
-        match edge.two_way {
-            true => {
-                match self.edges.get(index) {
-                    Some(s) => {
-                        Ok(&s.metadata)
-                    }
-                    None => { unreachable!("{}", index) }
-                }
-            }
-            false => { unreachable!() }
-        }
-    }
 
-
-    pub fn set_connection<F>(&mut self, edge: FastEdge, edit: F) -> GraphResult<usize>
-        where F: Fn(&mut AdjacencyEdge<E>)
+    pub fn get_connection<T>(&self, undirected: T) -> GraphResult<&E>
+        where T: Into<UndirectedEdge>
     {
-        let min_index = edge.min_index();
-        let max_index = edge.max_index();
-        let index = max_index * (max_index + 1) / 2 + min_index;
-        match edge.two_way {
-            true => {
-                match self.edges.get_mut(index) {
-                    Some(s) => {
-                        edit(s);
-                        Ok(s.degree)
-                    }
-                    None => { unreachable!("{}", index) }
-                }
+        let edge = undirected.into();
+        let index = edge_index(&edge);
+        match self.edges.get(index) {
+            Some(s) => {
+                Ok(&s.metadata)
             }
-            false => { unreachable!() }
+            None => { Err(GraphError::node_out_of_range(edge.max_index(), self.vertexes.len())) }
         }
     }
-    pub fn connect(&mut self, edge: FastEdge) -> GraphResult<usize> {
+    pub fn set_connection<T, F>(&mut self, undirected: T, edit: F) -> GraphResult<usize>
+        where T: Into<UndirectedEdge>,
+              F: Fn(&mut AdjacencyEdge<E>)
+    {
+        let edge = undirected.into();
+        let index = edge_index(&edge);
+        match self.edges.get_mut(index) {
+            Some(s) => {
+                edit(s);
+                Ok(s.degree)
+            }
+            None => { Err(GraphError::node_out_of_range(edge.max_index(), self.vertexes.len())) }
+        }
+    }
+    pub fn connect<T>(&mut self, edge: T) -> GraphResult<usize> where T: Into<UndirectedEdge> {
         self.set_connection(edge, |e| e.degree = e.degree.saturating_add(1))
     }
-    pub fn disconnect(&mut self, edge: FastEdge) -> GraphResult<usize> {
+    pub fn disconnect<T>(&mut self, edge: T) -> GraphResult<usize> where T: Into<UndirectedEdge> {
         self.set_connection(edge, |e| e.degree = e.degree.saturating_sub(1))
     }
 }
 
-pub struct FastEdge {
-    pub two_way: bool,
-    pub from: usize,
-    pub goto: usize,
+fn edge_index(edge: &UndirectedEdge) -> usize {
+    let min_index = edge.min_index();
+    let max_index = edge.max_index();
+    max_index * (max_index + 1) / 2 + min_index
 }
 
-impl FastEdge {
+
+
+impl UndirectedEdge {
     pub fn max_index(&self) -> usize {
         max(self.from, self.goto)
     }
@@ -124,8 +116,7 @@ impl FastEdge {
 #[test]
 fn test() {
     let mut graph = StaticUndirected::<(), ()>::new(5);
-    graph.connect(FastEdge {
-        two_way: true,
+    graph.connect(UndirectedEdge {
         from: 4,
         goto: 4,
     }).unwrap();

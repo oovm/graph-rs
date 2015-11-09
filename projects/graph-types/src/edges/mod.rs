@@ -15,6 +15,19 @@ pub enum EdgeDirection {
     Forward,
     Reverse,
 }
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct UndirectedEdge {
+    pub from: usize,
+    pub goto: usize,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct DirectedEdge {
+    pub from: usize,
+    pub goto: usize,
+}
+
+
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct PureEdge<M> {
