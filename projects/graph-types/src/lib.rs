@@ -1,9 +1,11 @@
 mod edges;
-mod vertexes;
-mod graphs;
 mod errors;
+mod graphs;
+mod vertexes;
 
-pub use crate::edges::{EdgeDirection, Edge, DirectedEdge, UndirectedEdge};
-pub use crate::vertexes::{Node, IntoNode, simple::PureNode, indexed::NodeIndex, get_iter::GetNodesVisitor, mut_iter::MutNodesVisitor};
-pub use crate::graphs::*;
-pub use crate::errors::{GraphErrorKind, GraphError, GraphResult};
+pub use crate::{
+    edges::{directed::DirectedEdge, undirected::UndirectedEdge, Edge, EdgeDirection},
+    errors::{GraphError, GraphErrorKind, GraphResult},
+    graphs::*,
+    vertexes::{get_iter::GetNodesVisitor, indexed::NodeIndex, mut_iter::MutNodesVisitor, simple::PureNode, IntoNode, Node},
+};
