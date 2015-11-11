@@ -1,6 +1,5 @@
-use std::borrow::Cow;
 use crate::{Edge, GetNodesVisitor, Node, NodeIndex};
-
+use std::borrow::Cow;
 
 pub trait Graph {
     type Node: Node + Clone;

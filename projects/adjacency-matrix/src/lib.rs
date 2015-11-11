@@ -4,8 +4,9 @@
 #![doc(html_logo_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 #![doc(html_favicon_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 
-mod errors;
+mod edges;
 mod graphs;
+mod static_full;
 mod static_half;
 
-pub use crate::errors::{Error, Result};
+pub use crate::{edges::AdjacencyEdge, static_full::StaticDirected, static_half::StaticUndirected};
