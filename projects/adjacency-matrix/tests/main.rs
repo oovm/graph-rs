@@ -8,7 +8,7 @@ fn ready() {
 
 #[test]
 fn test() {
-    let mut graph = StaticUndirected::<(), ()>::new(5);
+    let mut graph = StaticUndirected::<()>::new(5);
     graph.connect(UndirectedEdge { from: 4, goto: 4 }).unwrap();
     println!("{}", graph);
 }

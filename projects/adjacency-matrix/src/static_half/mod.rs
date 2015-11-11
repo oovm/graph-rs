@@ -1,19 +1,22 @@
 use crate::AdjacencyEdge;
 use graph_types::{GraphError, GraphResult, UndirectedEdge};
-use std::fmt::{Debug, Display};
+use num_traits::{One, Zero};
+use std::{
+    cmp::Ordering,
+    fmt::{Debug, Display},
+    ops::AddAssign,
+};
 
 #[derive(Clone, Debug)]
-pub struct StaticUndirected<V = (), E = ()> {
-    /// metadata of vertexes
-    vertexes: Vec<V>,
+pub struct StaticUndirected {
     /// edges, lower triangular matrix
-    edges: Vec<AdjacencyEdge<E>>,
+    edges: Vec<usize>,
 }
 
-impl<V, E> Display for StaticUndirected<V, E> {
+impl Display for StaticUndirected {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let size = self.min_degree().to_string().len();
-        let max = self.vertexes.len();
+        let size = self.max_degree().to_string().len();
+        let max = self.count_vertexes();
         for i in 0..max {
             for j in 0..max {
                 if j > i {
@@ -22,7 +25,7 @@ impl<V, E> Display for StaticUndirected<V, E> {
                 else {
                     let index = i * (i + 1) / 2 + j;
                     let edge = unsafe { self.edges.get_unchecked(index) };
-                    write!(f, "{:width$} ", edge.degree, width = size)?;
+                    write!(f, "{:width$} ", edge, width = size)?;
                 }
             }
             writeln!(f)?;
@@ -31,83 +34,88 @@ impl<V, E> Display for StaticUndirected<V, E> {
     }
 }
 
-impl<V, E> StaticUndirected<V, E> {
-    pub fn max_degree(&self) -> usize {
-        self.edges.iter().map(|edge| edge.degree).max().unwrap_or(0)
-    }
-    pub fn min_degree(&self) -> usize {
-        self.edges.iter().map(|edge| edge.degree).min().unwrap_or(0)
-    }
+fn max_degree_length<S>(edges: &[S]) -> usize
+where
+    S: Display,
+{
+    edges.iter().map(|edge| edge.to_string().len()).max().unwrap_or(0)
 }
 
-impl<V, E> StaticUndirected<V, E>
-where
-    V: Default,
-    E: Default,
-{
-    pub fn new(size: usize) -> Self {
-        let mut vertexes = Vec::with_capacity(size);
-        vertexes.resize_with(size, V::default);
-        let mut edges = Vec::with_capacity((size + 1) * size / 2);
-        edges.resize_with((size + 1) * size / 2, AdjacencyEdge::default);
-        Self { vertexes, edges }
-    }
-
-    pub fn get_node(&self, index: usize) -> GraphResult<&V> {
-        match self.vertexes.get(index) {
-            Some(s) => Ok(s),
-            None => Err(GraphError::node_out_of_range(index, self.vertexes.len())),
-        }
-    }
-    pub fn set_node<F>(&mut self, index: usize, edit: F) -> GraphResult<()>
+impl<S> StaticUndirected<S> {
+    pub fn new(size: usize) -> Self
     where
-        F: Fn(&mut V),
+        S: Zero,
     {
-        match self.vertexes.get_mut(index) {
-            Some(s) => {
-                edit(s);
-                Ok(())
-            }
-            None => Err(GraphError::node_out_of_range(index, self.vertexes.len())),
-        }
+        let mut edges = Vec::with_capacity((size + 1) * size / 2);
+        edges.resize_with((size + 1) * size / 2, S::zero);
+
+        Self { edges }
     }
-    pub fn get_edge<T>(&self, undirected: T) -> GraphResult<&E>
+    pub fn count_vertexes(&self) -> usize {
+        // edges == (size + 1) * size / 2
+        ((self.edges.len() * 8 + 1) as f64).sqrt().floor() as usize
+    }
+    pub fn max_degree(&self) -> &S
+    where
+        S: PartialOrd + Zero,
+    {
+        self.edges.iter().max_by(|a, b| a.partial_cmp(b).unwrap_or(Ordering::Equal)).unwrap_or(&S::zero())
+    }
+    pub fn min_degree(&self) -> &S
+    where
+        S: PartialOrd + Zero,
+    {
+        self.edges.iter().min_by(|a, b| a.partial_cmp(b).unwrap_or(Ordering::Equal)).unwrap_or(&S::zero())
+    }
+    pub fn get_edge<T>(&self, undirected: T) -> GraphResult<&S>
     where
         T: Into<UndirectedEdge>,
     {
         let edge = undirected.into();
         let index = edge_index(&edge);
         match self.edges.get(index) {
-            Some(s) => Ok(&s.metadata),
-            None => Err(GraphError::node_out_of_range(edge.max_index(), self.vertexes.len())),
+            Some(s) => Ok(s),
+            None => Err(GraphError::node_out_of_range(edge.max_index(), self.count_vertexes())),
         }
     }
-    pub fn set_edge<T, F>(&mut self, undirected: T, edit: F) -> GraphResult<usize>
+    pub fn mut_edge<T>(&mut self, undirected: T) -> GraphResult<&mut S>
     where
         T: Into<UndirectedEdge>,
-        F: Fn(&mut AdjacencyEdge<E>),
     {
         let edge = undirected.into();
         let index = edge_index(&edge);
         match self.edges.get_mut(index) {
-            Some(s) => {
-                edit(s);
-                Ok(s.degree)
-            }
-            None => Err(GraphError::node_out_of_range(edge.max_index(), self.vertexes.len())),
+            Some(s) => Ok(s),
+            None => Err(GraphError::node_out_of_range(edge.max_index(), self.count_vertexes())),
         }
     }
-    pub fn connect<T>(&mut self, edge: T) -> GraphResult<usize>
+    pub fn set_edge<T>(&mut self, undirected: T, connection: S) -> GraphResult<S>
     where
         T: Into<UndirectedEdge>,
     {
-        self.set_edge(edge, |e| e.degree = e.degree.saturating_add(1))
+        let mut new = connection;
+        let old = self.mut_edge(undirected)?;
+        std::mem::swap(&mut new, old);
+        Ok(new)
+    }
+
+    pub fn connect<T>(&mut self, edge: T) -> GraphResult<S>
+    where
+        T: Into<UndirectedEdge>,
+        S: One + AddAssign,
+    {
+        let edge = self.mut_edge(edge)?;
+        edge.add_assign(S::one());
+        self.get_edge(edge)
     }
     pub fn disconnect<T>(&mut self, edge: T) -> GraphResult<usize>
     where
         T: Into<UndirectedEdge>,
     {
-        self.set_edge(edge, |e| e.degree = e.degree.saturating_sub(1))
+        let edge = self.mut_edge(edge)?;
+        let old = *edge;
+        *edge = S::zero();
+        Ok(old)
     }
 }
 

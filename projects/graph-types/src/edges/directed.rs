@@ -15,3 +15,15 @@ impl Edge for DirectedEdge {
         self.goto
     }
 }
+
+impl DirectedEdge {
+    pub fn max_index(&self) -> usize {
+        max(self.from, self.goto)
+    }
+    pub fn min_index(&self) -> usize {
+        min(self.from, self.goto)
+    }
+    pub fn as_range(&self) -> Range<usize> {
+        self.min_index()..self.max_index()
+    }
+}
