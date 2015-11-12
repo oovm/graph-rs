@@ -6,32 +6,12 @@ use std::{
     fmt::{Debug, Display},
     ops::AddAssign,
 };
+mod display;
 
 #[derive(Clone, Debug)]
 pub struct StaticUndirected {
     /// edges, lower triangular matrix
     edges: Vec<usize>,
-}
-
-impl Display for StaticUndirected {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let size = self.max_degree().to_string().len();
-        let max = self.nodes();
-        for i in 0..max {
-            for j in 0..max {
-                if j > i {
-                    write!(f, "{:width$} ", ".", width = size)?;
-                }
-                else {
-                    let index = i * (i + 1) / 2 + j;
-                    let edge = unsafe { self.edges.get_unchecked(index) };
-                    write!(f, "{:width$} ", edge, width = size)?;
-                }
-            }
-            writeln!(f)?;
-        }
-        Ok(())
-    }
 }
 
 impl StaticUndirected {

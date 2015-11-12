@@ -1,9 +1,17 @@
 use super::*;
+use std::fmt::{Display, Formatter};
 
+/// [UndirectedEdge](https://reference.wolfram.com/language/ref/UndirectedEdge.html)
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct UndirectedEdge {
     pub from: usize,
     pub goto: usize,
+}
+
+impl Display for UndirectedEdge {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{} ↔ {}", self.from + 1, self.goto + 1)
+    }
 }
 
 impl Edge for UndirectedEdge {

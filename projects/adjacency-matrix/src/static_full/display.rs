@@ -24,7 +24,7 @@ impl ToWolfram for StaticDirected {
         let rows = self
             .edges
             .chunks_exact(self.nodes())
-            .map(|row| WolframValue::list(row.iter().map(|&edge| WolframValue::integer(edge as i64)).collect()))
+            .map(|row| WolframValue::list(row.iter().map(|edge| WolframValue::Integer64(*edge as i64)).collect()))
             .collect();
         WolframValue::function("AdjacencyGraph", vec![WolframValue::list(rows)])
     }
