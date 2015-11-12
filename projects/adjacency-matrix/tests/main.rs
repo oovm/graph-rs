@@ -1,5 +1,5 @@
-use adjacency_matrix::StaticUndirected;
-use graph_types::UndirectedEdge;
+use adjacency_matrix::{StaticDirected, StaticUndirected};
+use graph_types::ToWolfram;
 
 #[test]
 fn ready() {
@@ -8,7 +8,16 @@ fn ready() {
 
 #[test]
 fn test() {
-    let mut graph = StaticUndirected::<()>::new(5);
-    graph.connect(UndirectedEdge { from: 4, goto: 4 }).unwrap();
+    println!("directed graph:");
+    let mut graph = StaticUndirected::new(5);
+    graph.connect((1, 3)).unwrap();
+    graph.connect((1, 4)).unwrap();
     println!("{}", graph);
+    println!("undirected graph:");
+    let mut graph = StaticDirected::new(5);
+    graph.connect((2, 3)).unwrap();
+    graph.connect((2, 4)).unwrap();
+    graph.connect((3, 1)).unwrap();
+    graph.connect((4, 1)).unwrap();
+    println!("{}", graph.to_wolfram_string());
 }

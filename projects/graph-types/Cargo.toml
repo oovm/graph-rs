@@ -12,6 +12,7 @@ exclude = ["tests/", "package.json"]
 
 [dependencies]
 serde = { version = "1.0.162", optional = true }
+wolfram_wxf = { version = "0.6.3", optional = true }
 
 
 [dev-dependencies]

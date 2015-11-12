@@ -21,4 +21,5 @@ path = "../graph-types"
 [dev-dependencies]
 
 [features]
-default = []
+default = ["wolfram"]
+wolfram = ["graph-types/wolfram_wxf"]

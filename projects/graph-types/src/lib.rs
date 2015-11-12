@@ -15,3 +15,5 @@ pub use crate::{
     graphs::Graph,
     vertexes::{get_iter::GetNodesVisitor, indexed::NodeIndex, mut_iter::MutNodesVisitor, simple::PureNode, IntoNode, Node},
 };
+#[cfg(feature = "wolfram_wxf")]
+pub use wolfram_wxf::{ToWolfram, WolframValue};

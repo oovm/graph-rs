@@ -1,112 +1,87 @@
 use crate::AdjacencyEdge;
-use graph_types::{DirectedEdge, GraphError, GraphResult};
-use std::fmt::{Display, Formatter};
+use graph_types::{DirectedEdge, GraphError, GraphResult, UndirectedEdge};
+use num_traits::{One, Zero};
+use std::{
+    cmp::Ordering,
+    fmt::{Debug, Display},
+    ops::AddAssign,
+};
+mod display;
 
 #[derive(Clone, Debug)]
-pub struct StaticDirected<V = (), E = ()> {
-    /// metadata of vertexes
-    vertexes: Vec<V>,
-    /// edges, lower triangular matrix
-    edges: Vec<AdjacencyEdge<E>>,
+pub struct StaticDirected {
+    /// edges, full matrix
+    edges: Vec<usize>,
 }
 
-impl<V, E> Display for StaticDirected<V, E> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        let size = self.min_degree().to_string().len();
-        let max = self.vertexes.len();
-        for i in 0..max {
-            for j in 0..max {
-                let index = i * max + j;
-                let edge = self.edges.get(index).unwrap();
-                write!(f, "{:width$} ", edge.degree, width = size)?;
-            }
-            writeln!(f)?;
-        }
-        Ok(())
+impl StaticDirected {
+    pub fn new(nodes: usize) -> Self {
+        Self { edges: vec![0; nodes * nodes] }
     }
-}
-
-impl<V, E> StaticDirected<V, E> {
+    pub fn nodes(&self) -> usize {
+        // edges == nodes * nodes
+        (self.edges.len() as f64).sqrt() as usize
+    }
+    pub fn edges(&self) -> usize {
+        self.edges.len()
+    }
     pub fn max_degree(&self) -> usize {
-        self.edges.iter().map(|edge| edge.degree).max().unwrap_or(0)
+        self.edges.iter().max().copied().unwrap_or(0)
     }
     pub fn min_degree(&self) -> usize {
-        self.edges.iter().map(|edge| edge.degree).min().unwrap_or(0)
+        self.edges.iter().min().copied().unwrap_or(0)
     }
-}
-
-impl<V, E> StaticDirected<V, E>
-where
-    V: Default,
-    E: Default,
-{
-    pub fn new(size: usize) -> Self {
-        let mut vertexes = Vec::with_capacity(size);
-        vertexes.resize_with(size, V::default);
-        let mut edges = Vec::with_capacity((size + 1) * size / 2);
-        edges.resize_with((size + 1) * size / 2, AdjacencyEdge::default);
-        Self { vertexes, edges }
-    }
-    pub fn get_node(&self, index: usize) -> GraphResult<&V> {
-        match self.vertexes.get(index) {
-            Some(s) => Ok(s),
-            None => Err(GraphError::node_out_of_range(index, self.vertexes.len())),
-        }
-    }
-    pub fn set_node<F>(&mut self, index: usize, edit: F) -> GraphResult<()>
-    where
-        F: Fn(&mut V),
-    {
-        match self.vertexes.get_mut(index) {
-            Some(s) => {
-                edit(s);
-                Ok(())
-            }
-            None => Err(GraphError::node_out_of_range(index, self.vertexes.len())),
-        }
-    }
-    pub fn get_edge<T>(&self, directed: T) -> GraphResult<&E>
+    pub fn get_edge<T>(&self, undirected: T) -> GraphResult<usize>
     where
         T: Into<DirectedEdge>,
     {
-        let edge = directed.into();
-        let index = edge_index(&edge);
+        let edge = undirected.into();
+        let index = edge_index(&edge, self.nodes());
         match self.edges.get(index) {
-            Some(s) => Ok(&s.metadata),
-            None => Err(GraphError::node_out_of_range(edge.max_index(), self.vertexes.len())),
+            Some(s) => Ok(*s),
+            None => Err(GraphError::edge_out_of_range(index, self.edges.len())),
         }
     }
-    pub fn set_edge<T, F>(&mut self, directed: T, edit: F) -> GraphResult<usize>
+    pub fn mut_edge<T>(&mut self, undirected: T) -> GraphResult<&mut usize>
     where
         T: Into<DirectedEdge>,
-        F: Fn(&mut AdjacencyEdge<E>),
     {
-        let edge = directed.into();
-        let index = edge_index(&edge);
+        let edge = undirected.into();
+        let index = edge_index(&edge, self.nodes());
+        let count = self.edges.len();
         match self.edges.get_mut(index) {
-            Some(s) => {
-                edit(s);
-                Ok(s.degree)
-            }
-            None => Err(GraphError::node_out_of_range(edge.max_index(), self.vertexes.len())),
+            Some(s) => Ok(s),
+            None => Err(GraphError::edge_out_of_range(index, count)),
         }
     }
+    pub fn set_edge<T>(&mut self, undirected: T, mut connection: usize) -> GraphResult<usize>
+    where
+        T: Into<DirectedEdge>,
+    {
+        let new = &mut connection;
+        let old = self.mut_edge(undirected)?;
+        std::mem::swap(new, old);
+        Ok(*new)
+    }
+
     pub fn connect<T>(&mut self, edge: T) -> GraphResult<usize>
     where
         T: Into<DirectedEdge>,
     {
-        self.set_edge(edge, |e| e.degree = e.degree.saturating_add(1))
+        let edge = self.mut_edge(edge)?;
+        *edge = edge.saturating_add(1);
+        Ok(*edge)
     }
     pub fn disconnect<T>(&mut self, edge: T) -> GraphResult<usize>
     where
         T: Into<DirectedEdge>,
     {
-        self.set_edge(edge, |e| e.degree = e.degree.saturating_sub(1))
+        let edge = self.mut_edge(edge)?;
+        *edge = edge.saturating_sub(1);
+        Ok(*edge)
     }
 }
 
-fn edge_index(edge: &DirectedEdge) -> usize {
-    let min_index = edge.min_index();
-    let max_index = edge.max_index();
-    max_index * (max_index + 1) / 2 + min_index
+fn edge_index(edge: &DirectedEdge, rank: usize) -> usize {
+    edge.from * rank + edge.goto
 }

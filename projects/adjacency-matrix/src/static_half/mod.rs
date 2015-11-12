@@ -16,7 +16,7 @@ pub struct StaticUndirected {
 impl Display for StaticUndirected {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let size = self.max_degree().to_string().len();
-        let max = self.count_vertexes();
+        let max = self.nodes();
         for i in 0..max {
             for j in 0..max {
                 if j > i {
@@ -34,88 +34,71 @@ impl Display for StaticUndirected {
     }
 }
 
-fn max_degree_length<S>(edges: &[S]) -> usize
-where
-    S: Display,
-{
-    edges.iter().map(|edge| edge.to_string().len()).max().unwrap_or(0)
-}
-
-impl<S> StaticUndirected<S> {
-    pub fn new(size: usize) -> Self
-    where
-        S: Zero,
-    {
-        let mut edges = Vec::with_capacity((size + 1) * size / 2);
-        edges.resize_with((size + 1) * size / 2, S::zero);
-
-        Self { edges }
+impl StaticUndirected {
+    pub fn new(nodes: usize) -> Self {
+        Self { edges: vec![0; (nodes + 1) * nodes / 2] }
     }
-    pub fn count_vertexes(&self) -> usize {
-        // edges == (size + 1) * size / 2
-        ((self.edges.len() * 8 + 1) as f64).sqrt().floor() as usize
+    pub fn nodes(&self) -> usize {
+        // edges == (nodes + 1) * nodes / 2
+        (((self.edges.len() * 8 + 1) as f64).sqrt() / 2.0).floor() as usize
     }
-    pub fn max_degree(&self) -> &S
-    where
-        S: PartialOrd + Zero,
-    {
-        self.edges.iter().max_by(|a, b| a.partial_cmp(b).unwrap_or(Ordering::Equal)).unwrap_or(&S::zero())
+    pub fn edges(&self) -> usize {
+        self.edges.len()
     }
-    pub fn min_degree(&self) -> &S
-    where
-        S: PartialOrd + Zero,
-    {
-        self.edges.iter().min_by(|a, b| a.partial_cmp(b).unwrap_or(Ordering::Equal)).unwrap_or(&S::zero())
+    pub fn max_degree(&self) -> usize {
+        self.edges.iter().max().copied().unwrap_or(0)
     }
-    pub fn get_edge<T>(&self, undirected: T) -> GraphResult<&S>
+    pub fn min_degree(&self) -> usize {
+        self.edges.iter().min().copied().unwrap_or(0)
+    }
+    pub fn get_edge<T>(&self, undirected: T) -> GraphResult<usize>
     where
         T: Into<UndirectedEdge>,
     {
         let edge = undirected.into();
         let index = edge_index(&edge);
         match self.edges.get(index) {
-            Some(s) => Ok(s),
-            None => Err(GraphError::node_out_of_range(edge.max_index(), self.count_vertexes())),
+            Some(s) => Ok(*s),
+            None => Err(GraphError::edge_out_of_range(index, self.edges.len())),
         }
     }
-    pub fn mut_edge<T>(&mut self, undirected: T) -> GraphResult<&mut S>
+    pub fn mut_edge<T>(&mut self, undirected: T) -> GraphResult<&mut usize>
     where
         T: Into<UndirectedEdge>,
     {
         let edge = undirected.into();
         let index = edge_index(&edge);
+        let count = self.edges.len();
         match self.edges.get_mut(index) {
             Some(s) => Ok(s),
-            None => Err(GraphError::node_out_of_range(edge.max_index(), self.count_vertexes())),
+            None => Err(GraphError::edge_out_of_range(index, count)),
         }
     }
-    pub fn set_edge<T>(&mut self, undirected: T, connection: S) -> GraphResult<S>
+    pub fn set_edge<T>(&mut self, undirected: T, mut connection: usize) -> GraphResult<usize>
     where
         T: Into<UndirectedEdge>,
     {
-        let mut new = connection;
+        let new = &mut connection;
         let old = self.mut_edge(undirected)?;
-        std::mem::swap(&mut new, old);
-        Ok(new)
+        std::mem::swap(new, old);
+        Ok(*new)
     }
 
-    pub fn connect<T>(&mut self, edge: T) -> GraphResult<S>
+    pub fn connect<T>(&mut self, edge: T) -> GraphResult<usize>
     where
         T: Into<UndirectedEdge>,
-        S: One + AddAssign,
     {
         let edge = self.mut_edge(edge)?;
-        edge.add_assign(S::one());
-        self.get_edge(edge)
+        *edge = edge.saturating_add(1);
+        Ok(*edge)
     }
     pub fn disconnect<T>(&mut self, edge: T) -> GraphResult<usize>
     where
         T: Into<UndirectedEdge>,
     {
         let edge = self.mut_edge(edge)?;
-        let old = *edge;
-        *edge = S::zero();
-        Ok(old)
+        *edge = edge.saturating_sub(1);
+        Ok(*edge)
     }
 }
 
