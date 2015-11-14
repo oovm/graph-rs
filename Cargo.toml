@@ -1,7 +1,7 @@
 [workspace]
 members = ["projects/*"]
 default-members = [
-    "projects/adjacency-matrix",
+    "projects/graph-adjacency-matrix",
 ]
 exclude = [
     "projects/.DS_Store",
