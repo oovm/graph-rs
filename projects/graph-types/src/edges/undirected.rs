@@ -15,11 +15,11 @@ impl Display for UndirectedEdge {
 }
 
 impl Edge for UndirectedEdge {
-    fn from(&self) -> NodeIndex {
+    fn from(&self) -> usize {
         self.min_index()
     }
 
-    fn goto(&self) -> NodeIndex {
+    fn goto(&self) -> usize {
         self.max_index()
     }
 }

@@ -7,17 +7,14 @@ pub struct PureNode<M> {
 }
 
 impl<M> Node for PureNode<M> {
-    fn index(&self) -> NodeIndex {
+    fn index(&self) -> usize {
         self.index
     }
 }
 
 impl<M> PureNode<M> {
-    pub fn new(index: NodeIndex, metadata: M) -> Self {
-        Self {
-            index,
-            metadata,
-        }
+    pub fn new(index: usize, metadata: M) -> Self {
+        Self { index, metadata }
     }
     pub fn as_ref(&self) -> PureNode<&M> {
         PureNode::new(self.index, &self.metadata)
@@ -38,9 +35,7 @@ impl<M> PureNode<M> {
     /// let ref_outer = PureNode::re_ref(ref_inner);
     /// ```
     pub fn re_ref(node: PureNode<&M>) -> &PureNode<M> {
-        unsafe {
-            &*(&node as *const PureNode<&M> as *const PureNode<M>)
-        }
+        unsafe { &*(&node as *const PureNode<&M> as *const PureNode<M>) }
     }
     /// Cast the inner mutable reference to outer mutable reference.
     ///
@@ -58,8 +53,6 @@ impl<M> PureNode<M> {
     /// let ref_outer = PureNode::re_mut(ref_inner);
     /// ```
     pub fn re_mut(mut node: PureNode<&mut M>) -> &mut PureNode<M> {
-        unsafe {
-            &mut *(&mut node as *mut PureNode<&mut M> as *mut PureNode<M>)
-        }
+        unsafe { &mut *(&mut node as *mut PureNode<&mut M> as *mut PureNode<M>) }
     }
 }

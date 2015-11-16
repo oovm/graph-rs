@@ -10,10 +10,13 @@ mod graphs;
 mod vertexes;
 
 pub use crate::{
-    edges::{directed::DirectedEdge, undirected::UndirectedEdge, Edge, EdgeDirection},
+    edges::{
+        directed::DirectedEdge, get_iter::GetEdgesVisitor, mut_iter::MutEdgesVisitor, undirected::UndirectedEdge, Edge,
+        EdgeDirection,
+    },
     errors::{GraphError, GraphErrorKind, GraphResult},
     graphs::Graph,
-    vertexes::{get_iter::GetNodesVisitor, indexed::NodeIndex, mut_iter::MutNodesVisitor, simple::PureNode, IntoNode, Node},
+    vertexes::{get_iter::GetNodesVisitor, mut_iter::MutNodesVisitor, simple::PureNode, IntoNode, Node},
 };
 #[cfg(feature = "wolfram_wxf")]
 pub use wolfram_wxf::{ToWolfram, WolframValue};

@@ -1,4 +1,4 @@
-use crate::NodeIndex;
+use crate::Graph;
 use std::{
     cmp::{max, min},
     ops::Range,
@@ -11,9 +11,12 @@ mod simple;
 #[cfg(feature = "wolfram_wxf")]
 mod wolfram;
 
+pub mod get_iter;
+pub mod mut_iter;
+
 pub trait Edge {
-    fn from(&self) -> NodeIndex;
-    fn goto(&self) -> NodeIndex;
+    fn from(&self) -> usize;
+    fn goto(&self) -> usize;
     fn bidirectional(&self) -> bool {
         true
     }

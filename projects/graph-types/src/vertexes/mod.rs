@@ -1,21 +1,16 @@
-pub mod simple;
-pub mod indexed;
 pub mod get_iter;
+pub mod indexed;
 pub mod mut_iter;
+pub mod simple;
 
-use std::borrow::Cow;
 use crate::Graph;
-use crate::NodeIndex;
+use std::borrow::Cow;
 
 pub trait Node {
-    fn index(&self) -> NodeIndex;
+    fn index(&self) -> usize;
 }
 
 pub trait IntoNode {
     type Node: Node;
     fn into_node(self) -> Self::Node;
 }
-
-
-
-

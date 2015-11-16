@@ -7,11 +7,11 @@ pub struct DirectedEdge {
 }
 
 impl Edge for DirectedEdge {
-    fn from(&self) -> NodeIndex {
+    fn from(&self) -> usize {
         self.from
     }
 
-    fn goto(&self) -> NodeIndex {
+    fn goto(&self) -> usize {
         self.goto
     }
 }

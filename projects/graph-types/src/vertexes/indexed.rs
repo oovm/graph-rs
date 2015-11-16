@@ -1,9 +1,7 @@
 use super::*;
 
-pub type NodeIndex = usize;
-
-impl Node for NodeIndex {
-    fn index(&self) -> NodeIndex {
+impl Node for usize {
+    fn index(&self) -> usize {
         *self
     }
 }
