@@ -4,9 +4,5 @@
 #![doc(html_logo_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 #![doc(html_favicon_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 
-mod edges;
-mod graphs;
-mod static_full;
-mod static_half;
-
-pub use crate::{edges::AdjacencyEdge, graphs::AdjacencyMatrix, static_full::StaticDirected, static_half::StaticUndirected};
+mod in_memory;
+pub use crate::in_memory::InMemoryGraph;

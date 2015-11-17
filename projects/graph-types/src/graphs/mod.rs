@@ -1,4 +1,4 @@
-use crate::{Edge, GetEdgesVisitor, GetNodesVisitor, MutEdgesVisitor, Node};
+use crate::{Edge, Entry, GetEdgesVisitor, GetNodesVisitor, MutEdgesVisitor, Node};
 use std::borrow::Cow;
 
 /// Get basic information about the graph
@@ -6,6 +6,17 @@ pub trait Graph {
     type Node: Node + Clone;
     type Edge: Edge + Clone;
 
+    /// # Arguments
+    ///
+    /// * `index`:
+    ///
+    /// returns: Option<Cow<Self::Node>>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::Graph;
+    /// ```
     fn get_node(&self, index: usize) -> Option<Cow<Self::Node>>;
     fn mut_node(&mut self, index: usize) -> Option<&mut Self::Node> {
         unreachable!("The {} graph does not support mutating node `{}`", std::any::type_name::<Self>(), index)
@@ -17,6 +28,7 @@ pub trait Graph {
     fn insert_node(&mut self, node: Self::Node) -> usize {
         unreachable!("The {} graph does not support adding node `{}`", std::any::type_name::<Self>(), node.index())
     }
+
     fn remove_node(&mut self, index: usize) -> Option<Self::Node> {
         unreachable!("The {} graph does not support removing node `{}`", std::any::type_name::<Self>(), index)
     }
@@ -39,4 +51,16 @@ pub trait Graph {
         todo!()
     }
     fn count_edges(&self) -> usize;
+}
+
+pub trait WeightedGraph: Graph {
+    type Weight: Clone;
+
+    fn get_weight(&self, entry: Entry, index: usize) -> Option<Self::Weight>;
+    fn mut_weight(&mut self, entry: Entry, index: usize) -> Option<&mut Self::Weight> {
+        unreachable!("The {} graph does not support mutating weight `{}`", std::any::type_name::<Self>(), index)
+    }
+    fn set_weight(&mut self, entry: Entry, index: usize, weight: Self::Weight) -> Option<Self::Weight> {
+        unreachable!("The {} graph does not support setting weight `{}`", std::any::type_name::<Self>(), index)
+    }
 }

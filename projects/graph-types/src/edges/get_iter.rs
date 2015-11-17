@@ -1,5 +1,6 @@
 use crate::Graph;
 
+#[derive(Debug)]
 pub struct GetEdgesVisitor<'a, G: Graph + ?Sized> {
     graph: &'a G,
     index: usize,

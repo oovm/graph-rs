@@ -1,5 +1,6 @@
 use super::*;
 
+#[derive(Debug)]
 pub struct MutEdgesVisitor<'a, G: Graph + ?Sized> {
     graph: &'a mut G,
     index: usize,

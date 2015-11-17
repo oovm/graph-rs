@@ -1,8 +1,5 @@
-use crate::AdjacencyEdge;
 use graph_types::{GraphError, GraphResult, UndirectedEdge};
-use num_traits::{One, Zero};
 use std::{
-    cmp::Ordering,
     fmt::{Debug, Display},
     ops::AddAssign,
 };

@@ -1,19 +1,13 @@
+use crate::Entry;
 use std::{
     error::Error,
     fmt::{Debug, Display, Formatter},
 };
-
 pub type GraphResult<T = ()> = Result<T, GraphError>;
 
 #[derive(Debug)]
 pub struct GraphError {
     kind: Box<GraphErrorKind>,
-}
-
-#[derive(Copy, Clone, Debug)]
-pub enum Entry {
-    Node,
-    Edge,
 }
 
 #[derive(Clone, Debug)]

@@ -11,11 +11,13 @@ edition = "2021"
 exclude = ["tests/", "package.json"]
 
 [dependencies]
+num-traits = "0.2.15"
 serde = { version = "1.0.162", optional = true }
 wolfram_wxf = { version = "0.6.3", optional = true }
 
 
 [dev-dependencies]
+graph-theory = { version = "0.0.*", path = "../graph" }
 
 [features]
 default = []
