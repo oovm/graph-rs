@@ -15,6 +15,8 @@ pub mod get_iter;
 pub mod mut_iter;
 
 pub trait Edge {
+    type Weight;
+
     fn from(&self) -> usize;
     fn goto(&self) -> usize;
     fn bidirectional(&self) -> bool {

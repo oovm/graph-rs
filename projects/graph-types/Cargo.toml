@@ -12,6 +12,7 @@ exclude = ["tests/", "package.json"]
 
 [dependencies]
 num-traits = "0.2.15"
+dashmap = "5.4.0"
 serde = { version = "1.0.162", optional = true }
 wolfram_wxf = { version = "0.6.3", optional = true }
 

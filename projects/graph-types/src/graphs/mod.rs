@@ -52,15 +52,3 @@ pub trait Graph {
     }
     fn count_edges(&self) -> usize;
 }
-
-pub trait WeightedGraph: Graph {
-    type Weight: Clone;
-
-    fn get_weight(&self, entry: Entry, index: usize) -> Option<Self::Weight>;
-    fn mut_weight(&mut self, entry: Entry, index: usize) -> Option<&mut Self::Weight> {
-        unreachable!("The {} graph does not support mutating weight `{}`", std::any::type_name::<Self>(), index)
-    }
-    fn set_weight(&mut self, entry: Entry, index: usize, weight: Self::Weight) -> Option<Self::Weight> {
-        unreachable!("The {} graph does not support setting weight `{}`", std::any::type_name::<Self>(), index)
-    }
-}

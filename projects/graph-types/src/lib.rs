@@ -3,11 +3,13 @@
 #![doc = include_str!("../readme.md")]
 #![doc(html_logo_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 #![doc(html_favicon_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
+#![feature(generic_associated_types)]
 
 mod edges;
 mod entry;
 mod errors;
 mod graphs;
+mod storage;
 mod vertexes;
 
 pub use crate::{
@@ -17,7 +19,8 @@ pub use crate::{
     },
     entry::Entry,
     errors::{GraphError, GraphErrorKind, GraphResult},
-    graphs::{Graph, WeightedGraph},
+    graphs::Graph,
+    storage::WeightsProvider,
     vertexes::{get_iter::GetNodesVisitor, mut_iter::MutNodesVisitor, simple::PureNode, IntoNode, Node},
 };
 pub use num_traits::Zero;

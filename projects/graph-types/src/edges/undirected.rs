@@ -15,6 +15,8 @@ impl Display for UndirectedEdge {
 }
 
 impl Edge for UndirectedEdge {
+    type Weight = ();
+
     fn from(&self) -> usize {
         self.min_index()
     }
@@ -23,6 +25,7 @@ impl Edge for UndirectedEdge {
         self.max_index()
     }
 }
+
 impl From<(usize, usize)> for UndirectedEdge {
     fn from(ordinal: (usize, usize)) -> Self {
         Self { from: ordinal.0 - 1, goto: ordinal.1 - 1 }

@@ -12,10 +12,7 @@ pub struct GraphError {
 
 #[derive(Clone, Debug)]
 pub enum GraphErrorKind {
-    NodeNotFound,
-    EdgeNotFound,
-    NodeAlreadyExists,
-    EdgeAlreadyExists,
+    NotFound { entry: Entry, index: usize },
     OutOfRange { entry: Entry, index: usize, max: usize },
     Custom { message: String },
 }
@@ -31,26 +28,12 @@ impl Display for GraphError {
 impl Display for GraphErrorKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            GraphErrorKind::NodeNotFound => {
-                todo!()
+            GraphErrorKind::NotFound { entry, index } => {
+                write!(f, "{entry:?} index {index} not found")
             }
-            GraphErrorKind::EdgeNotFound => {
-                todo!()
+            GraphErrorKind::OutOfRange { entry, index, max } => {
+                write!(f, "{entry:?} index {index} is out of range, max index is {max}")
             }
-            GraphErrorKind::NodeAlreadyExists => {
-                todo!()
-            }
-            GraphErrorKind::EdgeAlreadyExists => {
-                todo!()
-            }
-            GraphErrorKind::OutOfRange { entry, index, max } => match entry {
-                Entry::Node => {
-                    write!(f, "Node index {} is out of range, max index is {}", index, max)
-                }
-                Entry::Edge => {
-                    write!(f, "Edge index {} is out of range, max index is {}", index, max)
-                }
-            },
             GraphErrorKind::Custom { message } => f.write_str(message),
         }
     }
