@@ -1,4 +1,4 @@
-use crate::Entry;
+use crate::{Entry, Query};
 use std::{
     error::Error,
     fmt::{Debug, Display, Formatter},
@@ -46,6 +46,12 @@ impl GraphError {
     {
         Self { kind: Box::new(GraphErrorKind::Custom { message: message.to_string() }) }
     }
+
+    pub fn not_found<Q: Into<Query>>(query: Q) -> Self {
+        let query = query.into();
+        Self { kind: Box::new(GraphErrorKind::NotFound { entry: query.entry, index: query.index }) }
+    }
+
     pub fn node_out_of_range(index: usize, max: usize) -> Self {
         Self { kind: Box::new(GraphErrorKind::OutOfRange { entry: Entry::Node, index, max }) }
     }

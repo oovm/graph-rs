@@ -1,7 +1,10 @@
-use crate::{Edge, Entry, GetEdgesVisitor, GetNodesVisitor, MutEdgesVisitor, Node};
+use crate::{Edge, GetEdgesVisitor, GetNodesVisitor, MutEdgesVisitor, Node};
 use std::borrow::Cow;
 
+pub mod weighted;
+
 /// Get basic information about the graph
+#[allow(unused_variables)]
 pub trait Graph {
     type Node: Node + Clone;
     type Edge: Edge + Clone;
