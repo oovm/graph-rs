@@ -5,12 +5,12 @@ use dashmap::{
 };
 
 #[derive(Clone, Debug)]
-pub struct SharedStorage<T> {
-    nodes: DashMap<usize, T>,
-    edges: DashMap<usize, T>,
+pub struct VectorStorage<T> {
+    nodes: Vec<usize, T>,
+    edges: Vec<usize, T>,
 }
 
-impl<'i, T: 'i> WeightsProvider<'i> for SharedStorage<T> {
+impl<'i, T: 'i> WeightsProvider<'i> for VectorStorage<T> {
     type Weight = T;
     type WeightRef = Ref<'i, usize, T>;
     type WeightMut = RefMut<'i, usize, T>;
@@ -30,7 +30,7 @@ impl<'i, T: 'i> WeightsProvider<'i> for SharedStorage<T> {
     }
 }
 
-impl<T> SharedStorage<T> {
+impl<T> VectorStorage<T> {
     pub fn get_data(&self, query: Query) -> Option<Ref<usize, T>> {
         let item = match query.entry {
             Entry::Node => self.nodes.get(&query.index)?,
