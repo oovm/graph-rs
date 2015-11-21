@@ -5,9 +5,9 @@
 #![doc(html_favicon_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 
 mod edges;
+mod entries;
 mod errors;
 mod graphs;
-mod query;
 mod storage;
 mod vertexes;
 
@@ -16,12 +16,13 @@ pub use crate::{
         directed::DirectedEdge, get_iter::GetEdgesVisitor, mut_iter::MutEdgesVisitor, undirected::UndirectedEdge, Edge,
         EdgeDirection,
     },
+    entries::{Entry, EntryName, EntryWeight, Query},
     errors::{GraphError, GraphErrorKind, GraphResult},
     graphs::{
-        weighted::{WeightedGraph, WeightsProvider},
+        weighted::{GraphData, ValueProvider},
         Graph,
     },
-    query::{Entry, Query},
+    storage::{btree::DictStorage, vector::ListStorage},
     vertexes::{get_iter::GetNodesVisitor, mut_iter::MutNodesVisitor, simple::PureNode, IntoNode, Node},
 };
 pub use num_traits::Zero;

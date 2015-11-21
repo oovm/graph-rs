@@ -5,4 +5,4 @@
 #![doc(html_favicon_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 
 mod in_memory;
-pub use crate::in_memory::InMemoryGraph;
+pub use crate::in_memory::StableGraph;

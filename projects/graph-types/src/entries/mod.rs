@@ -4,6 +4,17 @@ pub enum Entry {
     Edge,
 }
 
+/// mark a entry weight
+#[derive(Clone, Debug)]
+pub struct EntryWeight<N> {
+    weight: N,
+}
+
+#[derive(Clone, Debug)]
+pub struct EntryName {
+    name: String,
+}
+
 #[derive(Clone, Copy, Debug)]
 pub struct Query {
     pub entry: Entry,

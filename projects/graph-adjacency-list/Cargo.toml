@@ -14,7 +14,7 @@ exclude = ["package.json", "tests/**"]
 ndarray = "0.15.6"
 
 [dependencies.graph-types]
-version = "0.0.3"
+version = "0.0.*"
 path = "../graph-types"
 
 [dev-dependencies]

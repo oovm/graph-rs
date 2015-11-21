@@ -1,13 +1,14 @@
 use crate::{Entry, GraphError, Query, ValueProvider};
+use std::collections::BTreeMap;
 
 #[derive(Clone, Debug)]
-pub struct ListStorage<T> {
-    nodes: Vec<T>,
-    edges: Vec<T>,
+pub struct DictStorage<T> {
+    nodes: BTreeMap<usize, T>,
+    edges: BTreeMap<usize, T>,
 }
 
 // noinspection DuplicatedCode
-impl<'i, T: 'i> ValueProvider<'i, T> for ListStorage<T> {
+impl<'i, T: 'i> ValueProvider<'i, T> for DictStorage<T> {
     type ValueRef = &'i T;
     type ValueMut = &'i mut T;
 
@@ -26,30 +27,28 @@ impl<'i, T: 'i> ValueProvider<'i, T> for ListStorage<T> {
     }
 }
 
-impl<T> ListStorage<T> {
+impl<T> DictStorage<T> {
     pub fn get_data(&self, query: Query) -> Option<&T> {
         let item = match query.entry {
-            Entry::Node => self.nodes.get(query.index)?,
-            Entry::Edge => self.edges.get(query.index)?,
+            Entry::Node => self.nodes.get(&query.index)?,
+            Entry::Edge => self.edges.get(&query.index)?,
         };
         Some(item)
     }
     pub fn mut_data(&mut self, query: Query) -> Option<&mut T> {
         let item = match query.entry {
-            Entry::Node => self.nodes.get_mut(query.index)?,
-            Entry::Edge => self.edges.get_mut(query.index)?,
+            Entry::Node => self.nodes.get_mut(&query.index)?,
+            Entry::Edge => self.edges.get_mut(&query.index)?,
         };
         Some(item)
     }
     pub fn set_data(&mut self, query: Query, data: T) {
-        let index = match query.entry {
+        match query.entry {
             Entry::Node => {
-                self.nodes.push(data);
-                self.nodes.len()
+                self.nodes.insert(query.index, data);
             }
             Entry::Edge => {
-                self.edges.push(data);
-                self.edges.len()
+                self.edges.insert(query.index, data);
             }
         };
     }
