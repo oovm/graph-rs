@@ -10,8 +10,10 @@ pub struct SharedStorage<T> {
     edges: DashMap<usize, T>,
 }
 
-impl<'i, T: 'i> ValueProvider<'i> for SharedStorage<T> {
-    type Value = T;
+impl<'i, T> ValueProvider<'i, T> for SharedStorage<T>
+where
+    T: 'i + Send + Sync,
+{
     type ValueRef = Ref<'i, usize, T>;
     type ValueMut = RefMut<'i, usize, T>;
 

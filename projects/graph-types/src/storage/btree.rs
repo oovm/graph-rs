@@ -8,7 +8,10 @@ pub struct DictStorage<T> {
 }
 
 // noinspection DuplicatedCode
-impl<'i, T: 'i> ValueProvider<'i, T> for DictStorage<T> {
+impl<'i, T> ValueProvider<'i, T> for DictStorage<T>
+where
+    T: 'i + Send + Sync,
+{
     type ValueRef = &'i T;
     type ValueMut = &'i mut T;
 

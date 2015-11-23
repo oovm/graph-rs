@@ -1,5 +1,5 @@
 use graph_types::{
-    DictStorage, EntryName, EntryWeight, Graph, GraphData, GraphError, GraphResult, ListStorage, UndirectedEdge,
+    DictStorage, EntryName, EntryWeight, Graph, GraphData, GraphError, GraphResult, ListStorage, Query, UndirectedEdge,
 };
 use std::borrow::Cow;
 
@@ -37,9 +37,9 @@ impl GraphData<EntryName> for StableGraph {
 
 impl StableGraph {
     pub fn get_node_name<'i>(&self, names: &'i DictStorage<EntryName>) -> GraphResult<&'i EntryName> {
-        GraphData::<EntryName>::get_node_data(self, 0, names)
+        GraphData::<EntryName>::get_data(self, names, Query::node(0))
     }
     pub fn set_node_name(&self, names: &mut DictStorage<EntryName>, name: EntryName) -> GraphResult<EntryName> {
-        GraphData::<EntryName>::set_node_data(self, 0, names, name)
+        GraphData::<EntryName>::mut_data(self, names, Query::node(0), name)
     }
 }

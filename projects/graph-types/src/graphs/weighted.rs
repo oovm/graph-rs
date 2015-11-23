@@ -6,7 +6,7 @@ use std::{
     pin::Pin,
 };
 
-pub trait ValueProvider<'a, V> {
+pub trait ValueProvider<'a, V>: Send + Sync {
     type ValueRef: Deref<Target = V>;
     type ValueMut: DerefMut<Target = V>;
     fn get_value(&'a self, query: Query) -> Result<Self::ValueRef, GraphError>;
@@ -33,6 +33,7 @@ pub trait ValueProvider<'a, V> {
 /// ```
 /// use graph_types::{Graph, GraphData, ListStorage};
 /// ```
+
 pub trait GraphData<V>: Graph {
     type Provider: for<'p> ValueProvider<'p, V>;
 
@@ -48,36 +49,45 @@ pub trait GraphData<V>: Graph {
     /// ```
     /// use graph_types::{Graph, GraphData, ListStorage};
     /// ```
-    fn get_node_data<'a, 'p>(
+    fn get_data<'a, 'p>(
         &'a self,
-        index: usize,
         data: &'p Self::Provider,
-    ) -> Result<<Self::Provider as ValueProvider<'p, V>>::ValueRef, GraphError> {
-        data.get_value(Query::node(index))
-    }
-
-    fn set_node_data(&self, index: usize, data: &mut Self::Provider, value: V) -> Result<V, GraphError> {
-        data.set_value(Query::node(index), value)
-    }
-
-    fn get_data_async<'asynchronous, 'provider>(
-        &'asynchronous self,
         query: Query,
-        data: &'provider Self::Provider,
+    ) -> Result<<Self::Provider as ValueProvider<'p, V>>::ValueRef, GraphError> {
+        data.get_value(query)
+    }
+
+    fn mut_data(&self, data: &mut Self::Provider, query: Query, value: V) -> Result<V, GraphError> {
+        data.set_value(query, value)
+    }
+
+    fn get_data_async<'a, 'p, 'async_trait>(
+        &'a self,
+        data: &'p Self::Provider,
+        query: Query,
     ) -> Pin<
-        Box<dyn Future<Output = Result<<Self::Provider as ValueProvider<'provider, V>>::ValueRef, GraphError>> + Send + 'asynchronous>,
+        Box<dyn Future<Output = Result<<Self::Provider as ValueProvider<'p, V>>::ValueRef, GraphError>> + Send + 'async_trait>,
     >
     where
-        Self: Sync + 'asynchronous,
+        'a: 'async_trait,
+        'p: 'async_trait,
+        V: Send + 'async_trait,
+        Self: Sync + 'async_trait,
     {
-
-
-        async fn run(self: &Self) {
-            /* the original method body */
-        }
-
-        Box::pin(run(self))
-
-        data.get_value(query)
+        Box::pin(async move { data.get_value(query) })
+    }
+    fn mut_data_async<'a, 'p, 'async_trait>(
+        &'a self,
+        data: &'p mut Self::Provider,
+        query: Query,
+        value: V,
+    ) -> Pin<Box<dyn Future<Output = Result<V, GraphError>> + Send + 'async_trait>>
+    where
+        'a: 'async_trait,
+        'p: 'async_trait,
+        V: Send + 'async_trait,
+        Self: Sync + 'async_trait,
+    {
+        Box::pin(async move { data.set_value(query, value) })
     }
 }
