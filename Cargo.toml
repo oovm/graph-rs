@@ -1,6 +1,9 @@
 [workspace]
 members = ["projects/*"]
 default-members = [
+    "projects/graph",
+    "projects/graph-types",
+    "projects/graph-adjacency-list",
     "projects/graph-adjacency-matrix",
 ]
 exclude = [
