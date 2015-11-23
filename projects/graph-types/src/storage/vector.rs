@@ -1,5 +1,16 @@
 use crate::{Entry, GraphError, Query, ValueProvider};
 
+/// # Arguments
+///
+/// * `index`:
+///
+/// returns: Option<Cow<Self::Node>>
+///
+/// # Examples
+///
+/// ```
+/// use graph_theory::Graph;
+/// ```
 #[derive(Clone, Debug)]
 pub struct ListStorage<T> {
     nodes: Vec<T>,
@@ -30,6 +41,17 @@ where
 }
 
 impl<T> ListStorage<T> {
+    /// # Arguments
+    ///
+    /// * `index`:
+    ///
+    /// returns: Option<Cow<Self::Node>>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::Graph;
+    /// ```
     pub fn get_data(&self, query: Query) -> Option<&T> {
         let item = match query.entry {
             Entry::Node => self.nodes.get(query.index)?,
@@ -37,23 +59,22 @@ impl<T> ListStorage<T> {
         };
         Some(item)
     }
+    /// # Arguments
+    ///
+    /// * `index`:
+    ///
+    /// returns: Option<Cow<Self::Node>>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::Graph;
+    /// ```
     pub fn mut_data(&mut self, query: Query) -> Option<&mut T> {
         let item = match query.entry {
             Entry::Node => self.nodes.get_mut(query.index)?,
             Entry::Edge => self.edges.get_mut(query.index)?,
         };
         Some(item)
-    }
-    pub fn set_data(&mut self, query: Query, data: T) {
-        let index = match query.entry {
-            Entry::Node => {
-                self.nodes.push(data);
-                self.nodes.len()
-            }
-            Entry::Edge => {
-                self.edges.push(data);
-                self.edges.len()
-            }
-        };
     }
 }

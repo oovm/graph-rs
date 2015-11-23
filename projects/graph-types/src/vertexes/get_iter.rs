@@ -1,5 +1,16 @@
 use super::*;
 
+/// # Arguments
+///
+/// * `index`:
+///
+/// returns: Option<Cow<Self::Node>>
+///
+/// # Examples
+///
+/// ```
+/// use graph_theory::Graph;
+/// ```
 #[derive(Debug)]
 pub struct GetNodesVisitor<'i, G: Graph + ?Sized> {
     graph: &'i G,
@@ -35,6 +46,17 @@ impl<'i, G: Graph> DoubleEndedIterator for GetNodesVisitor<'i, G> {
 }
 
 impl<'i, G: Graph + ?Sized> GetNodesVisitor<'i, G> {
+    /// # Arguments
+    ///
+    /// * `index`:
+    ///
+    /// returns: Option<Cow<Self::Node>>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::Graph;
+    /// ```
     pub fn new(graph: &'i G) -> Self {
         Self { graph, index: 0 }
     }

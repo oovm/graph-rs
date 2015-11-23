@@ -1,6 +1,4 @@
-use graph_types::{
-    DictStorage, EntryName, EntryWeight, Graph, GraphData, GraphError, GraphResult, ListStorage, Query, UndirectedEdge,
-};
+use graph_types::{DictStorage, EntryName, Graph, GraphData, GraphResult, Query, UndirectedEdge};
 use std::borrow::Cow;
 
 #[derive(Debug)]

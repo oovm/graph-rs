@@ -23,7 +23,7 @@ pub use crate::{
         Graph,
     },
     storage::{btree::DictStorage, vector::ListStorage},
-    vertexes::{get_iter::GetNodesVisitor, mut_iter::MutNodesVisitor, simple::PureNode, IntoNode, Node},
+    vertexes::{get_iter::GetNodesVisitor, mut_iter::MutNodesVisitor, Node},
 };
 pub use num_traits::Zero;
 #[cfg(feature = "wolfram_wxf")]

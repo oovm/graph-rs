@@ -1,6 +1,17 @@
 use crate::{Entry, GraphError, Query, ValueProvider};
 use std::collections::BTreeMap;
 
+/// # Arguments
+///
+/// * `index`:
+///
+/// returns: Option<Cow<Self::Node>>
+///
+/// # Examples
+///
+/// ```
+/// use graph_theory::Graph;
+/// ```
 #[derive(Clone, Debug)]
 pub struct DictStorage<T> {
     nodes: BTreeMap<usize, T>,
@@ -31,6 +42,17 @@ where
 }
 
 impl<T> DictStorage<T> {
+    /// # Arguments
+    ///
+    /// * `index`:
+    ///
+    /// returns: Option<Cow<Self::Node>>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::Graph;
+    /// ```
     pub fn get_data(&self, query: Query) -> Option<&T> {
         let item = match query.entry {
             Entry::Node => self.nodes.get(&query.index)?,
@@ -38,6 +60,17 @@ impl<T> DictStorage<T> {
         };
         Some(item)
     }
+    /// # Arguments
+    ///
+    /// * `index`:
+    ///
+    /// returns: Option<Cow<Self::Node>>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::Graph;
+    /// ```
     pub fn mut_data(&mut self, query: Query) -> Option<&mut T> {
         let item = match query.entry {
             Entry::Node => self.nodes.get_mut(&query.index)?,
@@ -45,6 +78,17 @@ impl<T> DictStorage<T> {
         };
         Some(item)
     }
+    /// # Arguments
+    ///
+    /// * `index`:
+    ///
+    /// returns: Option<Cow<Self::Node>>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::Graph;
+    /// ```
     pub fn set_data(&mut self, query: Query, data: T) {
         match query.entry {
             Entry::Node => {

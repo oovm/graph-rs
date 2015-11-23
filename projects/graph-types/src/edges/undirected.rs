@@ -2,9 +2,42 @@ use super::*;
 use std::fmt::{Display, Formatter};
 
 /// [UndirectedEdge](https://reference.wolfram.com/language/ref/UndirectedEdge.html)
+/// # Arguments
+///
+/// * `index`:
+///
+/// returns: Option<Cow<Self::Node>>
+///
+/// # Examples
+///
+/// ```
+/// use graph_theory::Graph;
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct UndirectedEdge {
+    /// # Arguments
+    ///
+    /// * `index`:
+    ///
+    /// returns: Option<Cow<Self::Node>>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::Graph;
+    /// ```
     pub from: usize,
+    /// # Arguments
+    ///
+    /// * `index`:
+    ///
+    /// returns: Option<Cow<Self::Node>>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::Graph;
+    /// ```
     pub goto: usize,
 }
 
@@ -33,12 +66,45 @@ impl From<(usize, usize)> for UndirectedEdge {
 }
 
 impl UndirectedEdge {
+    /// # Arguments
+    ///
+    /// * `index`:
+    ///
+    /// returns: Option<Cow<Self::Node>>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::Graph;
+    /// ```
     pub fn max_index(&self) -> usize {
         max(self.from, self.goto)
     }
+    /// # Arguments
+    ///
+    /// * `index`:
+    ///
+    /// returns: Option<Cow<Self::Node>>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::Graph;
+    /// ```
     pub fn min_index(&self) -> usize {
         min(self.from, self.goto)
     }
+    /// # Arguments
+    ///
+    /// * `index`:
+    ///
+    /// returns: Option<Cow<Self::Node>>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::Graph;
+    /// ```
     pub fn as_range(&self) -> Range<usize> {
         self.min_index()..self.max_index()
     }
