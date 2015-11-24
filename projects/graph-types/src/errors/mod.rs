@@ -3,7 +3,7 @@ use std::{
     error::Error,
     fmt::{Debug, Display, Formatter},
     ops::DerefMut,
-    path::{Path, PathBuf},
+    path::Path,
 };
 
 /// The result type alias of a graph operation, see [`GraphError`] & [`GraphErrorKind`] for more.
@@ -44,7 +44,7 @@ pub struct GraphError {
 /// ```
 /// use graph_theory::Graph;
 /// ```
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub enum GraphErrorKind {
     /// Some index is not found in storage.
     ///

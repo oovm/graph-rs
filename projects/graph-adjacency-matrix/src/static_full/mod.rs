@@ -1,8 +1,5 @@
 use graph_types::{DirectedEdge, GraphError, GraphResult};
-use std::{
-    fmt::{Debug, Display},
-    ops::AddAssign,
-};
+use std::fmt::{Debug, Display};
 mod display;
 
 #[derive(Clone, Debug)]

@@ -1,5 +1,6 @@
 use super::*;
 
+/// [UndirectedEdge](https://reference.wolfram.com/language/ref/UndirectedEdge.html)
 /// # Arguments
 ///
 /// * `index`:

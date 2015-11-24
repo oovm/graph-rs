@@ -1,5 +1,4 @@
 use adjacency_matrix::{StaticDirected, StaticUndirected};
-use graph_types::ToWolfram;
 
 #[test]
 fn ready() {

@@ -45,6 +45,18 @@ where
 }
 
 impl<T> SharedStorage<T> {
+    /// # Arguments
+    ///
+    /// * `index`:
+    /// * `data`:
+    ///
+    /// returns: Result<<Self::Provider as ValueProvider>::ValueRef, GraphError>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_types::{Graph, GraphData, ListStorage};
+    /// ```
     pub fn get_data(&self, query: Query) -> Option<Ref<usize, T>> {
         let item = match query.entry {
             Entry::Node => self.nodes.get(&query.index)?,
@@ -52,6 +64,18 @@ impl<T> SharedStorage<T> {
         };
         Some(item)
     }
+    /// # Arguments
+    ///
+    /// * `index`:
+    /// * `data`:
+    ///
+    /// returns: Result<<Self::Provider as ValueProvider>::ValueRef, GraphError>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_types::{Graph, GraphData, ListStorage};
+    /// ```
     pub fn mut_data(&self, query: Query) -> Option<RefMut<usize, T>> {
         let item = match query.entry {
             Entry::Node => self.nodes.get_mut(&query.index)?,

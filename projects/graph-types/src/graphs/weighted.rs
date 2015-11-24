@@ -100,6 +100,18 @@ pub trait ValueProvider<'a, V>: Send + Sync {
 /// use graph_types::{Graph, GraphData, ListStorage};
 /// ```
 pub trait GraphData<V>: Graph {
+    /// # Arguments
+    ///
+    /// * `index`:
+    /// * `data`:
+    ///
+    /// returns: Result<<Self::Provider as ValueProvider>::ValueRef, GraphError>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_types::{Graph, GraphData, ListStorage};
+    /// ```
     type Provider: for<'p> ValueProvider<'p, V>;
 
     /// # Arguments
