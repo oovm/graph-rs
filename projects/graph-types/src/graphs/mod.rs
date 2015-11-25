@@ -5,6 +5,7 @@ use std::{
     ops::{Deref, DerefMut},
     pin::Pin,
 };
+
 pub mod weighted;
 
 /// Get basic information about the graph
@@ -21,7 +22,7 @@ pub trait Graph {
     /// ```
     /// use graph_theory::Graph;
     /// ```
-    type Node: Node + Clone;
+    type NodeIndex: Clone;
     /// # Arguments
     ///
     /// * `index`:
@@ -33,7 +34,7 @@ pub trait Graph {
     /// ```
     /// use graph_theory::Graph;
     /// ```
-    type Edge: Edge + Clone;
+    type EdgeIndex: Clone;
 
     /// # Arguments
     ///
@@ -46,7 +47,7 @@ pub trait Graph {
     /// ```
     /// use graph_theory::Graph;
     /// ```
-    fn get_node(&self, index: usize) -> Option<Cow<Self::Node>>;
+    fn get_node_id(&self, index: Self::NodeIndex) -> Option<usize>;
     /// # Arguments
     ///
     /// * `index`:
@@ -58,7 +59,7 @@ pub trait Graph {
     /// ```
     /// use graph_theory::Graph;
     /// ```
-    fn mut_node(&mut self, index: usize) -> Option<&mut Self::Node> {
+    fn mut_node(&mut self, index: usize) -> Option<&mut Self::NodeIndex> {
         unreachable!("The {} graph does not support mutating node `{}`", std::any::type_name::<Self>(), index)
     }
     /// # Arguments
@@ -98,8 +99,8 @@ pub trait Graph {
     /// ```
     /// use graph_theory::Graph;
     /// ```
-    fn insert_node(&mut self, node: Self::Node) -> usize {
-        unreachable!("The {} graph does not support adding node `{}`", std::any::type_name::<Self>(), node.index())
+    fn insert_node(&mut self, node: Self::NodeIndex) -> usize {
+        todo!()
     }
     /// # Arguments
     ///
@@ -112,7 +113,7 @@ pub trait Graph {
     /// ```
     /// use graph_theory::Graph;
     /// ```
-    fn remove_node(&mut self, index: usize) -> Option<Self::Node> {
+    fn remove_node(&mut self, index: usize) -> Option<Self::NodeIndex> {
         unreachable!("The {} graph does not support removing node `{}`", std::any::type_name::<Self>(), index)
     }
     /// # Arguments
@@ -126,7 +127,7 @@ pub trait Graph {
     /// ```
     /// use graph_theory::Graph;
     /// ```
-    fn get_edge(&self, index: usize) -> Option<Cow<Self::Edge>>;
+    fn get_edge(&self, index: usize) -> Option<Cow<Self::EdgeIndex>>;
     /// # Arguments
     ///
     /// * `index`:
@@ -138,7 +139,7 @@ pub trait Graph {
     /// ```
     /// use graph_theory::Graph;
     /// ```
-    fn mut_edge(&mut self, index: usize) -> Option<&mut Self::Edge> {
+    fn mut_edge(&mut self, index: usize) -> Option<&mut Self::EdgeIndex> {
         unreachable!("The {} graph does not support mutating edge `{}`", std::any::type_name::<Self>(), index)
     }
     /// # Arguments
@@ -180,7 +181,7 @@ pub trait Graph {
     /// ```
     /// use graph_theory::Graph;
     /// ```
-    fn insert_edge(&mut self, edge: Self::Edge) -> Self::Edge {
+    fn insert_edge(&mut self, edge: Self::EdgeIndex) -> Self::EdgeIndex {
         todo!()
     }
     /// # Arguments
@@ -194,7 +195,7 @@ pub trait Graph {
     /// ```
     /// use graph_theory::Graph;
     /// ```
-    fn remove_edge(&mut self, index: Self::Edge) -> Option<Self::Edge> {
+    fn remove_edge(&mut self, index: Self::EdgeIndex) -> Option<Self::EdgeIndex> {
         todo!()
     }
     /// # Arguments

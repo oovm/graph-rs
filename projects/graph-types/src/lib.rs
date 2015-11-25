@@ -7,6 +7,7 @@
 mod edges;
 mod entries;
 mod errors;
+mod famous_graphs;
 mod graphs;
 mod storage;
 mod vertexes;
@@ -18,6 +19,7 @@ pub use crate::{
     },
     entries::{Entry, EntryName, EntryWeight, Query},
     errors::{GraphError, GraphErrorKind, GraphResult},
+    famous_graphs::complete_graph::CompleteGraph,
     graphs::{
         weighted::{GraphData, ValueProvider},
         Graph,
@@ -25,9 +27,31 @@ pub use crate::{
     storage::{btree::DictStorage, vector::ListStorage},
     vertexes::{get_iter::GetNodesVisitor, mut_iter::MutNodesVisitor, Node},
 };
+
 pub use num_traits::Zero;
 #[cfg(feature = "wolfram_wxf")]
 pub use wolfram_wxf::{ToWolfram, WolframValue};
 
 #[cfg(feature = "dashmap")]
 pub use crate::storage::shared::SharedStorage;
+
+/// [UndirectedEdge](https://reference.wolfram.com/language/ref/UndirectedEdge.html)
+/// represents an bidirectional edge between two nodes.
+///
+///
+/// # Examples
+///
+/// ```
+/// use graph_theory::Graph;
+/// ```
+pub type NodeID = usize;
+/// [UndirectedEdge](https://reference.wolfram.com/language/ref/UndirectedEdge.html)
+/// represents an bidirectional edge between two nodes.
+///
+///
+/// # Examples
+///
+/// ```
+/// use graph_theory::Graph;
+/// ```
+pub type EdgeID = usize;

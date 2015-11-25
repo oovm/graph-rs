@@ -18,13 +18,13 @@ pub struct GetNodesVisitor<'i, G: Graph + ?Sized> {
 }
 
 impl<'i, G: Graph> Iterator for GetNodesVisitor<'i, G> {
-    type Item = Cow<'i, G::Node>;
+    type Item = Cow<'i, G::NodeIndex>;
 
     fn next(&mut self) -> Option<Self::Item> {
         if self.index < self.graph.count_nodes() {
             let index = self.index;
             self.index += 1;
-            self.graph.get_node(index)
+            self.graph.get_node_id(index)
         }
         else {
             None
@@ -37,7 +37,7 @@ impl<'i, G: Graph> DoubleEndedIterator for GetNodesVisitor<'i, G> {
         if self.index < self.graph.count_nodes() {
             let index = self.graph.count_nodes() - self.index - 1;
             self.index += 1;
-            self.graph.get_node(index)
+            self.graph.get_node_id(index)
         }
         else {
             None

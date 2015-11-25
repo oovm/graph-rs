@@ -4,6 +4,7 @@ use std::fmt::{Display, Formatter};
 /// [UndirectedEdge](https://reference.wolfram.com/language/ref/UndirectedEdge.html)
 /// represents an bidirectional edge between two nodes.
 ///
+///
 /// # Examples
 ///
 /// ```

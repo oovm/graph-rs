@@ -23,13 +23,13 @@ where
     N: Node + Clone,
     E: Edge + Clone,
 {
-    type Node = N;
-    type Edge = E;
+    type NodeIndex = N;
+    type EdgeIndex = E;
 
-    fn get_node(&self, index: usize) -> Option<Cow<Self::Node>> {
+    fn get_node_id(&self, index: usize) -> Option<Cow<Self::NodeIndex>> {
         self.vertexes.get(&index).map(|node| Cow::Borrowed(node))
     }
-    fn mut_node(&mut self, index: usize) -> Option<&mut Self::Node> {
+    fn mut_node(&mut self, index: usize) -> Option<&mut Self::NodeIndex> {
         self.vertexes.get_mut(&index)
     }
 
@@ -37,10 +37,10 @@ where
         self.count_nodes
     }
 
-    fn get_edge(&self, index: usize) -> Option<Cow<Self::Edge>> {
+    fn get_edge(&self, index: usize) -> Option<Cow<Self::EdgeIndex>> {
         self.edges.get(&index).map(|edge| Cow::Borrowed(edge))
     }
-    fn mut_edge(&mut self, index: usize) -> Option<&mut Self::Edge> {
+    fn mut_edge(&mut self, index: usize) -> Option<&mut Self::EdgeIndex> {
         self.edges.get_mut(&index)
     }
 

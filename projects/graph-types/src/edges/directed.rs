@@ -1,11 +1,9 @@
 use super::*;
 
-/// [UndirectedEdge](https://reference.wolfram.com/language/ref/UndirectedEdge.html)
-/// # Arguments
+/// [DirectedEdge](https://reference.wolfram.com/language/ref/DirectedEdge.html)
+/// represents an bidirectional edge between two nodes.
 ///
-/// * `index`:
-///
-/// returns: Option<Cow<Self::Node>>
+/// Also known as an arc.
 ///
 /// # Examples
 ///
@@ -14,29 +12,9 @@ use super::*;
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct DirectedEdge {
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::Graph;
-    /// ```
+    /// The index of the node that the edge is coming from.
     pub from: usize,
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::Graph;
-    /// ```
+    /// The index of the node that the edge is going to.
     pub goto: usize,
 }
 
@@ -55,50 +33,5 @@ impl Edge for DirectedEdge {
 impl From<(usize, usize)> for DirectedEdge {
     fn from(ordinal: (usize, usize)) -> Self {
         Self { from: ordinal.0 - 1, goto: ordinal.1 - 1 }
-    }
-}
-
-impl DirectedEdge {
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::Graph;
-    /// ```
-    pub fn max_index(&self) -> usize {
-        max(self.from, self.goto)
-    }
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::Graph;
-    /// ```
-    pub fn min_index(&self) -> usize {
-        min(self.from, self.goto)
-    }
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::Graph;
-    /// ```
-    pub fn as_range(&self) -> Range<usize> {
-        self.min_index()..self.max_index()
     }
 }

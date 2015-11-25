@@ -8,10 +8,10 @@ pub struct StableGraph {
 }
 
 impl Graph for StableGraph {
-    type Node = usize;
-    type Edge = UndirectedEdge;
+    type NodeIndex = usize;
+    type EdgeIndex = UndirectedEdge;
 
-    fn get_node(&self, index: usize) -> Option<Cow<Self::Node>> {
+    fn get_node_id(&self, index: usize) -> Option<Cow<Self::NodeIndex>> {
         todo!()
     }
 
@@ -19,7 +19,7 @@ impl Graph for StableGraph {
         todo!()
     }
 
-    fn get_edge(&self, index: usize) -> Option<Cow<Self::Edge>> {
+    fn get_edge(&self, index: usize) -> Option<Cow<Self::EdgeIndex>> {
         todo!()
     }
 

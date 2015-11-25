@@ -19,9 +19,11 @@ pub type GraphResult<T = ()> = Result<T, GraphError>;
 ///
 /// # Size
 ///
+/// The size of this struct is always 8 bytes.
+///
 /// ```
 /// use graph_theory::GraphError;
-/// assert_eq!(std::mem::size_of::<GraphError>(), 24);
+/// assert_eq!(std::mem::size_of::<GraphError>(), 8);
 /// ```
 ///
 /// # Examples
