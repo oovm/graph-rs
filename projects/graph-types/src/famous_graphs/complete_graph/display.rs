@@ -1,0 +1,19 @@
+use super::*;
+
+#[cfg(feature = "wolfram_wxf")]
+use wolfram_wxf::{ToWolfram, WolframValue};
+
+#[cfg(feature = "wolfram_wxf")]
+impl ToWolfram for CompleteGraph {
+    fn to_wolfram(&self) -> WolframValue {
+        let n = WolframValue::Integer64(self.rank as i64);
+
+        match self.directed {
+            true => {
+                let arg1 = WolframValue::function("Rule", vec!["DirectedEdges".into(), true.into()]);
+                WolframValue::function("CompleteGraph", vec![n, arg1])
+            }
+            false => WolframValue::function("CompleteGraph", vec![n]),
+        }
+    }
+}
