@@ -19,8 +19,6 @@ pub struct DirectedEdge {
 }
 
 impl Edge for DirectedEdge {
-    type Weight = ();
-
     fn from(&self) -> usize {
         self.from
     }

@@ -10,7 +10,8 @@ impl ToWolfram for CompleteGraph {
 
         match self.directed {
             true => {
-                let arg1 = WolframValue::function("Rule", vec!["DirectedEdges".into(), true.into()]);
+                let arg1 =
+                    WolframValue::function("Rule", vec![WolframValue::symbol("DirectedEdges"), WolframValue::symbol("True")]);
                 WolframValue::function("CompleteGraph", vec![n, arg1])
             }
             false => WolframValue::function("CompleteGraph", vec![n]),

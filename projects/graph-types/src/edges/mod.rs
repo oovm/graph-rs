@@ -5,6 +5,7 @@ use std::{
 };
 
 pub mod directed;
+pub mod insert_action;
 pub mod undirected;
 
 mod simple;
@@ -26,23 +27,15 @@ pub mod mut_iter;
 /// use graph_theory::Graph;
 /// ```
 pub trait Edge {
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
+    /// Whether the edge is bidirectional
     ///
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::{DirectedEdge, InsertionEdge, UndirectedEdge};
     /// ```
-    type Weight;
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
+    fn bidirectional(&self) -> bool;
+    /// The index of the node the edge is coming from
     ///
     /// # Examples
     ///
@@ -50,11 +43,7 @@ pub trait Edge {
     /// use graph_theory::Graph;
     /// ```
     fn from(&self) -> usize;
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
+    /// The index of the node the edge is going to
     ///
     /// # Examples
     ///
@@ -62,20 +51,6 @@ pub trait Edge {
     /// use graph_theory::Graph;
     /// ```
     fn goto(&self) -> usize;
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::Graph;
-    /// ```
-    fn bidirectional(&self) -> bool {
-        true
-    }
 }
 
 /// # Arguments

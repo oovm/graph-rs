@@ -8,7 +8,17 @@ use std::{
 
 pub mod weighted;
 
-/// Get basic information about the graph
+/// # Arguments
+///
+/// * `index`:
+///
+/// returns: Option<Cow<Self::Node>>
+///
+/// # Examples
+///
+/// ```
+/// use graph_theory::Graph;
+/// ```
 #[allow(unused_variables)]
 pub trait Graph {
     /// # Arguments

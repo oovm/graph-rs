@@ -45,7 +45,7 @@ impl Graph for CompleteGraph {
 impl CompleteGraph {
     /// Creates a new complete graph with the given rank.
     ///
-    /// ![](https://reference.wolfram.com/language/ref/Files/CompleteGraph.zh/O_1.png)
+    /// ![](https://raw.githubusercontent.com/oovm/graph-rs/dev/projects/graph-types/src/famous_graphs/complete_graph/k-complete.svg)
     ///
     /// # Examples
     ///
@@ -57,6 +57,8 @@ impl CompleteGraph {
         Self { directed: false, rank }
     }
     /// Creates a new directed complete graph with the given rank.
+    ///
+    /// ![](https://raw.githubusercontent.com/oovm/graph-rs/dev/projects/graph-types/src/famous_graphs/complete_graph/d-complete.svg)
     ///
     /// # Examples
     ///
@@ -73,18 +75,15 @@ impl CompleteGraph {
         let edges = graph.count_edges();
         if edges == nodes * (nodes - 1) {
             if is_directed(graph, nodes) {
-                Some(Self { directed: false, rank: nodes })
+                return Some(Self { directed: false, rank: nodes });
             }
         }
         else if edges == nodes * (nodes - 1) * 2 {
             if is_undirected(graph) {
-                Some(Self { directed: true, rank: nodes })
+                return Some(Self { directed: true, rank: nodes });
             }
         }
-        else {
-            None
-        }
-        todo!()
+        None
     }
 }
 

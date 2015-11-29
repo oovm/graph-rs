@@ -26,9 +26,10 @@ where
     type NodeIndex = N;
     type EdgeIndex = E;
 
-    fn get_node_id(&self, index: usize) -> Option<Cow<Self::NodeIndex>> {
-        self.vertexes.get(&index).map(|node| Cow::Borrowed(node))
+    fn get_node_id(&self, index: Self::NodeIndex) -> Option<usize> {
+        todo!()
     }
+
     fn mut_node(&mut self, index: usize) -> Option<&mut Self::NodeIndex> {
         self.vertexes.get_mut(&index)
     }

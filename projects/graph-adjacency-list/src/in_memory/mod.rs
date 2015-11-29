@@ -2,21 +2,20 @@ use graph_types::{DictStorage, EntryName, Graph, GraphData, GraphResult, Query, 
 use std::borrow::Cow;
 
 #[derive(Debug)]
-pub struct StableGraph {
-    nodes: Vec<usize>,
-    edges: Vec<usize>,
+pub struct AdjacencyList<T> {
+    heads: Vec<Vec<T>>,
 }
 
-impl Graph for StableGraph {
-    type NodeIndex = usize;
+impl<T> Graph for AdjacencyList<T> {
+    type NodeIndex = T;
     type EdgeIndex = UndirectedEdge;
 
-    fn get_node_id(&self, index: usize) -> Option<Cow<Self::NodeIndex>> {
-        todo!()
+    fn get_node_id(&self, index: Self::NodeIndex) -> Option<usize> {
+        self.heads.iter().position(|head| head.contains(&index))
     }
 
     fn count_nodes(&self) -> usize {
-        todo!()
+        self.heads.len()
     }
 
     fn get_edge(&self, index: usize) -> Option<Cow<Self::EdgeIndex>> {
@@ -27,17 +26,16 @@ impl Graph for StableGraph {
         todo!()
     }
 }
-
-impl GraphData<EntryName> for StableGraph {
-    /// Not all node needs a name, so we use a dict storage here.
-    type Provider = DictStorage<EntryName>;
-}
-
-impl StableGraph {
-    pub fn get_node_name<'i>(&self, names: &'i DictStorage<EntryName>) -> GraphResult<&'i EntryName> {
-        GraphData::<EntryName>::get_data(self, names, Query::node(0))
-    }
-    pub fn set_node_name(&self, names: &mut DictStorage<EntryName>, name: EntryName) -> GraphResult<EntryName> {
-        GraphData::<EntryName>::mut_data(self, names, Query::node(0), name)
-    }
-}
+// impl GraphData<EntryName> for AdjacencyList {
+//     /// Not all node needs a name, so we use a dict storage here.
+//     type Provider = DictStorage<EntryName>;
+// }
+//
+// impl AdjacencyList {
+//     pub fn get_node_name<'i>(&self, names: &'i DictStorage<EntryName>) -> GraphResult<&'i EntryName> {
+//         GraphData::<EntryName>::get_data(self, names, Query::node(0))
+//     }
+//     pub fn set_node_name(&self, names: &mut DictStorage<EntryName>, name: EntryName) -> GraphResult<EntryName> {
+//         GraphData::<EntryName>::mut_data(self, names, Query::node(0), name)
+//     }
+// }
