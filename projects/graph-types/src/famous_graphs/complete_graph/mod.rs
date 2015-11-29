@@ -1,5 +1,4 @@
-use crate::{DirectedEdge, Graph};
-use std::borrow::Cow;
+use crate::Graph;
 mod display;
 
 /// [CompleteGraph](https://reference.wolfram.com/language/ref/CompleteGraph.html)
@@ -23,18 +22,9 @@ pub struct CompleteGraph {
 
 impl Graph for CompleteGraph {
     type NodeIndex = usize;
-    type EdgeIndex = usize;
-
-    fn get_node_id(&self, index: Self::NodeIndex) -> Option<usize> {
-        todo!()
-    }
 
     fn count_nodes(&self) -> usize {
         self.rank
-    }
-
-    fn get_edge(&self, index: usize) -> Option<Cow<Self::EdgeIndex>> {
-        todo!()
     }
 
     fn count_edges(&self) -> usize {

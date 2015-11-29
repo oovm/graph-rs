@@ -12,6 +12,7 @@ use crate::{DirectedEdge, UndirectedEdge};
 /// ```
 /// use graph_theory::Graph;
 /// ```
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct InsertionEdge {
     /// Whether the edge is bidirectional
     pub bidi: bool,
@@ -34,14 +35,14 @@ impl From<DirectedEdge> for InsertionEdge {
 }
 
 impl Edge for InsertionEdge {
+    fn bidirectional(&self) -> bool {
+        self.bidi
+    }
+
     fn from(&self) -> usize {
         self.from
     }
-
     fn goto(&self) -> usize {
         self.goto
-    }
-    fn bidirectional(&self) -> bool {
-        self.bidi
     }
 }

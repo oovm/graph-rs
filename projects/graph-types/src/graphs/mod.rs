@@ -44,45 +44,6 @@ pub trait Graph {
     /// ```
     /// use graph_theory::Graph;
     /// ```
-    type EdgeIndex: Clone;
-
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::Graph;
-    /// ```
-    fn get_node_id(&self, index: Self::NodeIndex) -> Option<usize>;
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::Graph;
-    /// ```
-    fn mut_node(&mut self, index: usize) -> Option<&mut Self::NodeIndex> {
-        unreachable!("The {} graph does not support mutating node `{}`", std::any::type_name::<Self>(), index)
-    }
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::Graph;
-    /// ```
     fn get_nodes(&self) -> GetNodesVisitor<Self> {
         GetNodesVisitor::new(self)
     }
@@ -126,43 +87,6 @@ pub trait Graph {
     fn remove_node(&mut self, index: usize) -> Option<Self::NodeIndex> {
         unreachable!("The {} graph does not support removing node `{}`", std::any::type_name::<Self>(), index)
     }
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::Graph;
-    /// ```
-    fn get_edge(&self, index: usize) -> Option<Cow<Self::EdgeIndex>>;
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::Graph;
-    /// ```
-    fn mut_edge(&mut self, index: usize) -> Option<&mut Self::EdgeIndex> {
-        unreachable!("The {} graph does not support mutating edge `{}`", std::any::type_name::<Self>(), index)
-    }
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::Graph;
-    /// ```
     fn get_edges(&self) -> GetEdgesVisitor<Self> {
         GetEdgesVisitor::new(self)
     }
@@ -191,7 +115,7 @@ pub trait Graph {
     /// ```
     /// use graph_theory::Graph;
     /// ```
-    fn insert_edge(&mut self, edge: Self::EdgeIndex) -> Self::EdgeIndex {
+    fn insert_edge<E: Edge>(&mut self, edge: E) -> usize {
         todo!()
     }
     /// # Arguments
@@ -205,7 +129,7 @@ pub trait Graph {
     /// ```
     /// use graph_theory::Graph;
     /// ```
-    fn remove_edge(&mut self, index: Self::EdgeIndex) -> Option<Self::EdgeIndex> {
+    fn remove_edge(&mut self, index: usize) -> Option<usize> {
         todo!()
     }
     /// # Arguments

@@ -2,23 +2,22 @@ use graph_types::{DictStorage, EntryName, Graph, GraphData, GraphResult, Query, 
 use std::borrow::Cow;
 
 #[derive(Debug)]
-pub struct AdjacencyList<T> {
-    heads: Vec<Vec<T>>,
+pub struct AdjacencyList {
+    heads: Vec<Vec<usize>>,
 }
 
-impl<T> Graph for AdjacencyList<T> {
-    type NodeIndex = T;
-    type EdgeIndex = UndirectedEdge;
+impl Graph for AdjacencyList {
+    type NodeIndex = usize;
 
-    fn get_node_id(&self, index: Self::NodeIndex) -> Option<usize> {
-        self.heads.iter().position(|head| head.contains(&index))
+    fn get_node(&self, index: Self::NodeIndex) -> Option<usize> {
+        todo!()
     }
 
     fn count_nodes(&self) -> usize {
         self.heads.len()
     }
 
-    fn get_edge(&self, index: usize) -> Option<Cow<Self::EdgeIndex>> {
+    fn get_edge(&self, index: usize) -> Option<usize> {
         todo!()
     }
 

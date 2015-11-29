@@ -25,7 +25,9 @@ impl Display for UndirectedEdge {
 }
 
 impl Edge for UndirectedEdge {
-    type Weight = ();
+    fn bidirectional(&self) -> bool {
+        true
+    }
 
     fn from(&self) -> usize {
         self.min_index()

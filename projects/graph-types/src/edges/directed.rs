@@ -19,6 +19,10 @@ pub struct DirectedEdge {
 }
 
 impl Edge for DirectedEdge {
+    fn bidirectional(&self) -> bool {
+        false
+    }
+
     fn from(&self) -> usize {
         self.from
     }
