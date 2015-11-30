@@ -1,4 +1,4 @@
-use crate::Graph;
+use crate::{DirectedEdge, Graph};
 use std::{
     cmp::{max, min},
     ops::Range,
@@ -51,6 +51,37 @@ pub trait Edge {
     /// use graph_theory::Graph;
     /// ```
     fn goto(&self) -> usize;
+    /// The smaller of the two indices.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::{Edge, UndirectedEdge};
+    /// assert_eq!(UndirectedEdge::new(1, 2).max_index(), 2);
+    /// assert_eq!(UndirectedEdge::new(2, 1).max_index(), 2);
+    /// ```
+    fn max_index(&self) -> usize {
+        max(self.from(), self.goto())
+    }
+    /// The smaller of the two indices.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::{Edge, UndirectedEdge};
+    /// assert_eq!(UndirectedEdge::new(1, 2).min_index(), 1);
+    /// assert_eq!(UndirectedEdge::new(2, 1).min_index(), 1);
+    /// ```
+    fn min_index(&self) -> usize {
+        min(self.from(), self.goto())
+    }
+}
+
+pub trait EdgeInsertion {
+    fn next_edge(&mut self) ->  Option<>
+    fn max_index(&self) -> usize {
+        self.into_edges().map(|edge| edge.max_index()).max().unwrap_or(0)
+    }
 }
 
 /// # Arguments

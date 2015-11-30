@@ -50,30 +50,6 @@ impl UndirectedEdge {
     pub fn new(from: usize, goto: usize) -> Self {
         Self { from, goto }
     }
-    /// The bigger of the two indices.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::UndirectedEdge;
-    /// assert_eq!(UndirectedEdge::new(1, 2).max_index(), 2);
-    /// assert_eq!(UndirectedEdge::new(2, 1).max_index(), 2);
-    /// ```
-    pub fn max_index(&self) -> usize {
-        max(self.from, self.goto)
-    }
-    /// The smaller of the two indices.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::UndirectedEdge;
-    /// assert_eq!(UndirectedEdge::new(1, 2).min_index(), 1);
-    /// assert_eq!(UndirectedEdge::new(2, 1).min_index(), 1);
-    /// ```
-    pub fn min_index(&self) -> usize {
-        min(self.from, self.goto)
-    }
     /// Use the edge as a range.
     ///
     /// # Examples

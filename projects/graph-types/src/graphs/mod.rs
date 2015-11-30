@@ -8,11 +8,7 @@ use std::{
 
 pub mod weighted;
 
-/// # Arguments
-///
-/// * `index`:
-///
-/// returns: Option<Cow<Self::Node>>
+/// Represent a graph storage, with a set of nodes and edges.
 ///
 /// # Examples
 ///

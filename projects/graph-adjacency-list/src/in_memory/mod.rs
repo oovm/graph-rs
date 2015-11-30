@@ -1,4 +1,4 @@
-use graph_types::{DictStorage, EntryName, Graph, GraphData, GraphResult, Query, UndirectedEdge};
+use graph_types::{DictStorage, Edge, EntryName, Graph, GraphData, GraphResult, Query, UndirectedEdge};
 use std::borrow::Cow;
 
 #[derive(Debug)]
@@ -9,20 +9,32 @@ pub struct AdjacencyList {
 impl Graph for AdjacencyList {
     type NodeIndex = usize;
 
-    fn get_node(&self, index: Self::NodeIndex) -> Option<usize> {
-        todo!()
-    }
-
     fn count_nodes(&self) -> usize {
         self.heads.len()
     }
 
-    fn get_edge(&self, index: usize) -> Option<usize> {
-        todo!()
+    fn insert_edge<E: Edge>(&mut self, edge: E) -> usize {
+        let max = edge.max_index();
+        if max >= self.heads.len() {
+            self.heads.resize(max + 1, Vec::new());
+        }
+        let lhs = edge.from();
+        let rhs = edge.goto();
+        if edge.bidirectional() {
+            unsafe {
+                self.heads.get_unchecked_mut(lhs).push(rhs);
+                self.heads.get_unchecked_mut(rhs).push(lhs);
+            }
+        }
+        else {
+            unsafe {
+                self.heads.get_unchecked_mut(lhs).push(rhs);
+            }
+        }
+        0
     }
-
     fn count_edges(&self) -> usize {
-        todo!()
+        self.heads.iter().map(|v| v.len()).sum()
     }
 }
 // impl GraphData<EntryName> for AdjacencyList {
