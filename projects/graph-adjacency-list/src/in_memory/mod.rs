@@ -1,9 +1,27 @@
 use graph_types::{DictStorage, Edge, EntryName, Graph, GraphData, GraphResult, Query, UndirectedEdge};
-use std::borrow::Cow;
+use std::{borrow::Cow, marker::PhantomData};
 
+/// A vertex first adjacency list
 #[derive(Debug)]
 pub struct AdjacencyList {
-    heads: Vec<Vec<usize>>,
+    heads: Vec<AdjacencyNeighbor>,
+}
+
+/// start node id is the same as the index in the vector
+pub struct AdjacencyNeighbor {
+    neighbors: u32,
+    end_node_ids: Vec<EdgeID>,
+}
+
+/// u64::MAX is reserved for the empty
+#[repr(C)]
+pub struct EdgeID {
+    edge_id: u32,
+    end_node: u32,
+}
+
+impl EdgeID {
+    const EMPTY: Self = Self { edge_id: u32::MAX, end_node: u32::MAX };
 }
 
 impl Graph for AdjacencyList {
