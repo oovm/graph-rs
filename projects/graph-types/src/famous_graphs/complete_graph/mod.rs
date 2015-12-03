@@ -1,4 +1,4 @@
-use crate::Graph;
+use crate::GraphEngine;
 mod display;
 
 /// [CompleteGraph](https://reference.wolfram.com/language/ref/CompleteGraph.html)
@@ -9,7 +9,7 @@ mod display;
 /// # Examples
 ///
 /// ```
-/// use graph_theory::{CompleteGraph, Graph};
+/// use graph_theory::{CompleteGraph, GraphEngine};
 /// let graph = CompleteGraph::new(3);
 /// assert_eq!(graph.count_nodes(), 3);
 /// assert_eq!(graph.count_edges(), 3 * 2);
@@ -20,7 +20,7 @@ pub struct CompleteGraph {
     rank: usize,
 }
 
-impl Graph for CompleteGraph {
+impl GraphEngine for CompleteGraph {
     type NodeIndex = usize;
 
     fn count_nodes(&self) -> usize {
@@ -60,7 +60,7 @@ impl CompleteGraph {
         Self { directed: true, rank }
     }
     /// Check if the given graph is a complete graph, and if so, return it.
-    pub fn check<G: Graph>(graph: &G) -> Option<Self> {
+    pub fn check<G: GraphEngine>(graph: &G) -> Option<Self> {
         let nodes = graph.count_nodes();
         let edges = graph.count_edges();
         if edges == nodes * (nodes - 1) {
@@ -80,7 +80,7 @@ impl CompleteGraph {
 /// Add nodes degree is rank -1
 fn is_directed<G>(graph: &G, rank: usize) -> bool
 where
-    G: Graph,
+    G: GraphEngine,
 {
     let _ = (graph, rank);
     todo!()
@@ -88,7 +88,7 @@ where
 
 fn is_undirected<G>(graph: &G) -> bool
 where
-    G: Graph,
+    G: GraphEngine,
 {
     let _ = (graph,);
     todo!()

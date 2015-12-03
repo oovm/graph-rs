@@ -44,7 +44,7 @@ pub struct GraphError {
 /// # Examples
 ///
 /// ```
-/// use graph_theory::Graph;
+/// use graph_theory::GraphEngine;
 /// ```
 #[derive(Debug)]
 pub enum GraphErrorKind {
@@ -106,7 +106,7 @@ pub enum GraphErrorKind {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     Custom {
         /// # Arguments

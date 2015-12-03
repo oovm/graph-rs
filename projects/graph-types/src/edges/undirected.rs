@@ -8,7 +8,7 @@ use std::fmt::{Display, Formatter};
 /// # Examples
 ///
 /// ```
-/// use graph_theory::Graph;
+/// use graph_theory::GraphEngine;
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct UndirectedEdge {

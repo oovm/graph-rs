@@ -13,7 +13,7 @@ use dashmap::{
 /// # Examples
 ///
 /// ```
-/// use graph_theory::Graph;
+/// use graph_theory::GraphEngine;
 /// ```
 #[derive(Clone, Debug, Default)]
 pub struct SharedStorage<T> {
@@ -55,7 +55,7 @@ impl<T> SharedStorage<T> {
     /// # Examples
     ///
     /// ```
-    /// use graph_types::{Graph, GraphData, ListStorage};
+    /// use graph_types::{GraphEngine, GraphData, ListStorage};
     /// ```
     pub fn get_data(&self, query: Query) -> Option<Ref<usize, T>> {
         let item = match query.entry {
@@ -74,7 +74,7 @@ impl<T> SharedStorage<T> {
     /// # Examples
     ///
     /// ```
-    /// use graph_types::{Graph, GraphData, ListStorage};
+    /// use graph_types::{GraphEngine, GraphData, ListStorage};
     /// ```
     pub fn mut_data(&self, query: Query) -> Option<RefMut<usize, T>> {
         let item = match query.entry {

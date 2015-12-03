@@ -9,15 +9,15 @@ use super::*;
 /// # Examples
 ///
 /// ```
-/// use graph_theory::Graph;
+/// use graph_theory::GraphEngine;
 /// ```
 #[derive(Debug)]
-pub struct GetNodesVisitor<'i, G: Graph + ?Sized> {
+pub struct GetNodesVisitor<'i, G: GraphEngine + ?Sized> {
     graph: &'i G,
     index: usize,
 }
 
-impl<'i, G: Graph> Iterator for GetNodesVisitor<'i, G> {
+impl<'i, G: GraphEngine> Iterator for GetNodesVisitor<'i, G> {
     type Item = Cow<'i, G::NodeIndex>;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -31,7 +31,7 @@ impl<'i, G: Graph> Iterator for GetNodesVisitor<'i, G> {
     }
 }
 
-impl<'i, G: Graph> DoubleEndedIterator for GetNodesVisitor<'i, G> {
+impl<'i, G: GraphEngine> DoubleEndedIterator for GetNodesVisitor<'i, G> {
     fn next_back(&mut self) -> Option<Self::Item> {
         if self.index >= self.graph.count_nodes() {
             return None;
@@ -43,7 +43,7 @@ impl<'i, G: Graph> DoubleEndedIterator for GetNodesVisitor<'i, G> {
     }
 }
 
-impl<'i, G: Graph + ?Sized> GetNodesVisitor<'i, G> {
+impl<'i, G: GraphEngine + ?Sized> GetNodesVisitor<'i, G> {
     /// # Arguments
     ///
     /// * `index`:
@@ -53,7 +53,7 @@ impl<'i, G: Graph + ?Sized> GetNodesVisitor<'i, G> {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     pub fn new(graph: &'i G) -> Self {
         Self { graph, index: 0 }

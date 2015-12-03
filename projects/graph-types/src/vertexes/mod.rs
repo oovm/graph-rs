@@ -2,7 +2,7 @@ pub mod get_iter;
 pub mod indexed;
 pub mod mut_iter;
 
-use crate::Graph;
+use crate::GraphEngine;
 use std::borrow::Cow;
 
 /// # Arguments
@@ -14,7 +14,7 @@ use std::borrow::Cow;
 /// # Examples
 ///
 /// ```
-/// use graph_theory::Graph;
+/// use graph_theory::GraphEngine;
 /// ```
 pub trait Node {
     /// # Arguments
@@ -26,7 +26,7 @@ pub trait Node {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     fn index(&self) -> usize;
 }

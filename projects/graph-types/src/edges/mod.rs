@@ -1,4 +1,4 @@
-use crate::{DirectedEdge, Graph};
+use crate::{DirectedEdge, GraphEngine};
 use std::{
     cmp::{max, min},
     ops::Range,
@@ -24,7 +24,7 @@ pub mod mut_iter;
 /// # Examples
 ///
 /// ```
-/// use graph_theory::Graph;
+/// use graph_theory::GraphEngine;
 /// ```
 pub trait Edge {
     /// Whether the edge is bidirectional
@@ -40,7 +40,7 @@ pub trait Edge {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     fn from(&self) -> usize;
     /// The index of the node the edge is going to
@@ -48,7 +48,7 @@ pub trait Edge {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     fn goto(&self) -> usize;
     /// The smaller of the two indices.
@@ -93,7 +93,7 @@ pub trait EdgeInsertion {
 /// # Examples
 ///
 /// ```
-/// use graph_theory::Graph;
+/// use graph_theory::GraphEngine;
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum EdgeDirection {
@@ -106,7 +106,7 @@ pub enum EdgeDirection {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     TwoWay,
     /// # Arguments
@@ -118,7 +118,7 @@ pub enum EdgeDirection {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     Forward,
     /// # Arguments
@@ -130,7 +130,7 @@ pub enum EdgeDirection {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     Reverse,
 }

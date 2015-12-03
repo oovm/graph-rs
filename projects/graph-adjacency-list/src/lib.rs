@@ -4,5 +4,5 @@
 #![doc(html_logo_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 #![doc(html_favicon_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 
-mod in_memory;
-pub use crate::in_memory::AdjacencyList;
+mod sparse_nodes;
+pub use crate::sparse_nodes::{AdjacencyNodeList, UnGraph, DiGraph};

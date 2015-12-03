@@ -10,7 +10,7 @@ use super::*;
 /// # Examples
 ///
 /// ```
-/// use graph_types::{Graph, GraphData, ListStorage};
+/// use graph_types::{GraphEngine, GraphData, ListStorage};
 /// ```
 pub trait ValueProvider<'a, V>: Send + Sync {
     /// # Arguments
@@ -23,7 +23,7 @@ pub trait ValueProvider<'a, V>: Send + Sync {
     /// # Examples
     ///
     /// ```
-    /// use graph_types::{Graph, GraphData, ListStorage};
+    /// use graph_types::{GraphEngine, GraphData, ListStorage};
     /// ```
     type ValueRef: Deref<Target = V>;
     /// # Arguments
@@ -36,7 +36,7 @@ pub trait ValueProvider<'a, V>: Send + Sync {
     /// # Examples
     ///
     /// ```
-    /// use graph_types::{Graph, GraphData, ListStorage};
+    /// use graph_types::{GraphEngine, GraphData, ListStorage};
     /// ```
     type ValueMut: DerefMut<Target = V>;
     /// # Arguments
@@ -49,7 +49,7 @@ pub trait ValueProvider<'a, V>: Send + Sync {
     /// # Examples
     ///
     /// ```
-    /// use graph_types::{Graph, GraphData, ListStorage};
+    /// use graph_types::{GraphEngine, GraphData, ListStorage};
     /// ```
     fn get_value(&'a self, query: Query) -> Result<Self::ValueRef, GraphError>;
     /// # Arguments
@@ -62,7 +62,7 @@ pub trait ValueProvider<'a, V>: Send + Sync {
     /// # Examples
     ///
     /// ```
-    /// use graph_types::{Graph, GraphData, ListStorage};
+    /// use graph_types::{GraphEngine, GraphData, ListStorage};
     /// ```
     fn mut_value(&'a mut self, query: Query) -> Result<Self::ValueMut, GraphError>;
     /// # Arguments
@@ -75,7 +75,7 @@ pub trait ValueProvider<'a, V>: Send + Sync {
     /// # Examples
     ///
     /// ```
-    /// use graph_types::{Graph, GraphData, ListStorage};
+    /// use graph_types::{GraphEngine, GraphData, ListStorage};
     /// ```
     fn set_value(&'a mut self, query: Query, value: V) -> Result<V, GraphError> {
         let mut new = value;
@@ -97,9 +97,9 @@ pub trait ValueProvider<'a, V>: Send + Sync {
 /// # Examples
 ///
 /// ```
-/// use graph_types::{Graph, GraphData, ListStorage};
+/// use graph_types::{GraphEngine, GraphData, ListStorage};
 /// ```
-pub trait GraphData<V>: Graph {
+pub trait GraphData<V>: GraphEngine {
     /// # Arguments
     ///
     /// * `index`:
@@ -110,7 +110,7 @@ pub trait GraphData<V>: Graph {
     /// # Examples
     ///
     /// ```
-    /// use graph_types::{Graph, GraphData, ListStorage};
+    /// use graph_types::{GraphEngine, GraphData, ListStorage};
     /// ```
     type Provider: for<'p> ValueProvider<'p, V>;
 
@@ -124,7 +124,7 @@ pub trait GraphData<V>: Graph {
     /// # Examples
     ///
     /// ```
-    /// use graph_types::{Graph, GraphData, ListStorage};
+    /// use graph_types::{GraphEngine, GraphData, ListStorage};
     /// ```
     fn get_data<'a, 'p>(
         &'a self,
@@ -143,7 +143,7 @@ pub trait GraphData<V>: Graph {
     /// # Examples
     ///
     /// ```
-    /// use graph_types::{Graph, GraphData, ListStorage};
+    /// use graph_types::{GraphEngine, GraphData, ListStorage};
     /// ```
     fn mut_data(&self, data: &mut Self::Provider, query: Query, value: V) -> Result<V, GraphError> {
         data.set_value(query, value)
@@ -158,7 +158,7 @@ pub trait GraphData<V>: Graph {
     /// # Examples
     ///
     /// ```
-    /// use graph_types::{Graph, GraphData, ListStorage};
+    /// use graph_types::{GraphEngine, GraphData, ListStorage};
     /// ```
     fn async_get_data<'a, 'p, 'async_trait>(
         &'a self,
@@ -185,7 +185,7 @@ pub trait GraphData<V>: Graph {
     /// # Examples
     ///
     /// ```
-    /// use graph_types::{Graph, GraphData, ListStorage};
+    /// use graph_types::{GraphEngine, GraphData, ListStorage};
     /// ```
     fn async_mut_data<'a, 'p, 'async_trait>(
         &'a self,

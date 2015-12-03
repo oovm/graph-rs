@@ -9,7 +9,7 @@ use crate::{Entry, GraphError, Query, ValueProvider};
 /// # Examples
 ///
 /// ```
-/// use graph_theory::Graph;
+/// use graph_theory::GraphEngine;
 /// ```
 #[derive(Clone, Debug)]
 pub struct ListStorage<T> {
@@ -50,7 +50,7 @@ impl<T> ListStorage<T> {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     pub fn get_data(&self, query: Query) -> Option<&T> {
         let item = match query.entry {
@@ -68,7 +68,7 @@ impl<T> ListStorage<T> {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     pub fn mut_data(&mut self, query: Query) -> Option<&mut T> {
         let item = match query.entry {

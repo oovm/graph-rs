@@ -9,10 +9,10 @@ use super::*;
 /// # Examples
 ///
 /// ```
-/// use graph_theory::Graph;
+/// use graph_theory::GraphEngine;
 /// ```
 #[derive(Debug)]
-pub struct MutNodesVisitor<'a, G: Graph> {
+pub struct MutNodesVisitor<'a, G: GraphEngine> {
     graph: &'a mut G,
     index: usize,
 }

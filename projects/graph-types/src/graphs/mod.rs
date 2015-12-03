@@ -13,10 +13,10 @@ pub mod weighted;
 /// # Examples
 ///
 /// ```
-/// use graph_theory::Graph;
+/// use graph_theory::GraphEngine;
 /// ```
 #[allow(unused_variables)]
-pub trait Graph {
+pub trait GraphEngine {
     /// # Arguments
     ///
     /// * `index`:
@@ -26,19 +26,7 @@ pub trait Graph {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
-    /// ```
-    type NodeIndex: Clone;
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     fn get_nodes(&self) -> GetNodesVisitor<Self> {
         GetNodesVisitor::new(self)
@@ -52,7 +40,7 @@ pub trait Graph {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     fn count_nodes(&self) -> usize;
     /// # Arguments
@@ -64,7 +52,7 @@ pub trait Graph {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     fn insert_node(&mut self, node: Self::NodeIndex) -> usize {
         todo!()
@@ -78,7 +66,7 @@ pub trait Graph {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     fn remove_node(&mut self, index: usize) -> Option<Self::NodeIndex> {
         unreachable!("The {} graph does not support removing node `{}`", std::any::type_name::<Self>(), index)
@@ -95,7 +83,7 @@ pub trait Graph {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     fn mut_edges(&mut self) -> MutEdgesVisitor<Self> {
         MutEdgesVisitor::new(self)
@@ -109,7 +97,7 @@ pub trait Graph {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     fn insert_edge<E: Edge>(&mut self, edge: E) -> usize {
         todo!()
@@ -123,7 +111,7 @@ pub trait Graph {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     fn remove_edge(&mut self, index: usize) -> Option<usize> {
         todo!()
@@ -137,7 +125,7 @@ pub trait Graph {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     fn count_edges(&self) -> usize;
 }

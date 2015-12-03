@@ -1,5 +1,5 @@
 use crate::StaticDirected;
-use graph_types::{Edge, Graph, Node};
+use graph_types::{Edge, GraphEngine, Node};
 use std::{borrow::Cow, collections::BTreeMap};
 
 #[derive(Clone, Debug)]
@@ -18,7 +18,7 @@ enum AdjacencyStorage {
     SquareFixed(StaticDirected),
 }
 
-impl<N, E> Graph for AdjacencyMatrix<N, E>
+impl<N, E> GraphEngine for AdjacencyMatrix<N, E>
 where
     N: Node + Clone,
     E: Edge + Clone,

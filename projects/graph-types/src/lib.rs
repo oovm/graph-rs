@@ -22,7 +22,7 @@ pub use crate::{
     famous_graphs::complete_graph::CompleteGraph,
     graphs::{
         weighted::{GraphData, ValueProvider},
-        Graph,
+        GraphEngine,
     },
     storage::{btree::DictStorage, vector::ListStorage},
     vertexes::{get_iter::GetNodesVisitor, mut_iter::MutNodesVisitor, Node},
@@ -42,7 +42,7 @@ pub use crate::storage::shared::SharedStorage;
 /// # Examples
 ///
 /// ```
-/// use graph_theory::Graph;
+/// use graph_theory::GraphEngine;
 /// ```
 pub type NodeID = usize;
 /// [UndirectedEdge](https://reference.wolfram.com/language/ref/UndirectedEdge.html)
@@ -52,6 +52,6 @@ pub type NodeID = usize;
 /// # Examples
 ///
 /// ```
-/// use graph_theory::Graph;
+/// use graph_theory::GraphEngine;
 /// ```
 pub type EdgeID = usize;

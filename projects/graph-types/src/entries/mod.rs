@@ -7,7 +7,7 @@
 /// # Examples
 ///
 /// ```
-/// use graph_theory::Graph;
+/// use graph_theory::GraphEngine;
 /// ```
 #[derive(Copy, Clone, Debug)]
 pub enum Entry {
@@ -20,7 +20,7 @@ pub enum Entry {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     Node,
     /// # Arguments
@@ -32,7 +32,7 @@ pub enum Entry {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     Edge,
 }
@@ -46,7 +46,7 @@ pub enum Entry {
 /// # Examples
 ///
 /// ```
-/// use graph_theory::Graph;
+/// use graph_theory::GraphEngine;
 /// ```
 #[derive(Clone, Debug)]
 pub struct EntryWeight<N> {
@@ -61,7 +61,7 @@ pub struct EntryWeight<N> {
 /// # Examples
 ///
 /// ```
-/// use graph_theory::Graph;
+/// use graph_theory::GraphEngine;
 /// ```
 #[derive(Clone, Debug)]
 pub struct EntryName {
@@ -76,7 +76,7 @@ pub struct EntryName {
 /// # Examples
 ///
 /// ```
-/// use graph_theory::Graph;
+/// use graph_theory::GraphEngine;
 /// ```
 #[derive(Clone, Copy, Debug)]
 pub struct Query {
@@ -89,7 +89,7 @@ pub struct Query {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     pub entry: Entry,
     /// # Arguments
@@ -101,7 +101,7 @@ pub struct Query {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     pub index: usize,
 }
@@ -116,7 +116,7 @@ impl Query {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     pub fn node(id: usize) -> Self {
         Self { entry: Entry::Node, index: id }
@@ -130,7 +130,7 @@ impl Query {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     pub fn edge(id: usize) -> Self {
         Self { entry: Entry::Edge, index: id }

@@ -9,17 +9,17 @@ use super::*;
 /// # Examples
 ///
 /// ```
-/// use graph_theory::Graph;
+/// use graph_theory::GraphEngine;
 /// ```
 #[derive(Debug)]
-pub struct MutEdgesVisitor<'a, G: Graph + ?Sized> {
+pub struct MutEdgesVisitor<'a, G: GraphEngine + ?Sized> {
     graph: &'a mut G,
     index: usize,
 }
 
 impl<'a, G> MutEdgesVisitor<'a, G>
 where
-    G: Graph + ?Sized,
+    G: GraphEngine + ?Sized,
 {
     /// # Arguments
     ///
@@ -30,7 +30,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::Graph;
+    /// use graph_theory::GraphEngine;
     /// ```
     pub fn new(graph: &'a mut G) -> Self {
         Self { graph, index: 0 }
