@@ -6,3 +6,4 @@
 
 pub use adjacency_matrix::{AdjacencyEdge, StaticDirected, StaticUndirected};
 pub use graph_types::*;
+pub use adjacency_list;

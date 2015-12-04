@@ -77,13 +77,6 @@ pub trait Edge {
     }
 }
 
-pub trait EdgeInsertion {
-    fn next_edge(&mut self) ->  Option<>
-    fn max_index(&self) -> usize {
-        self.into_edges().map(|edge| edge.max_index()).max().unwrap_or(0)
-    }
-}
-
 /// # Arguments
 ///
 /// * `index`:

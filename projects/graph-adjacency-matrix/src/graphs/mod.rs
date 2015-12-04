@@ -23,7 +23,7 @@ where
     N: Node + Clone,
     E: Edge + Clone,
 {
-    type NodeIndex = N;
+
 
     fn count_nodes(&self) -> usize {
         self.count_nodes

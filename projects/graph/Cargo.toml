@@ -13,6 +13,10 @@ exclude = ["package.json", "tests/**"]
 [dependencies]
 
 
+[dependencies.adjacency-list]
+version = "0.0.*"
+path = "../graph-adjacency-list"
+
 [dependencies.adjacency-matrix]
 version = "0.0.*"
 path = "../graph-adjacency-matrix"

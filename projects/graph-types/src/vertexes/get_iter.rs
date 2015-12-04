@@ -18,7 +18,7 @@ pub struct GetNodesVisitor<'i, G: GraphEngine + ?Sized> {
 }
 
 impl<'i, G: GraphEngine> Iterator for GetNodesVisitor<'i, G> {
-    type Item = Cow<'i, G::NodeIndex>;
+    type Item = Cow<'i, usize>;
 
     fn next(&mut self) -> Option<Self::Item> {
         if self.index >= self.graph.count_nodes() {

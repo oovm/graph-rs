@@ -43,33 +43,40 @@ pub trait GraphEngine {
     /// use graph_theory::GraphEngine;
     /// ```
     fn count_nodes(&self) -> usize;
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
+    /// Insert a node without any neighbors (edges).
     ///
     /// # Examples
     ///
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn insert_node(&mut self, node: Self::NodeIndex) -> usize {
+    fn insert_node(&mut self, node: usize) -> usize {
         todo!()
     }
-    /// # Arguments
+    /// Remove the given node.
     ///
-    /// * `index`:
+    /// # Undefined Behavior
     ///
-    /// returns: Option<Cow<Self::Node>>
+    /// - If the node has any edges, the behavior is undefined.
+    /// It is recommended to remove all edges before removing the node, see [`GraphEngine::remove_node_with_edges`].
     ///
     /// # Examples
     ///
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn remove_node(&mut self, index: usize) -> Option<Self::NodeIndex> {
-        unreachable!("The {} graph does not support removing node `{}`", std::any::type_name::<Self>(), index)
+    fn remove_node(&mut self, node_id: usize) {
+        self.remove_node_with_edges(node_id)
+    }
+    /// Remove the given node and all edges connected to it.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::GraphEngine;
+    /// ```
+    fn remove_node_with_edges(&mut self, node_id: usize) {
+        unreachable!(
     }
     fn get_edges(&self) -> GetEdgesVisitor<Self> {
         GetEdgesVisitor::new(self)

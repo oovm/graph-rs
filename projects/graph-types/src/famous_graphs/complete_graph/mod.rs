@@ -21,7 +21,6 @@ pub struct CompleteGraph {
 }
 
 impl GraphEngine for CompleteGraph {
-    type NodeIndex = usize;
 
     fn count_nodes(&self) -> usize {
         self.rank
