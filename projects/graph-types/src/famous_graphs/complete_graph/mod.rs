@@ -1,4 +1,5 @@
-use crate::GraphEngine;
+use crate::{Edge, EdgeRemoveAction, GraphEngine};
+
 mod display;
 
 /// [CompleteGraph](https://reference.wolfram.com/language/ref/CompleteGraph.html)
@@ -21,9 +22,23 @@ pub struct CompleteGraph {
 }
 
 impl GraphEngine for CompleteGraph {
-
     fn count_nodes(&self) -> usize {
         self.rank
+    }
+
+    #[track_caller]
+    fn remove_node_with_edges(&mut self, _: usize) {
+        self.exception("remove node with edges")
+    }
+
+    #[track_caller]
+    fn insert_edge<E: Edge>(&mut self, _: E) -> usize {
+        self.exception("insert edge")
+    }
+
+    #[track_caller]
+    fn remove_edge<E>(&mut self, _: E) where E: Into<EdgeRemoveAction> {
+        self.exception("remove edge")
     }
 
     fn count_edges(&self) -> usize {
@@ -66,8 +81,7 @@ impl CompleteGraph {
             if is_directed(graph, nodes) {
                 return Some(Self { directed: false, rank: nodes });
             }
-        }
-        else if edges == nodes * (nodes - 1) * 2 {
+        } else if edges == nodes * (nodes - 1) * 2 {
             if is_undirected(graph) {
                 return Some(Self { directed: true, rank: nodes });
             }
@@ -78,17 +92,17 @@ impl CompleteGraph {
 
 /// Add nodes degree is rank -1
 fn is_directed<G>(graph: &G, rank: usize) -> bool
-where
-    G: GraphEngine,
+    where
+        G: GraphEngine,
 {
     let _ = (graph, rank);
     todo!()
 }
 
 fn is_undirected<G>(graph: &G) -> bool
-where
-    G: GraphEngine,
+    where
+        G: GraphEngine,
 {
-    let _ = (graph,);
+    let _ = (graph, );
     todo!()
 }

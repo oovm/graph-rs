@@ -1,14 +1,13 @@
 use crate::StaticDirected;
-use graph_types::{Edge, GraphEngine, Node};
+use graph_types::{Edge, EdgeRemoveAction, GraphEngine, Node};
 use std::{borrow::Cow, collections::BTreeMap};
 
 #[derive(Clone, Debug)]
-pub struct AdjacencyMatrix<N, E> {
+pub struct AdjacencyMatrix<N> {
     count_nodes: usize,
     count_edges: usize,
     adjacency: AdjacencyStorage,
     vertexes: BTreeMap<usize, N>,
-    edges: BTreeMap<usize, E>,
 }
 
 /// Inner storage layout of the adjacency matrix
@@ -18,10 +17,9 @@ enum AdjacencyStorage {
     SquareFixed(StaticDirected),
 }
 
-impl<N, E> GraphEngine for AdjacencyMatrix<N, E>
+impl<N> GraphEngine for AdjacencyMatrix<N>
 where
     N: Node + Clone,
-    E: Edge + Clone,
 {
 
 
@@ -29,18 +27,19 @@ where
         self.count_nodes
     }
 
+    fn remove_node_with_edges(&mut self, node_id: usize) {
+        todo!()
+    }
+
+    fn insert_edge<E: Edge>(&mut self, edge: E) -> usize {
+        todo!()
+    }
+
+    fn remove_edge<E>(&mut self, edge: E) where E: Into<EdgeRemoveAction> {
+        todo!()
+    }
+
     fn count_edges(&self) -> usize {
         self.count_edges
-    }
-}
-
-impl<N, E> AdjacencyMatrix<N, E> {}
-
-impl<N, E> AdjacencyMatrix<N, E> {
-    pub fn cast_dynamic(&self) -> AdjacencyMatrix<N, E> {
-        todo!()
-    }
-    pub fn cast_fixed(&self) -> AdjacencyMatrix<N, E> {
-        todo!()
     }
 }

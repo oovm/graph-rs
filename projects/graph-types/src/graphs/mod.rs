@@ -18,6 +18,11 @@ pub mod weighted;
 /// ```
 #[allow(unused_variables)]
 pub trait GraphEngine {
+    /// Mark the graph engine does not support the ability.
+    fn exception(&self, ability: &'static str) -> ! {
+        unreachable!("Graph engine {} does not support {ability}", type_name::<Self>())
+    }
+
     /// # Arguments
     ///
     /// * `index`:
@@ -78,9 +83,7 @@ pub trait GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn remove_node_with_edges(&mut self, node_id: usize) {
-        unreachable!("Graph engine {} does not support removing nodes", type_name::<Self>())
-    }
+    fn remove_node_with_edges(&mut self, node_id: usize);
     fn get_edges(&self) -> GetEdgesVisitor<Self> {
         GetEdgesVisitor::new(self)
     }
@@ -109,21 +112,15 @@ pub trait GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn insert_edge<E: Edge>(&mut self, edge: E) -> usize {
-        todo!()
-    }
+    fn insert_edge<E: Edge>(&mut self, edge: E) -> usize;
     /// Remove edge by given edge-id or start and end node-id.
-    ///
-    /// Returns `true` if the edge was removed, `false` if the edge was not found.
     ///
     /// # Examples
     ///
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn remove_edge<E>(&mut self, edge: E) -> bool where E: Into<EdgeRemoveAction> {
-        unreachable!("Graph engine {} does not support removing edges", type_name::<Self>())
-    }
+    fn remove_edge<E>(&mut self, edge: E) where E: Into<EdgeRemoveAction>;
     /// # Arguments
     ///
     /// * `index`:

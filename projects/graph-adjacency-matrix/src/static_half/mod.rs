@@ -1,4 +1,4 @@
-use graph_types::{GraphError, GraphResult, UndirectedEdge};
+use graph_types::{Edge, GraphError, GraphResult, UndirectedEdge};
 use std::fmt::{Debug, Display};
 mod display;
 

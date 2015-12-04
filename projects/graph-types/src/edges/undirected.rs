@@ -30,11 +30,11 @@ impl Edge for UndirectedEdge {
     }
 
     fn from(&self) -> usize {
-        self.min_index()
+        self.from
     }
 
     fn goto(&self) -> usize {
-        self.max_index()
+        self.goto
     }
 }
 

@@ -1,4 +1,4 @@
-use graph_types::{DictStorage, Edge, EntryName, GraphEngine, GraphData, GraphResult, Query, UndirectedEdge};
+use graph_types::{DictStorage, Edge, EntryName, GraphEngine, GraphData, GraphResult, Query, UndirectedEdge, EdgeRemoveAction};
 use std::{borrow::Cow, marker::PhantomData};
 use std::collections::BTreeMap;
 
@@ -68,6 +68,7 @@ pub struct AdjacencyNodeList<const TwoWay: bool> {
     last_edge: EdgeID,
 }
 
+#[derive(Debug)]
 struct NodeNeighbors {
     end_nodes: BTreeMap<EdgeID, EndNodeID>,
 }
@@ -99,8 +100,31 @@ impl GraphEngine for DiGraph {
         end_nodes.end_nodes.insert(new_edge_id, end_node_id);
         new_edge_id as usize
     }
+    fn remove_edge<E>(&mut self, edge: E) where E: Into<EdgeRemoveAction> {
+        match edge.into() {
+            EdgeRemoveAction::EdgeID(v) => {
+                let edge_id = v as u32;
+                for (_, node) in self.head_nodes.iter_mut() {
+                    node.end_nodes.remove(&edge_id);
+                    // edge id is unique in the graph
+                    break
+                }
+            }
+            EdgeRemoveAction::Directed(v) => {
+                let start_node_id = v.from() as u32;
+                let end_node_id = v.goto() as u32;
+                if let Some(node) = self.head_nodes.get_mut(&start_node_id) {
+                    // notice that there are multiple edges between two nodes
+                    node.end_nodes.retain(|_, &mut v| v != end_node_id);
+                }
+            }
+            EdgeRemoveAction::Undirected(v) => {
+                panic!("remove undirected edge {v} is not supported in directed graph");
+            }
+        }
+    }
     fn count_edges(&self) -> usize {
-        self.head_nodes.iter().map(|v| v.len()).sum()
+        self.head_nodes.iter().map(|(_, v)| v.end_nodes.len()).sum()
     }
 }
 // impl GraphData<EntryName> for AdjacencyList {
