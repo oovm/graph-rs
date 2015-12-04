@@ -1,10 +1,11 @@
-use crate::{Edge, GetEdgesVisitor, GetNodesVisitor, GraphError, MutEdgesVisitor, Node, Query};
+use crate::{Edge, EdgeRemoveAction, GetEdgesVisitor, GetNodesVisitor, GraphError, MutEdgesVisitor, Node, Query};
 use std::{
     borrow::Cow,
     future::Future,
     ops::{Deref, DerefMut},
     pin::Pin,
 };
+use std::any::type_name;
 
 pub mod weighted;
 
@@ -58,7 +59,9 @@ pub trait GraphEngine {
     /// # Undefined Behavior
     ///
     /// - If the node has any edges, the behavior is undefined.
+    ///
     /// It is recommended to remove all edges before removing the node, see [`GraphEngine::remove_node_with_edges`].
+    ///
     ///
     /// # Examples
     ///
@@ -76,7 +79,7 @@ pub trait GraphEngine {
     /// use graph_theory::GraphEngine;
     /// ```
     fn remove_node_with_edges(&mut self, node_id: usize) {
-        unreachable!(
+        unreachable!("Graph engine {} does not support removing nodes", type_name::<Self>())
     }
     fn get_edges(&self) -> GetEdgesVisitor<Self> {
         GetEdgesVisitor::new(self)
@@ -109,19 +112,17 @@ pub trait GraphEngine {
     fn insert_edge<E: Edge>(&mut self, edge: E) -> usize {
         todo!()
     }
-    /// # Arguments
+    /// Remove edge by given edge-id or start and end node-id.
     ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
+    /// Returns `true` if the edge was removed, `false` if the edge was not found.
     ///
     /// # Examples
     ///
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn remove_edge(&mut self, index: usize) -> Option<usize> {
-        todo!()
+    fn remove_edge<E>(&mut self, edge: E) -> bool where E: Into<EdgeRemoveAction> {
+        unreachable!("Graph engine {} does not support removing edges", type_name::<Self>())
     }
     /// # Arguments
     ///

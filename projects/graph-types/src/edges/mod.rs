@@ -5,7 +5,7 @@ use std::{
 };
 
 pub mod directed;
-pub mod insert_action;
+pub mod remove_action;
 pub mod undirected;
 
 mod simple;
@@ -32,7 +32,7 @@ pub trait Edge {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::{DirectedEdge, InsertionEdge, UndirectedEdge};
+    /// use graph_theory::{DirectedEdge, EdgeRemoveAction, UndirectedEdge};
     /// ```
     fn bidirectional(&self) -> bool;
     /// The index of the node the edge is coming from

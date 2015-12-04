@@ -14,7 +14,7 @@ mod vertexes;
 
 pub use crate::{
     edges::{
-        directed::DirectedEdge, get_iter::GetEdgesVisitor, insert_action::InsertionEdge, mut_iter::MutEdgesVisitor,
+        directed::DirectedEdge, get_iter::GetEdgesVisitor, remove_action::EdgeRemoveAction, mut_iter::MutEdgesVisitor,
         undirected::UndirectedEdge, Edge, EdgeDirection,
     },
     entries::{Entry, EntryName, EntryWeight, Query},

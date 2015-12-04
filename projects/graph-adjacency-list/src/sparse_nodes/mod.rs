@@ -84,10 +84,9 @@ impl GraphEngine for DiGraph {
         });
         node
     }
-    fn remove_node(&mut self, index: usize) -> Option<usize> {
-        let node_id = index as u32;
+    fn remove_node_with_edges(&mut self, node_id: usize) {
+        let node_id = node_id as u32;
         self.head_nodes.remove(&node_id);
-        Some(index)
     }
     fn insert_edge<E: Edge>(&mut self, edge: E) -> usize {
         let new_edge_id = self.last_edge.saturating_add(1);
