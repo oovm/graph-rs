@@ -6,6 +6,7 @@ use std::{
     pin::Pin,
 };
 use std::any::type_name;
+use crate::edges::actions::EdgeInsertAction;
 
 pub mod weighted;
 
@@ -19,6 +20,8 @@ pub mod weighted;
 #[allow(unused_variables)]
 pub trait GraphEngine {
     /// Mark the graph engine does not support the ability.
+    ///
+    /// Currently, we can not detect the ability at compile time, so we use this method to mark the ability is not supported.
     fn exception(&self, ability: &'static str) -> ! {
         unreachable!("Graph engine {} does not support {ability}", type_name::<Self>())
     }
@@ -47,6 +50,8 @@ pub trait GraphEngine {
     ///
     /// ```
     /// use graph_theory::GraphEngine;
+    /// use graph_theory::CompleteGraph;
+    /// assert_eq!(CompleteGraph::new(5).count_nodes(), 10);
     /// ```
     fn count_nodes(&self) -> usize;
     /// Insert a node without any neighbors (edges).
@@ -55,8 +60,13 @@ pub trait GraphEngine {
     ///
     /// ```
     /// use graph_theory::GraphEngine;
+    /// use graph_theory::adjacency_list::UnGraph;
+    /// let mut graph = UnGraph::default();
+    /// assert_eq!(graph.count(), 0);
+    /// graph.insert_node(5);
+    /// assert_eq!(graph.count(), 1);
     /// ```
-    fn insert_node(&mut self, node: usize) -> usize {
+    fn insert_node(&mut self, node_id: usize) -> usize {
         todo!()
     }
     /// Remove the given node.
@@ -72,6 +82,11 @@ pub trait GraphEngine {
     ///
     /// ```
     /// use graph_theory::GraphEngine;
+    /// use graph_theory::adjacency_list::UnGraph;
+    /// let mut graph = UnGraph::default();
+    /// assert_eq!(graph.count(), 0);
+    /// graph.insert_node(5);
+    /// assert_eq!(graph.count(), 1);
     /// ```
     fn remove_node(&mut self, node_id: usize) {
         self.remove_node_with_edges(node_id)
@@ -82,6 +97,11 @@ pub trait GraphEngine {
     ///
     /// ```
     /// use graph_theory::GraphEngine;
+    /// use graph_theory::adjacency_list::UnGraph;
+    /// let mut graph = UnGraph::default();
+    /// assert_eq!(graph.count(), 0);
+    /// graph.insert_node(5);
+    /// assert_eq!(graph.count(), 1);
     /// ```
     fn remove_node_with_edges(&mut self, node_id: usize);
     fn get_edges(&self) -> GetEdgesVisitor<Self> {
@@ -101,18 +121,25 @@ pub trait GraphEngine {
     fn mut_edges(&mut self) -> MutEdgesVisitor<Self> {
         MutEdgesVisitor::new(self)
     }
-    /// # Arguments
+    /// Insert a edge between two nodes.
     ///
-    /// * `index`:
+    /// # Undefined Behavior
     ///
-    /// returns: Option<Cow<Self::Node>>
+    /// - If the nodes does not exist, the behavior is undefined.
+    ///
+    /// It is recommended to check the existence of the nodes before inserting the edge, see [`GraphEngine::insert_edge_with_nodes`].
     ///
     /// # Examples
     ///
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn insert_edge<E: Edge>(&mut self, edge: E) -> usize;
+    fn insert_edge<E>(&mut self, edge: E) -> Vec<usize> where E: Into<EdgeInsertAction> {
+        self.insert_edge_with_nodes(edge)
+    }
+    /// Insert edge to graph, if the nodes does not exist, also insert them.
+    fn insert_edge_with_nodes<E>(&mut self, edge: E) -> Vec<usize> where E: Into<EdgeInsertAction>;
+
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Examples

@@ -1,4 +1,4 @@
-use graph_types::{DictStorage, Edge, EntryName, GraphEngine, GraphData, GraphResult, Query, UndirectedEdge, EdgeRemoveAction};
+use graph_types::{DictStorage, Edge, EntryName, GraphEngine, GraphData, GraphResult, Query, UndirectedEdge, EdgeRemoveAction, EdgeInsertAction, DirectedEdge};
 use std::{borrow::Cow, marker::PhantomData};
 use std::collections::BTreeMap;
 
@@ -73,6 +73,15 @@ struct NodeNeighbors {
     end_nodes: BTreeMap<EdgeID, EndNodeID>,
 }
 
+impl<const TwoWay: bool> Default for AdjacencyNodeList<TwoWay> {
+    fn default() -> Self {
+        Self {
+            head_nodes: BTreeMap::new(),
+            last_edge: 0,
+        }
+    }
+}
+
 impl GraphEngine for DiGraph {
     fn count_nodes(&self) -> usize {
         self.head_nodes.len()
@@ -89,17 +98,25 @@ impl GraphEngine for DiGraph {
         let node_id = node_id as u32;
         self.head_nodes.remove(&node_id);
     }
-    fn insert_edge<E: Edge>(&mut self, edge: E) -> usize {
-        let new_edge_id = self.last_edge.saturating_add(1);
-        self.last_edge = new_edge_id;
-        let start_node_id = edge.from() as u32;
-        let end_node_id = edge.goto() as u32;
-        let end_nodes = self.head_nodes.entry(start_node_id).or_insert_with(|| NodeNeighbors {
-            end_nodes: BTreeMap::new(),
-        });
-        end_nodes.end_nodes.insert(new_edge_id, end_node_id);
-        new_edge_id as usize
+
+    fn insert_edge_with_nodes<E>(&mut self, edge: E) -> Vec<usize> where E: Into<EdgeInsertAction> {
+        let mut new_edge_ids = Vec::with_capacity(2);
+        match edge.into() {
+            EdgeInsertAction::Directed(edge) => {
+                self.insert_directed_edge(edge, &mut new_edge_ids);
+            }
+            EdgeInsertAction::Undirected(edge) => {
+                self.insert_undirected_edge(edge, &mut new_edge_ids)
+            }
+            EdgeInsertAction::Grouped(v) => {
+                for edge in v {
+                    self.insert_edge_with_nodes(edge);
+                }
+            }
+        }
+        new_edge_ids
     }
+
     fn remove_edge<E>(&mut self, edge: E) where E: Into<EdgeRemoveAction> {
         match edge.into() {
             EdgeRemoveAction::EdgeID(v) => {
@@ -107,12 +124,12 @@ impl GraphEngine for DiGraph {
                 for (_, node) in self.head_nodes.iter_mut() {
                     node.end_nodes.remove(&edge_id);
                     // edge id is unique in the graph
-                    break
+                    break;
                 }
             }
             EdgeRemoveAction::Directed(v) => {
-                let start_node_id = v.from() as u32;
-                let end_node_id = v.goto() as u32;
+                let start_node_id = v.lhs() as u32;
+                let end_node_id = v.rhs() as u32;
                 if let Some(node) = self.head_nodes.get_mut(&start_node_id) {
                     // notice that there are multiple edges between two nodes
                     node.end_nodes.retain(|_, &mut v| v != end_node_id);
@@ -127,6 +144,28 @@ impl GraphEngine for DiGraph {
         self.head_nodes.iter().map(|(_, v)| v.end_nodes.len()).sum()
     }
 }
+
+impl DiGraph {
+    pub fn insert_directed_edge(&mut self, edge: DirectedEdge, news: &mut Vec<usize>) {
+        let edge_id = self.last_edge;
+        self.last_edge += 1;
+        let start_node_id = edge.from as u32;
+        let end_node_id = edge.goto as u32;
+        news.push(edge_id as usize);
+        if let Some(node) = self.head_nodes.get_mut(&start_node_id) {
+            node.end_nodes.insert(edge_id, end_node_id);
+        } else {
+            let mut end_nodes = BTreeMap::new();
+            end_nodes.insert(edge_id, end_node_id);
+            self.head_nodes.insert(start_node_id, NodeNeighbors { end_nodes });
+        }
+    }
+    pub fn insert_undirected_edge(&mut self, edge: UndirectedEdge, news: &mut Vec<usize>) {
+        self.insert_directed_edge(DirectedEdge::new(edge.from, edge.goto), news);
+        self.insert_directed_edge(DirectedEdge::new(edge.goto, edge.from), news);
+    }
+}
+
 // impl GraphData<EntryName> for AdjacencyList {
 //     /// Not all node needs a name, so we use a dict storage here.
 //     type Provider = DictStorage<EntryName>;

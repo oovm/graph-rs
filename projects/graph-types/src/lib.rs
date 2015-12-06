@@ -1,6 +1,6 @@
 #![deny(missing_debug_implementations, missing_copy_implementations)]
 #![warn(missing_docs, rustdoc::missing_crate_level_docs)]
-#![doc = include_str!("../readme.md")]
+#![doc = include_str ! ("../readme.md")]
 #![doc(html_logo_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 #![doc(html_favicon_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 
@@ -14,8 +14,8 @@ mod vertexes;
 
 pub use crate::{
     edges::{
-        directed::DirectedEdge, get_iter::GetEdgesVisitor, remove_action::EdgeRemoveAction, mut_iter::MutEdgesVisitor,
-        undirected::UndirectedEdge, Edge, EdgeDirection,
+        typed_edges::{DirectedEdge, DynamicEdge, UndirectedEdge}, get_iter::GetEdgesVisitor, actions::{EdgeInsertAction, EdgeRemoveAction}, mut_iter::MutEdgesVisitor,
+        Edge, EdgeDirection,
     },
     entries::{Entry, EntryName, EntryWeight, Query},
     errors::{GraphError, GraphErrorKind, GraphResult},
@@ -34,24 +34,3 @@ pub use wolfram_wxf::{ToWolfram, WolframValue};
 
 #[cfg(feature = "dashmap")]
 pub use crate::storage::shared::SharedStorage;
-
-/// [UndirectedEdge](https://reference.wolfram.com/language/ref/UndirectedEdge.html)
-/// represents an bidirectional edge between two nodes.
-///
-///
-/// # Examples
-///
-/// ```
-/// use graph_theory::GraphEngine;
-/// ```
-pub type NodeID = usize;
-/// [UndirectedEdge](https://reference.wolfram.com/language/ref/UndirectedEdge.html)
-/// represents an bidirectional edge between two nodes.
-///
-///
-/// # Examples
-///
-/// ```
-/// use graph_theory::GraphEngine;
-/// ```
-pub type EdgeID = usize;

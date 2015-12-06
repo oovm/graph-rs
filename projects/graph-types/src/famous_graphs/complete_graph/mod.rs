@@ -1,4 +1,5 @@
 use crate::{Edge, EdgeRemoveAction, GraphEngine};
+use crate::edges::actions::EdgeInsertAction;
 
 mod display;
 
@@ -28,13 +29,13 @@ impl GraphEngine for CompleteGraph {
 
     #[track_caller]
     fn remove_node_with_edges(&mut self, _: usize) {
-        self.exception("remove node with edges")
+        self.exception("remove node")
     }
 
-    #[track_caller]
-    fn insert_edge<E: Edge>(&mut self, _: E) -> usize {
+    fn insert_edge_with_nodes<E>(&mut self, _: E) -> Vec<usize> where E: Into<EdgeInsertAction> {
         self.exception("insert edge")
     }
+
 
     #[track_caller]
     fn remove_edge<E>(&mut self, _: E) where E: Into<EdgeRemoveAction> {

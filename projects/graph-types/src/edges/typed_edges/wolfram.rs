@@ -1,5 +1,7 @@
-use crate::{DirectedEdge, UndirectedEdge};
+
+use crate::{DirectedEdge};
 use wolfram_wxf::{ToWolfram, WolframValue};
+use crate::UndirectedEdge;
 
 impl ToWolfram for UndirectedEdge {
     fn to_wolfram(&self) -> WolframValue {

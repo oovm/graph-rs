@@ -4,13 +4,15 @@ use std::{
     ops::Range,
 };
 
-pub mod directed;
-pub mod remove_action;
-pub mod undirected;
+use std::fmt::{Display, Formatter};
+use crate::{DynamicEdge, UndirectedEdge};
+
+pub mod typed_edges;
+pub mod actions;
+
 
 mod simple;
-#[cfg(feature = "wolfram_wxf")]
-mod wolfram;
+
 
 pub mod get_iter;
 pub mod mut_iter;
@@ -32,25 +34,25 @@ pub trait Edge {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::{DirectedEdge, EdgeRemoveAction, UndirectedEdge};
+    /// use graph_theory::{DirectedEdge};
     /// ```
-    fn bidirectional(&self) -> bool;
-    /// The index of the node the edge is coming from
+    fn direction(&self) -> EdgeDirection;
+    /// The left side node id of the edge
     ///
     /// # Examples
     ///
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn from(&self) -> usize;
-    /// The index of the node the edge is going to
+    fn lhs(&self) -> usize;
+    /// The right side node id of the edge
     ///
     /// # Examples
     ///
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn goto(&self) -> usize;
+    fn rhs(&self) -> usize;
     /// The smaller of the two indices.
     ///
     /// # Examples
@@ -61,7 +63,7 @@ pub trait Edge {
     /// assert_eq!(UndirectedEdge::new(2, 1).max_index(), 2);
     /// ```
     fn max_index(&self) -> usize {
-        max(self.from(), self.goto())
+        max(self.lhs(), self.rhs())
     }
     /// The smaller of the two indices.
     ///
@@ -73,7 +75,7 @@ pub trait Edge {
     /// assert_eq!(UndirectedEdge::new(2, 1).min_index(), 1);
     /// ```
     fn min_index(&self) -> usize {
-        min(self.from(), self.goto())
+        min(self.lhs(), self.rhs())
     }
 }
 
@@ -91,40 +93,12 @@ pub trait Edge {
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum EdgeDirection {
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::GraphEngine;
-    /// ```
+    /// A directed edge that goes from the smaller index to the larger index.
+    Dynamic,
+    /// A directed edge that goes from the smaller index to the larger index.
     TwoWay,
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::GraphEngine;
-    /// ```
+    /// A directed edge that goes from the smaller index to the larger index.
     Forward,
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::GraphEngine;
-    /// ```
+    /// A directed edge that goes from the larger index to the smaller index.
     Reverse,
 }
