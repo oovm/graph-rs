@@ -6,7 +6,7 @@ use std::{
     pin::Pin,
 };
 use std::any::type_name;
-use crate::edges::actions::EdgeInsertAction;
+
 
 pub mod weighted;
 
@@ -123,24 +123,55 @@ pub trait GraphEngine {
     }
     /// Insert a edge between two nodes.
     ///
-    /// # Undefined Behavior
+    /// # Undefined Behaviors
     ///
     /// - If the nodes does not exist, the behavior is undefined.
     ///
     /// It is recommended to check the existence of the nodes before inserting the edge, see [`GraphEngine::insert_edge_with_nodes`].
+    ///
+    /// - Insert undirected edge to directed graph.
+    ///
+    /// Two edges will be inserted, but only return last edge's id.
+    ///
+    /// # Panics
+    ///
+    /// - No such ability
+    ///
+    /// Not all graph engine supports insert edge.
+    ///
+    /// - Insert disconnected edge
+    ///
+    /// Meaningless, don't do that.
     ///
     /// # Examples
     ///
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn insert_edge<E>(&mut self, edge: E) -> Vec<usize> where E: Into<EdgeInsertAction> {
+    fn insert_edge<E: Edge>(&mut self, edge: E) -> EdgeInsertResult {
         self.insert_edge_with_nodes(edge)
     }
     /// Insert edge to graph, if the nodes does not exist, also insert them.
-    fn insert_edge_with_nodes<E>(&mut self, edge: E) -> Vec<usize> where E: Into<EdgeInsertAction>;
-
+    ///
+    /// # Panics
+    ///
+    /// - No such ability
+    ///
+    /// Not all graph engine supports insert edge.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::GraphEngine;
+    /// ```
+    fn insert_edge_with_nodes<E: Edge>(&mut self, edge: E) -> EdgeInsertResult;
     /// Remove edge by given edge-id or start and end node-id.
+    ///
+    /// # Panics
+    ///
+    /// - No such ability
+    ///
+    /// Not all graph engine supports insert edge.
     ///
     /// # Examples
     ///

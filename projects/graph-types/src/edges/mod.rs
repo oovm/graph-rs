@@ -77,28 +77,33 @@ pub trait Edge {
     fn min_index(&self) -> usize {
         min(self.lhs(), self.rhs())
     }
+
+    /// Creates a new edge with the indices swapped.
+    fn as_dynamic(&self) -> DynamicEdge {
+        DynamicEdge {
+            bidi: self.direction(),
+            from: self.lhs(),
+            goto: self.rhs(),
+        }
+    }
 }
 
 
-/// # Arguments
-///
-/// * `index`:
-///
-/// returns: Option<Cow<Self::Node>>
-///
-/// # Examples
+/// Determines the direction between two nodes
 ///
 /// ```
 /// use graph_theory::GraphEngine;
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum EdgeDirection {
-    /// A directed edge that goes from the smaller index to the larger index.
+    /// Two nodes that are not connected.
+    Disconnect,
+    /// The direction is determined by graph engine
     Dynamic,
-    /// A directed edge that goes from the smaller index to the larger index.
+    /// This edge is bidirectional
     TwoWay,
-    /// A directed edge that goes from the smaller index to the larger index.
+    /// This edge is unidirectional
     Forward,
-    /// A directed edge that goes from the larger index to the smaller index.
+    /// This edge is unidirectional and goes in the opposite direction
     Reverse,
 }

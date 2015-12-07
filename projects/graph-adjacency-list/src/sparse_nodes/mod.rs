@@ -1,4 +1,4 @@
-use graph_types::{DictStorage, Edge, EntryName, GraphEngine, GraphData, GraphResult, Query, UndirectedEdge, EdgeRemoveAction, EdgeInsertAction, DirectedEdge};
+use graph_types::{DictStorage, Edge, EntryName, GraphEngine, GraphData, GraphResult, Query, UndirectedEdge, EdgeRemoveAction, DirectedEdge, DynamicEdge, EdgeDirection};
 use std::{borrow::Cow, marker::PhantomData};
 use std::collections::BTreeMap;
 
@@ -99,23 +99,20 @@ impl GraphEngine for DiGraph {
         self.head_nodes.remove(&node_id);
     }
 
-    fn insert_edge_with_nodes<E>(&mut self, edge: E) -> Vec<usize> where E: Into<EdgeInsertAction> {
-        let mut new_edge_ids = Vec::with_capacity(2);
-        match edge.into() {
-            EdgeInsertAction::Directed(edge) => {
-                self.insert_directed_edge(edge, &mut new_edge_ids);
+    fn insert_edge_with_nodes<E: Edge>(&mut self, edge: E) -> Vec<usize> {
+        let DynamicEdge { bidi, from, goto } = edge.into();
+        match bidi {
+            EdgeDirection::Disconnect => {
+               // do nothing
             }
-            EdgeInsertAction::Undirected(edge) => {
-                self.insert_undirected_edge(edge, &mut new_edge_ids)
-            }
-            EdgeInsertAction::Grouped(v) => {
-                for edge in v {
-                    self.insert_edge_with_nodes(edge);
-                }
-            }
+            EdgeDirection::Dynamic => {}
+            EdgeDirection::TwoWay => {}
+            EdgeDirection::Forward => {}
+            EdgeDirection::Reverse => {}
         }
-        new_edge_ids
+
     }
+
 
     fn remove_edge<E>(&mut self, edge: E) where E: Into<EdgeRemoveAction> {
         match edge.into() {
