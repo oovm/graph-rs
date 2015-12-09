@@ -1,4 +1,4 @@
-use crate::{Edge, EdgeRemoveAction, GetEdgesVisitor, GetNodesVisitor, GraphError, MutEdgesVisitor, Node, Query};
+use crate::{Edge, EdgeInsertResult, EdgeRemoveAction, GetEdgesVisitor, GetNodesVisitor, GraphError, MutEdgesVisitor, Node, Query};
 use std::{
     borrow::Cow,
     future::Future,

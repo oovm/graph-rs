@@ -3,7 +3,7 @@ use super::*;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum EdgeInsertResult {
     Nothing,
-    EdgeID(usize),
+    OneEdge(usize),
     TwoEdges(usize, usize),
 }
 
