@@ -18,29 +18,22 @@ impl GraphEngine for UnGraph {
         self.head_nodes.remove(&node_id);
     }
 
-    fn insert_edge_with_nodes<E: Edge>(&mut self, edge: E) -> EdgeInsertResult {
-        let lhs = edge.lhs() as u32;
-        let rhs = edge.rhs() as u32;
+    fn insert_edge_with_nodes<E: Edge>(&mut self, edge: E) -> EdgeInsertID {
+        let min = edge.min_index() as u32;
+        let max = edge.max_index() as u32;
         match edge.direction() {
             EdgeDirection::Disconnect => {
-                EdgeInsertResult::Nothing
+                EdgeInsertID::Nothing
             }
-            EdgeDirection::Dynamic | EdgeDirection::Forward => {
-                let e1 = self.insert_directed_edge(lhs, rhs);
-                EdgeInsertResult::OneEdge(e1)
+            EdgeDirection::Forward | EdgeDirection::Reverse => {
+                panic!("insert directed edge {edge} is not supported in undirected graph")
             }
-            EdgeDirection::Reverse => {
-                let e1 = self.insert_directed_edge(rhs, lhs);
-                EdgeInsertResult::OneEdge(e1)
-            }
-            EdgeDirection::TwoWay => {
-                let e1 = self.insert_directed_edge(lhs, rhs);
-                let e2 = self.insert_directed_edge(rhs, lhs);
-                EdgeInsertResult::TwoEdges(e1, e2)
+            EdgeDirection::Dynamic | EdgeDirection::TwoWay => {
+                let e = self.insert_undirected_edge(min, max);
+                EdgeInsertID::OneEdge(e)
             }
         }
     }
-
 
     fn remove_edge<E>(&mut self, edge: E) where E: Into<EdgeRemoveAction> {
         match edge.into() {

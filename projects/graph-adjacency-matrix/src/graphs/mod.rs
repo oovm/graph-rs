@@ -1,5 +1,5 @@
 use crate::StaticDirected;
-use graph_types::{Edge, EdgeInsertResult, EdgeRemoveAction, GraphEngine, Node};
+use graph_types::{Edge, EdgeInsertID, EdgeRemoveAction, GraphEngine, Node};
 use std::{borrow::Cow, collections::BTreeMap};
 
 #[derive(Clone, Debug)]
@@ -31,7 +31,7 @@ where
         todo!()
     }
 
-    fn insert_edge_with_nodes<E: Edge>(&mut self, edge: E) -> EdgeInsertResult {
+    fn insert_edge_with_nodes<E: Edge>(&mut self, edge: E) -> EdgeInsertID {
         todo!()
     }
 

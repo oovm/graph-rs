@@ -61,6 +61,7 @@ pub struct UndirectedEdge {
     pub goto: usize,
 }
 
+
 impl Edge for DynamicEdge {
     fn direction(&self) -> EdgeDirection {
         self.bidi

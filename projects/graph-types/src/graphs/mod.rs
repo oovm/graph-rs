@@ -1,4 +1,4 @@
-use crate::{Edge, EdgeInsertResult, EdgeRemoveAction, GetEdgesVisitor, GetNodesVisitor, GraphError, MutEdgesVisitor, Node, Query};
+use crate::{Edge, EdgeInsertID, EdgeRemoveAction, GetEdgesVisitor, GetNodesVisitor, GraphError, MutEdgesVisitor, Node, Query};
 use std::{
     borrow::Cow,
     future::Future,
@@ -148,7 +148,7 @@ pub trait GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn insert_edge<E: Edge>(&mut self, edge: E) -> EdgeInsertResult {
+    fn insert_edge<E: Edge>(&mut self, edge: E) -> EdgeInsertID {
         self.insert_edge_with_nodes(edge)
     }
     /// Insert edge to graph, if the nodes does not exist, also insert them.
@@ -164,7 +164,7 @@ pub trait GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn insert_edge_with_nodes<E: Edge>(&mut self, edge: E) -> EdgeInsertResult;
+    fn insert_edge_with_nodes<E: Edge>(&mut self, edge: E) -> EdgeInsertID;
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics

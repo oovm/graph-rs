@@ -1,4 +1,4 @@
-use crate::{Edge, EdgeInsertResult, EdgeRemoveAction, GraphEngine};
+use crate::{Edge, EdgeInsertID, EdgeRemoveAction, GraphEngine};
 
 mod display;
 
@@ -32,7 +32,7 @@ impl GraphEngine for CompleteGraph {
     }
 
     #[track_caller]
-    fn insert_edge_with_nodes<E: Edge>(&mut self, edge: E) -> EdgeInsertResult {
+    fn insert_edge_with_nodes<E: Edge>(&mut self, edge: E) -> EdgeInsertID {
         self.exception("insert edge")
     }
 

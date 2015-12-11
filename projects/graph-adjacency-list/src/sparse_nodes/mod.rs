@@ -1,4 +1,4 @@
-use graph_types::{DictStorage, Edge, EntryName, GraphEngine, GraphData, GraphResult, Query, UndirectedEdge, EdgeRemoveAction, DirectedEdge, DynamicEdge, EdgeDirection, EdgeInsertResult};
+use graph_types::{DictStorage, Edge, EntryName, GraphEngine, GraphData, GraphResult, Query, UndirectedEdge, EdgeRemoveAction, DirectedEdge, DynamicEdge, EdgeDirection, EdgeInsertID};
 use std::{borrow::Cow, marker::PhantomData};
 use std::collections::BTreeMap;
 
@@ -37,31 +37,7 @@ pub type UnGraph = AdjacencyNodeList<true>;
 /// - Query edge: O(V)
 pub type DiGraph = AdjacencyNodeList<false>;
 
-/// Sparse, node first, adjacency list
-///
-/// # Space Complexity
-///
-/// - O(|V| + |E|) for undirected graph
-/// - O(|V| + 2|E|) for directed graph
-///
-/// # Node Time Complexity
-///
-/// This structure has very good performance for nodes
-///
-/// - Insert: O(1)
-/// - Query: O(1)
-/// - Removal: O(1)
-/// - Count: O(1)
-/// - Neighbors: O(1)
-///
-/// # Edge Time Complexity
-///
-/// This structure has linear complexity across the edges
-///
-/// - Insert edge: O(1)
-/// - Query edge: O(|V|)
-/// - Removal edge: O(|V|)
-/// - Count edges: O(|V|)
+#[doc = include_str!("AdjacencyNodeList.html")]
 #[derive(Debug)]
 pub struct AdjacencyNodeList<const TwoWay: bool> {
     head_nodes: BTreeMap<StartNodeID, NodeNeighbors>,

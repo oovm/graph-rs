@@ -18,25 +18,25 @@ impl GraphEngine for DiGraph {
         self.head_nodes.remove(&node_id);
     }
 
-    fn insert_edge_with_nodes<E: Edge>(&mut self, edge: E) -> EdgeInsertResult {
+    fn insert_edge_with_nodes<E: Edge>(&mut self, edge: E) -> EdgeInsertID {
         let lhs = edge.lhs() as u32;
         let rhs = edge.rhs() as u32;
         match edge.direction() {
             EdgeDirection::Disconnect => {
-                EdgeInsertResult::Nothing
+                EdgeInsertID::Nothing
             }
             EdgeDirection::Dynamic | EdgeDirection::Forward => {
                 let e1 = self.insert_directed_edge(lhs, rhs);
-                EdgeInsertResult::OneEdge(e1)
+                EdgeInsertID::OneEdge(e1)
             }
             EdgeDirection::Reverse => {
                 let e1 = self.insert_directed_edge(rhs, lhs);
-                EdgeInsertResult::OneEdge(e1)
+                EdgeInsertID::OneEdge(e1)
             }
             EdgeDirection::TwoWay => {
                 let e1 = self.insert_directed_edge(lhs, rhs);
                 let e2 = self.insert_directed_edge(rhs, lhs);
-                EdgeInsertResult::TwoEdges(e1, e2)
+                EdgeInsertID::TwoEdges(e1, e2)
             }
         }
     }

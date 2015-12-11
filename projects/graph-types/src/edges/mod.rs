@@ -28,7 +28,7 @@ pub mod mut_iter;
 /// ```
 /// use graph_theory::GraphEngine;
 /// ```
-pub trait Edge {
+pub trait Edge: Display {
     /// Whether the edge is bidirectional
     ///
     /// # Examples

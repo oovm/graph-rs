@@ -1,0 +1,38 @@
+<p>Sparse, node first, adjacency list</p>
+<h1 id="space-complexity">Space Complexity</h1>
+<ul>
+    <li><math>
+        <mrow>
+            <mi>O</mi>
+            <mrow>
+                <mo fence="true" form="prefix">(</mo>
+                <mi>|</mi>
+                <mi>V</mi>
+                <mi>|</mi>
+                <mo>+</mo>
+                <mi>|</mi>
+                <mi>E</mi>
+                <mi>|</mi>
+                <mo fence="true" form="postfix">)</mo>
+            </mrow>
+        </mrow>
+    </math> for undirected graph</li>
+    <li>O(|V| + 2|E|) for directed graph</li>
+</ul>
+<h1 id="node-time-complexity">Node Time Complexity</h1>
+<p>This structure has very good performance for nodes</p>
+<ul>
+    <li>Insert: O(1)</li>
+    <li>Query: O(1)</li>
+    <li>Removal: O(1)</li>
+    <li>Count: O(1)</li>
+    <li>Neighbors: O(1)</li>
+</ul>
+<h1 id="edge-time-complexity">Edge Time Complexity</h1>
+<p>This structure has linear complexity across the edges</p>
+<ul>
+    <li>Insert edge: O(1)</li>
+    <li>Query edge: O(|V|)</li>
+    <li>Removal edge: O(|V|)</li>
+    <li>Count edges: O(|V|)</li>
+</ul>
