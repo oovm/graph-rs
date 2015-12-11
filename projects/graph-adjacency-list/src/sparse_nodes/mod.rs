@@ -1,5 +1,5 @@
-use graph_types::{DictStorage, Edge, EntryName, GraphEngine, GraphData, GraphResult, Query, UndirectedEdge, EdgeRemoveAction, DirectedEdge, DynamicEdge, EdgeDirection, EdgeInsertID};
-use std::{borrow::Cow, marker::PhantomData};
+use graph_types::{Edge, GraphEngine, EdgeRemoveAction, EdgeDirection, EdgeInsertID};
+
 use std::collections::BTreeMap;
 
 mod di_graph;
@@ -39,7 +39,7 @@ pub type DiGraph = AdjacencyNodeList<false>;
 
 #[doc = include_str!("AdjacencyNodeList.html")]
 #[derive(Debug)]
-pub struct AdjacencyNodeList<const TwoWay: bool> {
+pub struct AdjacencyNodeList<const TWO_WAY: bool> {
     head_nodes: BTreeMap<StartNodeID, NodeNeighbors>,
     last_edge: EdgeID,
 }

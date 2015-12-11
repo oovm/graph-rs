@@ -1,6 +1,5 @@
-use crate::{Edge, EdgeInsertID, EdgeRemoveAction, GetEdgesVisitor, GetNodesVisitor, GraphError, MutEdgesVisitor, Node, Query};
+use crate::{Edge, EdgeInsertID, EdgeRemoveAction, GetEdgesVisitor, GetNodesVisitor, GraphError, MutEdgesVisitor, Query};
 use std::{
-    borrow::Cow,
     future::Future,
     ops::{Deref, DerefMut},
     pin::Pin,
@@ -40,18 +39,14 @@ pub trait GraphEngine {
     fn get_nodes(&self) -> GetNodesVisitor<Self> {
         GetNodesVisitor::new(self)
     }
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
+    /// Count the number of nodes in the graph.
     ///
     /// # Examples
     ///
     /// ```
     /// use graph_theory::GraphEngine;
     /// use graph_theory::CompleteGraph;
-    /// assert_eq!(CompleteGraph::new(5).count_nodes(), 10);
+    /// assert_eq!(CompleteGraph::new(5).count_nodes(), 5);
     /// ```
     fn count_nodes(&self) -> usize;
     /// Insert a node without any neighbors (edges).
@@ -62,9 +57,9 @@ pub trait GraphEngine {
     /// use graph_theory::GraphEngine;
     /// use graph_theory::adjacency_list::UnGraph;
     /// let mut graph = UnGraph::default();
-    /// assert_eq!(graph.count(), 0);
+    /// assert_eq!(graph.count_nodes(), 0);
     /// graph.insert_node(5);
-    /// assert_eq!(graph.count(), 1);
+    /// assert_eq!(graph.count_nodes(), 1);
     /// ```
     fn insert_node(&mut self, node_id: usize) -> usize {
         todo!()
@@ -84,9 +79,9 @@ pub trait GraphEngine {
     /// use graph_theory::GraphEngine;
     /// use graph_theory::adjacency_list::UnGraph;
     /// let mut graph = UnGraph::default();
-    /// assert_eq!(graph.count(), 0);
+    /// assert_eq!(graph.count_nodes(), 0);
     /// graph.insert_node(5);
-    /// assert_eq!(graph.count(), 1);
+    /// assert_eq!(graph.count_nodes(), 1);
     /// ```
     fn remove_node(&mut self, node_id: usize) {
         self.remove_node_with_edges(node_id)
@@ -99,9 +94,9 @@ pub trait GraphEngine {
     /// use graph_theory::GraphEngine;
     /// use graph_theory::adjacency_list::UnGraph;
     /// let mut graph = UnGraph::default();
-    /// assert_eq!(graph.count(), 0);
+    /// assert_eq!(graph.count_nodes(), 0);
     /// graph.insert_node(5);
-    /// assert_eq!(graph.count(), 1);
+    /// assert_eq!(graph.count_nodes(), 1);
     /// ```
     fn remove_node_with_edges(&mut self, node_id: usize);
     fn get_edges(&self) -> GetEdgesVisitor<Self> {
@@ -179,16 +174,14 @@ pub trait GraphEngine {
     /// use graph_theory::GraphEngine;
     /// ```
     fn remove_edge<E>(&mut self, edge: E) where E: Into<EdgeRemoveAction>;
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
+    /// Count the number of edges in the graph.
     ///
     /// # Examples
     ///
     /// ```
     /// use graph_theory::GraphEngine;
+    /// use graph_theory::CompleteGraph;
+    /// assert_eq!(CompleteGraph::new(5).count_edges(), 20);
     /// ```
     fn count_edges(&self) -> usize;
 }

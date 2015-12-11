@@ -24,7 +24,7 @@ impl<'i, G: GraphEngine> Iterator for GetNodesVisitor<'i, G> {
         if self.index >= self.graph.count_nodes() {
             return None;
         }
-        let index = self.index;
+        let _index = self.index;
         self.index += 1;
         // self.graph.get_node_id(index);
         todo!()
@@ -36,7 +36,7 @@ impl<'i, G: GraphEngine> DoubleEndedIterator for GetNodesVisitor<'i, G> {
         if self.index >= self.graph.count_nodes() {
             return None;
         }
-        let index = self.graph.count_nodes() - self.index - 1;
+        let _index = self.graph.count_nodes() - self.index - 1;
         self.index += 1;
         // self.graph.get_node_id(index);
         todo!()

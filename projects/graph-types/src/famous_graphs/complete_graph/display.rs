@@ -1,5 +1,6 @@
 use super::*;
 
+
 #[cfg(feature = "wolfram_wxf")]
 use wolfram_wxf::{ToWolfram, WolframValue};
 
@@ -15,6 +16,24 @@ impl ToWolfram for CompleteGraph {
                 WolframValue::function("CompleteGraph", vec![n, arg1])
             }
             false => WolframValue::function("CompleteGraph", vec![n]),
+        }
+    }
+}
+
+impl Debug for CompleteGraph {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self.directed {
+            true => write!(f, "CompleteGraph({}, directed)", self.rank),
+            false => write!(f, "CompleteGraph({})", self.rank),
+        }
+    }
+}
+
+impl Display for CompleteGraph {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self.directed {
+            true => write!(f, "CompleteGraph({}, directed)", self.rank),
+            false => write!(f, "CompleteGraph({})", self.rank),
         }
     }
 }

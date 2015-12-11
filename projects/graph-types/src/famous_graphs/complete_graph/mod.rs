@@ -1,6 +1,8 @@
 use crate::{Edge, EdgeInsertID, EdgeRemoveAction, GraphEngine};
+use std::fmt::{Debug, Display, Formatter};
 
 mod display;
+
 
 /// [CompleteGraph](https://reference.wolfram.com/language/ref/CompleteGraph.html)
 /// represents a graph where every node is connected to every other node.
@@ -15,7 +17,7 @@ mod display;
 /// assert_eq!(graph.count_nodes(), 3);
 /// assert_eq!(graph.count_edges(), 3 * 2);
 /// ```
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub struct CompleteGraph {
     directed: bool,
     rank: usize,
@@ -32,7 +34,7 @@ impl GraphEngine for CompleteGraph {
     }
 
     #[track_caller]
-    fn insert_edge_with_nodes<E: Edge>(&mut self, edge: E) -> EdgeInsertID {
+    fn insert_edge_with_nodes<E: Edge>(&mut self, _edge: E) -> EdgeInsertID {
         self.exception("insert edge")
     }
 
