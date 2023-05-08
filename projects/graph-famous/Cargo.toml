@@ -1,0 +1,24 @@
+[package]
+name = "graph-famous"
+version = "0.0.0"
+authors = ["Aster <192607617@qq.com>"]
+description = "Adjacency Matrix and Adjacency Graph"
+repository = "https://github.com/oovm/graph-rs"
+documentation = "https://docs.rs/adjacency-matrix"
+readme = "Readme.md"
+license = "MPL-2.0"
+edition = "2021"
+exclude = ["package.json", "tests/**"]
+
+[dependencies]
+
+[dependencies.graph-types]
+version = "0.0.*"
+path = "../graph-types"
+features = []
+
+[dev-dependencies]
+
+[features]
+default = []
+wolfram = ["graph-types/wolfram_wxf"]

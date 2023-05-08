@@ -3,8 +3,9 @@ use graph_types::{
 };
 use std::collections::BTreeMap;
 
-type NodeID = u32;
 type EdgeID = u32;
+type StartNodeID = u32;
+type EndNodeID = u32;
 
 #[doc = include_str!("AdjacencyEdgeList.html")]
 #[derive(Debug)]
@@ -12,15 +13,17 @@ pub struct AdjacencyEdgeList {
     edges: BTreeMap<EdgeID, ShortEdge>,
 }
 
+#[derive(Debug)]
 pub struct ShortEdge {
-    from: NodeID,
-    goto: NodeID,
+    from: StartNodeID,
+    goto: EndNodeID,
 }
 
 impl GraphEngine for AdjacencyEdgeList {
     fn has_node(&self, node_id: usize) -> bool {
+        let id = node_id as u32;
         for edge in self.edges.values() {
-            if edge.from == node_id || edge.goto == node_id {
+            if edge.from == id || edge.goto == id {
                 return true;
             }
         }
@@ -28,6 +31,8 @@ impl GraphEngine for AdjacencyEdgeList {
     }
 
     fn remove_node_with_edges(&mut self, node_id: usize) {
+        let id = node_id as u32;
+
         todo!()
     }
 
@@ -40,26 +45,22 @@ impl GraphEngine for AdjacencyEdgeList {
     }
 
     fn insert_edge_with_nodes<E: Edge>(&mut self, edge: E) -> EdgeInsertID {
+        let lhs = edge.lhs() as u32;
+        let rhs = edge.rhs() as u32;
         match edge.direction() {
             EdgeDirection::Disconnect => EdgeInsertID::Nothing,
-            EdgeDirection::Dynamic => {}
-            EdgeDirection::TwoWay => {}
-            EdgeDirection::Forward => {}
-            EdgeDirection::Reverse => {}
-        }
-
-        match edge.into() {
-            EdgeQuery::EdgeID(_) => {
-                panic!("Cannot insert edge id to AdjacencyEdgeList")
+            EdgeDirection::TwoWay => {
+                let e1 = self.insert_one_way_edge(lhs, rhs);
+                let e2 = self.insert_one_way_edge(rhs, lhs);
+                EdgeInsertID::TwoEdges(e1, e2)
             }
-            EdgeQuery::Directed(v) => {
-                let e1 = self.insert_one_way_edge(v.from as u32, v.goto as u32);
+            EdgeDirection::Forward => {
+                let e1 = self.insert_one_way_edge(lhs, rhs);
                 EdgeInsertID::OneEdge(e1)
             }
-            EdgeQuery::Undirected(v) => {
-                let e1 = self.insert_one_way_edge(v.from as u32, v.goto as u32);
-                let e2 = self.insert_one_way_edge(v.goto as u32, v.from as u32);
-                EdgeInsertID::TwoEdges(e1, e2)
+            EdgeDirection::Reverse => {
+                let e1 = self.insert_one_way_edge(rhs, lhs);
+                EdgeInsertID::OneEdge(e1)
             }
         }
     }

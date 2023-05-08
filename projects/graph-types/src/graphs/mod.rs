@@ -28,7 +28,7 @@ pub trait GraphEngine {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::{CompleteGraph, GraphEngine};
+    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
     /// assert_eq!(CompleteGraph::new(5).count_nodes(), 5);
     /// ```
     fn has_node(&self, node_id: usize) -> bool;
@@ -40,7 +40,7 @@ pub trait GraphEngine {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::{CompleteGraph, GraphEngine};
+    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
     /// assert_eq!(CompleteGraph::new(5).count_nodes(), 5);
     /// ```
     fn get_node_degree(&self, node_id: usize) -> Result<usize, GraphError> {
@@ -51,7 +51,7 @@ pub trait GraphEngine {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::{CompleteGraph, GraphEngine};
+    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
     /// assert_eq!(CompleteGraph::new(5).count_nodes(), 5);
     /// ```
     fn count_nodes(&self) -> usize {
@@ -62,8 +62,8 @@ pub trait GraphEngine {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::{adjacency_list::UnGraph, GraphEngine};
-    /// let mut graph = UnGraph::default();
+    /// use graph_theory::{graph_engines::AdjacencyNodeList, GraphEngine};
+    /// let mut graph = AdjacencyNodeList::default();
     /// assert_eq!(graph.count_nodes(), 0);
     /// graph.insert_node(5);
     /// assert_eq!(graph.count_nodes(), 1);
@@ -83,8 +83,8 @@ pub trait GraphEngine {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::{adjacency_list::UnGraph, GraphEngine};
-    /// let mut graph = UnGraph::default();
+    /// use graph_theory::{graph_engines::AdjacencyNodeList, GraphEngine};
+    /// let mut graph = AdjacencyNodeList::default();
     /// assert_eq!(graph.count_nodes(), 0);
     /// graph.insert_node(5);
     /// assert_eq!(graph.count_nodes(), 1);
@@ -97,8 +97,8 @@ pub trait GraphEngine {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::{adjacency_list::UnGraph, GraphEngine};
-    /// let mut graph = UnGraph::default();
+    /// use graph_theory::{graph_engines::AdjacencyNodeList, GraphEngine};
+    /// let mut graph = AdjacencyNodeList::default();
     /// assert_eq!(graph.count_nodes(), 0);
     /// graph.insert_node(5);
     /// assert_eq!(graph.count_nodes(), 1);
@@ -109,11 +109,20 @@ pub trait GraphEngine {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::GraphEngine;
+    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
+    /// let mut graph = CompleteGraph::new(5);
+    /// assert_eq!(graph.traverse_nodes().count(), 20)
     /// ```
     fn traverse_nodes(&self) -> NodesVisitor<Self>;
 
     /// Get the edges of the graph.
+    ///
+    ///
+    /// ```
+    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
+    /// let mut graph = CompleteGraph::new(5);
+    /// assert_eq!(graph.traverse_nodes().count(), 20)
+    /// ```
     fn get_edges(&self) -> GetEdgesVisitor<Self>;
     /// Insert a edge between two nodes.
     ///

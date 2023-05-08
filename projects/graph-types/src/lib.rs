@@ -7,7 +7,6 @@
 mod edges;
 mod entries;
 mod errors;
-pub mod famous_graphs;
 mod graphs;
 mod storage;
 mod vertexes;
