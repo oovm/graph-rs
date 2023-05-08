@@ -1,14 +1,14 @@
 use graph_types::{Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, NodesVisitor};
 use std::{fmt::Debug, mem::size_of};
 
-/// https://reference.wolfram.com/language/ref/CycleGraph.html
+// https://reference.wolfram.com/language/ref/StarGraph.html
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct CycleGraph {
+pub struct StarGraph {
     rank: u32,
 }
 
-impl GraphEngine for CycleGraph {
+impl GraphEngine for StarGraph {
     fn has_node(&self, node_id: usize) -> bool {
         node_id < self.rank as usize
     }
@@ -47,12 +47,12 @@ impl GraphEngine for CycleGraph {
     /// Takes O(1) space, in fact it's always takes 32 bits.
     ///
     /// ```
-    /// use graph_theory::{graph_engines::CycleGraph, GraphEngine};
-    /// assert_eq!(CycleGraph::new(3).size_hint(), 4);
-    /// assert_eq!(CycleGraph::new(4).size_hint(), 4);
-    /// assert_eq!(CycleGraph::new(5).size_hint(), 4);
+    /// use graph_theory::{graph_engines::StarGraph, GraphEngine};
+    /// assert_eq!(StarGraph::new(3).size_hint(), 4);
+    /// assert_eq!(StarGraph::new(4).size_hint(), 4);
+    /// assert_eq!(StarGraph::new(5).size_hint(), 4);
     /// ```
     fn size_hint(&self) -> usize {
-        size_of::<CycleGraph>()
+        size_of::<StarGraph>()
     }
 }

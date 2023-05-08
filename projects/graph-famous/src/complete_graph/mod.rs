@@ -16,24 +16,25 @@ mod wolfram;
 /// # Examples
 ///
 /// ```
-/// use graph_theory::{CompleteGraph, GraphEngine};
+/// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
 /// let graph = CompleteGraph::new(3);
 /// assert_eq!(graph.count_nodes(), 3);
-/// assert_eq!(graph.count_edges(), 3 * 2);
+/// assert_eq!(graph.count_edges(), 12);
 /// ```
+#[repr(C)]
 #[derive(Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct CompleteGraph {
-    directed: bool,
-    rank: usize,
+    rank: u32,
 }
 
 impl GraphEngine for CompleteGraph {
     fn has_node(&self, node_id: usize) -> bool {
-        node_id < self.rank
+        node_id < self.rank as usize
     }
 
     fn count_nodes(&self) -> usize {
-        self.rank
+        self.rank as usize
     }
 
     #[track_caller]
@@ -62,20 +63,21 @@ impl GraphEngine for CompleteGraph {
         self.exception("remove edge")
     }
 
-    /// Takes O(1) space.
+    fn count_edges(&self) -> usize {
+        let rank = self.rank as usize;
+        rank * (rank - 1) * 2
+    }
+
+    /// Takes O(1) space, in fact it's always takes 32 bits.
     ///
     /// ```
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// assert_eq!(CompleteGraph::new(3).size_hint(), 24);
-    /// assert_eq!(CompleteGraph::new(4).size_hint(), 24);
-    /// assert_eq!(CompleteGraph::new(5).size_hint(), 24);
+    /// assert_eq!(CompleteGraph::new(3).size_hint(), 4);
+    /// assert_eq!(CompleteGraph::new(4).size_hint(), 4);
+    /// assert_eq!(CompleteGraph::new(5).size_hint(), 4);
     /// ```
     fn size_hint(&self) -> usize {
         size_of::<CompleteGraph>()
-    }
-
-    fn count_edges(&self) -> usize {
-        if self.directed { self.rank * (self.rank - 1) * 2 } else { self.rank * (self.rank - 1) }
     }
 }
 
@@ -84,6 +86,8 @@ impl CompleteGraph {
     ///
     /// ![](https://raw.githubusercontent.com/oovm/graph-rs/dev/projects/graph-types/src/famous_graphs/complete_graph/k-complete.svg)
     ///
+    /// ![](https://raw.githubusercontent.com/oovm/graph-rs/dev/projects/graph-types/src/famous_graphs/complete_graph/d-complete.svg)
+    ///
     /// # Examples
     ///
     /// ```
@@ -91,20 +95,10 @@ impl CompleteGraph {
     /// let graph = CompleteGraph::new(3);
     /// ```
     pub fn new(rank: usize) -> Self {
-        Self { directed: false, rank }
+        Self { rank: rank as u32 }
     }
-    /// Creates a new directed complete graph with the given rank.
-    ///
-    /// ![](https://raw.githubusercontent.com/oovm/graph-rs/dev/projects/graph-types/src/famous_graphs/complete_graph/d-complete.svg)
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::CompleteGraph;
-    /// let graph = CompleteGraph::directed(3);
-    /// ```
     pub fn directed(rank: usize) -> Self {
-        Self { directed: true, rank }
+        Self { rank: rank as u32 }
     }
     /// Check if the given graph is a complete graph, and if so, return it.
     pub fn check<G: GraphEngine>(graph: &G) -> Option<Self> {
@@ -112,12 +106,7 @@ impl CompleteGraph {
         let edges = graph.count_edges();
         if edges == nodes * (nodes - 1) {
             if is_directed(graph, nodes) {
-                return Some(Self { directed: false, rank: nodes });
-            }
-        }
-        else if edges == nodes * (nodes - 1) * 2 {
-            if is_undirected(graph) {
-                return Some(Self { directed: true, rank: nodes });
+                return Some(Self { rank: nodes as u32 });
             }
         }
         None

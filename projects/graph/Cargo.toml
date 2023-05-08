@@ -33,7 +33,7 @@ path = "../graph-types"
 
 [features]
 default = ["serde", "wolfram"]
-serde = ["graph-types/serde"]
+serde = ["graph-types/serde", "graph-families/serde"]
 wolfram = ["graph-types/wolfram_wxf", "adjacency-matrix/wolfram", "graph-families/wolfram"]
 
 [package.metadata.docs.rs]
