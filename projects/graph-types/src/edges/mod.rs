@@ -1,18 +1,16 @@
-use crate::{DirectedEdge, GraphEngine};
+use crate::DirectedEdge;
 use std::{
     cmp::{max, min},
     ops::Range,
 };
 
-use std::fmt::{Display, Formatter};
 use crate::{DynamicEdge, UndirectedEdge};
+use std::fmt::{Display, Formatter};
 
-pub mod typed_edges;
 pub mod actions;
-
+pub mod typed_edges;
 
 mod simple;
-
 
 pub mod get_iter;
 pub mod mut_iter;
@@ -34,7 +32,7 @@ pub trait Edge: Display {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::{DirectedEdge};
+    /// use graph_theory::DirectedEdge;
     /// ```
     fn direction(&self) -> EdgeDirection;
     /// The left side node id of the edge
@@ -80,14 +78,9 @@ pub trait Edge: Display {
 
     /// Creates a new edge with the indices swapped.
     fn as_dynamic(&self) -> DynamicEdge {
-        DynamicEdge {
-            bidi: self.direction(),
-            from: self.lhs(),
-            goto: self.rhs(),
-        }
+        DynamicEdge { bidi: self.direction(), from: self.lhs(), goto: self.rhs() }
     }
 }
-
 
 /// Determines the direction between two nodes
 ///

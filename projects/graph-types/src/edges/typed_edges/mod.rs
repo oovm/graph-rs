@@ -1,7 +1,7 @@
 use super::*;
 
-mod display;
 mod constructors;
+mod display;
 
 #[cfg(feature = "wolfram_wxf")]
 mod wolfram;
@@ -18,6 +18,7 @@ mod wolfram;
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct DynamicEdge {
+    /// The direction of the edge.
     pub bidi: EdgeDirection,
     /// The index of the node that the edge is coming from.
     pub from: usize,
@@ -43,7 +44,6 @@ pub struct DirectedEdge {
     pub goto: usize,
 }
 
-
 /// [UndirectedEdge](https://reference.wolfram.com/language/ref/UndirectedEdge.html)
 /// represents an bidirectional edge between two nodes.
 ///
@@ -61,7 +61,6 @@ pub struct UndirectedEdge {
     pub goto: usize,
 }
 
-
 impl Edge for DynamicEdge {
     fn direction(&self) -> EdgeDirection {
         self.bidi
@@ -75,7 +74,6 @@ impl Edge for DynamicEdge {
         self.goto
     }
 }
-
 
 impl Edge for DirectedEdge {
     fn direction(&self) -> EdgeDirection {

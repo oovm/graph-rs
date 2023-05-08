@@ -55,7 +55,7 @@ impl<T> SharedStorage<T> {
     /// # Examples
     ///
     /// ```
-    /// use graph_types::{GraphEngine, GraphData, ListStorage};
+    /// use graph_types::{EntryEngine, GraphEngine, ListStorage};
     /// ```
     pub fn get_data(&self, query: Query) -> Option<Ref<usize, T>> {
         let item = match query.entry {
@@ -74,7 +74,7 @@ impl<T> SharedStorage<T> {
     /// # Examples
     ///
     /// ```
-    /// use graph_types::{GraphEngine, GraphData, ListStorage};
+    /// use graph_types::{EntryEngine, GraphEngine, ListStorage};
     /// ```
     pub fn mut_data(&self, query: Query) -> Option<RefMut<usize, T>> {
         let item = match query.entry {

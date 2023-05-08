@@ -1,8 +1,7 @@
-use crate::{Edge, EdgeInsertID, EdgeRemoveAction, NodesVisitor, GraphEngine};
+use crate::{Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, NodesVisitor};
 use std::fmt::{Debug, Display, Formatter};
 
 mod display;
-
 
 /// [CompleteGraph](https://reference.wolfram.com/language/ref/CompleteGraph.html)
 /// represents a graph where every node is connected to every other node.
@@ -24,12 +23,8 @@ pub struct CompleteGraph {
 }
 
 impl GraphEngine for CompleteGraph {
-    fn has_node(&self, node_id: usize) -> Option<usize> {
-        if node_id < self.rank { Some(node_id) } else { None }
-    }
-
-    fn get_nodes(&self) -> NodesVisitor<Self> {
-        NodesVisitor::range(self, 0..self.count_nodes())
+    fn has_node(&self, node_id: usize) -> bool {
+        node_id < self.rank
     }
 
     fn count_nodes(&self) -> usize {
@@ -41,14 +36,24 @@ impl GraphEngine for CompleteGraph {
         self.exception("remove node")
     }
 
+    fn traverse_nodes(&self) -> NodesVisitor<Self> {
+        NodesVisitor::range(self, 0..self.count_nodes())
+    }
+
+    fn get_edges(&self) -> GetEdgesVisitor<Self> {
+        todo!()
+    }
+
     #[track_caller]
     fn insert_edge_with_nodes<E: Edge>(&mut self, _edge: E) -> EdgeInsertID {
         self.exception("insert edge")
     }
 
-
     #[track_caller]
-    fn remove_edge<E>(&mut self, _: E) where E: Into<EdgeRemoveAction> {
+    fn remove_edge<E>(&mut self, _: E)
+    where
+        E: Into<EdgeQuery>,
+    {
         self.exception("remove edge")
     }
 
@@ -92,7 +97,8 @@ impl CompleteGraph {
             if is_directed(graph, nodes) {
                 return Some(Self { directed: false, rank: nodes });
             }
-        } else if edges == nodes * (nodes - 1) * 2 {
+        }
+        else if edges == nodes * (nodes - 1) * 2 {
             if is_undirected(graph) {
                 return Some(Self { directed: true, rank: nodes });
             }
@@ -103,17 +109,17 @@ impl CompleteGraph {
 
 /// Add nodes degree is rank -1
 fn is_directed<G>(graph: &G, rank: usize) -> bool
-    where
-        G: GraphEngine,
+where
+    G: GraphEngine,
 {
     let _ = (graph, rank);
     todo!()
 }
 
 fn is_undirected<G>(graph: &G) -> bool
-    where
-        G: GraphEngine,
+where
+    G: GraphEngine,
 {
-    let _ = (graph, );
+    let _ = (graph,);
     todo!()
 }

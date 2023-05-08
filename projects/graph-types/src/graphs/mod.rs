@@ -1,12 +1,10 @@
-use crate::{Edge, EdgeInsertID, EdgeRemoveAction, GetEdgesVisitor, NodesVisitor, GraphError,  Query};
+use crate::{Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphError, NodesVisitor, Query};
 use std::{
+    any::type_name,
     future::Future,
     ops::{Deref, DerefMut},
     pin::Pin,
 };
-use std::any::type_name;
-
-
 
 pub mod weighted;
 
@@ -25,39 +23,46 @@ pub trait GraphEngine {
     fn exception(&self, ability: &'static str) -> ! {
         unreachable!("Graph engine {} does not support {ability}", type_name::<Self>())
     }
-
     /// Check if the node exists, return the node id if exists.
-    fn has_node(&self, node_id: usize) -> Option<usize>;
-
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
     ///
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::GraphEngine;
+    /// use graph_theory::{CompleteGraph, GraphEngine};
+    /// assert_eq!(CompleteGraph::new(5).count_nodes(), 5);
     /// ```
-    fn get_nodes(&self) -> NodesVisitor<Self>;
+    fn has_node(&self, node_id: usize) -> bool;
+
+    /// Check if the node exists, return the node id if exists.
+    ///
+    /// Return [None] if the node does not exist.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::{CompleteGraph, GraphEngine};
+    /// assert_eq!(CompleteGraph::new(5).count_nodes(), 5);
+    /// ```
+    fn get_node_degree(&self, node_id: usize) -> Result<usize, GraphError> {
+        todo!()
+    }
     /// Count the number of nodes in the graph.
     ///
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::GraphEngine;
-    /// use graph_theory::CompleteGraph;
+    /// use graph_theory::{CompleteGraph, GraphEngine};
     /// assert_eq!(CompleteGraph::new(5).count_nodes(), 5);
     /// ```
-    fn count_nodes(&self) -> usize;
+    fn count_nodes(&self) -> usize {
+        self.traverse_nodes().count()
+    }
     /// Insert a node without any neighbors (edges).
     ///
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::GraphEngine;
-    /// use graph_theory::adjacency_list::UnGraph;
+    /// use graph_theory::{adjacency_list::UnGraph, GraphEngine};
     /// let mut graph = UnGraph::default();
     /// assert_eq!(graph.count_nodes(), 0);
     /// graph.insert_node(5);
@@ -78,8 +83,7 @@ pub trait GraphEngine {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::GraphEngine;
-    /// use graph_theory::adjacency_list::UnGraph;
+    /// use graph_theory::{adjacency_list::UnGraph, GraphEngine};
     /// let mut graph = UnGraph::default();
     /// assert_eq!(graph.count_nodes(), 0);
     /// graph.insert_node(5);
@@ -93,17 +97,24 @@ pub trait GraphEngine {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::GraphEngine;
-    /// use graph_theory::adjacency_list::UnGraph;
+    /// use graph_theory::{adjacency_list::UnGraph, GraphEngine};
     /// let mut graph = UnGraph::default();
     /// assert_eq!(graph.count_nodes(), 0);
     /// graph.insert_node(5);
     /// assert_eq!(graph.count_nodes(), 1);
     /// ```
     fn remove_node_with_edges(&mut self, node_id: usize);
-    fn get_edges(&self) -> GetEdgesVisitor<Self> {
-        GetEdgesVisitor::new(self)
-    }
+    /// Traverse all nodes in the graph.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::GraphEngine;
+    /// ```
+    fn traverse_nodes(&self) -> NodesVisitor<Self>;
+
+    /// Get the edges of the graph.
+    fn get_edges(&self) -> GetEdgesVisitor<Self>;
     /// Insert a edge between two nodes.
     ///
     /// # Undefined Behaviors
@@ -161,14 +172,15 @@ pub trait GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn remove_edge<E>(&mut self, edge: E) where E: Into<EdgeRemoveAction>;
+    fn remove_edge<E>(&mut self, edge: E)
+    where
+        E: Into<EdgeQuery>;
     /// Count the number of edges in the graph.
     ///
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::GraphEngine;
-    /// use graph_theory::CompleteGraph;
+    /// use graph_theory::{CompleteGraph, GraphEngine};
     /// assert_eq!(CompleteGraph::new(5).count_edges(), 20);
     /// ```
     fn count_edges(&self) -> usize;

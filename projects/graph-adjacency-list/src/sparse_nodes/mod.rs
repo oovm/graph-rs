@@ -1,4 +1,4 @@
-use graph_types::{Edge, GraphEngine, EdgeRemoveAction, EdgeDirection, EdgeInsertID};
+use graph_types::{Edge, EdgeDirection, EdgeInsertID, EdgeQuery, GraphEngine};
 
 use std::collections::BTreeMap;
 
@@ -49,11 +49,19 @@ struct NodeNeighbors {
     end_nodes: BTreeMap<EdgeID, EndNodeID>,
 }
 
-impl<const TwoWay: bool> Default for AdjacencyNodeList<TwoWay> {
+impl<const TWO_WAY: bool> Default for AdjacencyNodeList<TWO_WAY> {
     fn default() -> Self {
-        Self {
-            head_nodes: BTreeMap::new(),
-            last_edge: 0,
-        }
+        Self { head_nodes: BTreeMap::new(), last_edge: 0 }
+    }
+}
+
+impl<const TWO_WAY: bool> AdjacencyNodeList<TWO_WAY> {
+    /// Low level api, insert node
+    pub(crate) fn insert_node(&mut self, node: u32) {
+        self.head_nodes.entry(node).or_insert_with(|| NodeNeighbors { end_nodes: BTreeMap::new() });
+    }
+    /// Low level api, remove node
+    pub(crate) fn remove_node(&mut self, node: u32) {
+        self.head_nodes.remove(&node);
     }
 }

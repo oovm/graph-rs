@@ -7,21 +7,22 @@
 mod edges;
 mod entries;
 mod errors;
-mod famous_graphs;
+pub mod famous_graphs;
 mod graphs;
 mod storage;
 mod vertexes;
 
 pub use crate::{
     edges::{
-        typed_edges::{DirectedEdge, DynamicEdge, UndirectedEdge}, get_iter::GetEdgesVisitor, actions::{EdgeRemoveAction, EdgeInsertID},
+        actions::{EdgeInsertID, EdgeQuery},
+        get_iter::GetEdgesVisitor,
+        typed_edges::{DirectedEdge, DynamicEdge, UndirectedEdge},
         Edge, EdgeDirection,
     },
     entries::{Entry, EntryName, EntryWeight, Query},
     errors::{GraphError, GraphErrorKind, GraphResult},
-    famous_graphs::complete_graph::CompleteGraph,
     graphs::{
-        weighted::{GraphData, ValueProvider},
+        weighted::{EntryEngine, ValueProvider},
         GraphEngine,
     },
     storage::{btree::DictStorage, vector::ListStorage},

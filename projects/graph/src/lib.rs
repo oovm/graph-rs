@@ -6,4 +6,10 @@
 
 pub use adjacency_matrix::{AdjacencyEdge, StaticDirected, StaticUndirected};
 pub use graph_types::*;
-pub use adjacency_list;
+
+pub mod graph_engines {
+    pub use adjacency_list::{
+        sparse_edges::{self as adjacency_edge_list, AdjacencyEdgeList},
+        sparse_nodes::{self as adjacency_node_list, AdjacencyNodeList},
+    };
+}

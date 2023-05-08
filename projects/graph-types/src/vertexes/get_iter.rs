@@ -3,7 +3,6 @@ use std::{
     any::type_name,
     fmt::{Debug, Formatter},
     ops::{Bound, Range, RangeBounds},
-    slice::SliceIndex,
 };
 
 /// # Arguments
@@ -30,30 +29,36 @@ impl<'i, G: GraphEngine + ?Sized> Debug for NodesVisitor<'i, G> {
     }
 }
 
-impl<'i, G: GraphEngine> Iterator for NodesVisitor<'i, G> {
+impl<'i, G> Iterator for NodesVisitor<'i, G>
+where
+    G: GraphEngine + ?Sized,
+{
     type Item = usize;
 
     fn next(&mut self) -> Option<Self::Item> {
         let index = self.indexer.next()?;
-        match self.graph.has_node(index) {
-            Some(s) => Some(s),
-            None => self.next(),
-        }
+        if self.graph.has_node(index) { Some(index) } else { self.next() }
     }
 }
 
-impl<'i, G: GraphEngine> DoubleEndedIterator for NodesVisitor<'i, G> {
+impl<'i, G> DoubleEndedIterator for NodesVisitor<'i, G>
+where
+    G: GraphEngine + ?Sized,
+{
     fn next_back(&mut self) -> Option<Self::Item> {
         let index = self.indexer.next_back()?;
-        match self.graph.has_node(index) {
-            Some(s) => Some(s),
-            None => self.next_back(),
-        }
+        if self.graph.has_node(index) { Some(index) } else { self.next_back() }
     }
 }
 
 impl<'i, G: GraphEngine + ?Sized> NodesVisitor<'i, G> {
     /// Create a custom node visitor
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::GraphEngine;
+    /// ```
     pub fn new<I>(graph: &'i G, indexer: I) -> Self
     where
         I: DoubleEndedIterator<Item = usize> + 'static,
@@ -65,9 +70,13 @@ impl<'i, G: GraphEngine + ?Sized> NodesVisitor<'i, G> {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::GraphEngine;
+    /// use graph_theory::{CompleteGraph, NodesVisitor};
+    /// let graph = CompleteGraph::new(5);
+    /// let mut visitor = NodesVisitor::range(&graph, 1..=2);
+    /// assert_eq!(visitor.next(), Some(1));
+    /// assert_eq!(visitor.next(), Some(2));
+    /// assert_eq!(visitor.next(), None);
     /// ```
-    /// # Arguments
     pub fn range<R>(graph: &'i G, range: R) -> Self
     where
         R: RangeBounds<usize>,
@@ -86,11 +95,20 @@ impl<'i, G: GraphEngine + ?Sized> NodesVisitor<'i, G> {
         };
         Self { graph, indexer: Box::new(Range { start, end }) }
     }
-    /// # Arguments
-    pub fn slice<S>(graph: &'i G, slice: S) -> Self
-    where
-        S: SliceIndex<[usize]>,
-    {
-        todo!()
+    /// Create a index based node visitor
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::{CompleteGraph, NodesVisitor};
+    /// let graph = CompleteGraph::new(5);
+    /// let mut visitor = NodesVisitor::slice(&graph, &[1, 2]);
+    /// assert_eq!(visitor.next(), Some(1));
+    /// assert_eq!(visitor.next(), Some(2));
+    /// assert_eq!(visitor.next(), None);
+    /// ```
+    pub fn slice(graph: &'i G, slice: &'static [usize]) -> Self {
+        // TODO: allow non static slices
+        Self { graph, indexer: Box::new(slice.iter().copied()) }
     }
 }
