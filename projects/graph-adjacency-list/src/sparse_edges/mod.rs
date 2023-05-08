@@ -1,37 +1,23 @@
-use graph_types::{DirectedEdge, Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, NodesVisitor};
+use graph_types::{DirectedEdge, DynamicEdge, Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, NodesVisitor};
 use std::collections::BTreeMap;
 
 type NodeID = u32;
 type EdgeID = u32;
 
-pub type UnGraph = AdjacencyEdgeList<true>;
-pub type DiGraph = AdjacencyEdgeList<false>;
-
 #[doc = include_str!("AdjacencyNodeList.html")]
 #[derive(Debug)]
 pub struct AdjacencyEdgeList {
-    edges: BTreeMap<EdgeID, AdjacencyEdge>,
+    edges: BTreeMap<EdgeID, DynamicEdge>,
 }
 
-struct AdjacencyEdge {
-    lhs: NodeID,
-    rhs: NodeID,
-}
-
-impl<const TWO_WAY: bool> AdjacencyEdgeList<TWO_WAY> {
-    pub(crate) fn has_node(&self, node: u32) -> bool {
+impl GraphEngine for AdjacencyEdgeList {
+    fn has_node(&self, node_id: usize) -> bool {
         for edge in self.edges.values() {
-            if edge.lhs == node || edge.rhs == node {
+            if edge.from == node_id || edge.goto == node_id {
                 return true;
             }
         }
         false
-    }
-}
-
-impl GraphEngine for DiGraph {
-    fn has_node(&self, node_id: usize) -> bool {
-        self.has_node(node_id as u32)
     }
 
     fn remove_node_with_edges(&mut self, node_id: usize) {
