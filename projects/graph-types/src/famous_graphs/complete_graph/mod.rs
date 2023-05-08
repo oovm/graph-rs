@@ -24,6 +24,10 @@ pub struct CompleteGraph {
 }
 
 impl GraphEngine for CompleteGraph {
+    fn has_node(&self, node_id: usize) -> Option<usize> {
+        if node_id < self.rank { Some(node_id) } else { None }
+    }
+
     fn count_nodes(&self) -> usize {
         self.rank
     }

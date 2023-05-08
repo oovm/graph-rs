@@ -2,6 +2,15 @@ use super::*;
 
 
 impl GraphEngine for DiGraph {
+    fn has_node(&self, node_id: usize) -> Option<usize> {
+        let node_id = node_id as u32;
+        if self.head_nodes.contains_key(&node_id) {
+            Some(node_id as usize)
+        } else {
+            None
+        }
+    }
+
     fn count_nodes(&self) -> usize {
         self.head_nodes.len()
     }

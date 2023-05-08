@@ -21,6 +21,9 @@ impl<N> GraphEngine for AdjacencyMatrix<N>
 where
     N: Node + Clone,
 {
+    fn has_node(&self, node_id: usize) -> Option<usize> {
+        todo!()
+    }
 
 
     fn count_nodes(&self) -> usize {

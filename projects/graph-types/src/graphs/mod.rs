@@ -25,6 +25,9 @@ pub trait GraphEngine {
         unreachable!("Graph engine {} does not support {ability}", type_name::<Self>())
     }
 
+    /// Check if the node exists.
+    fn has_node(&self, node_id: usize) -> Option<usize>;
+
     /// # Arguments
     ///
     /// * `index`:

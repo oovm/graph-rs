@@ -2,6 +2,11 @@ use super::*;
 
 
 impl GraphEngine for UnGraph {
+    fn has_node(&self, node_id: usize) -> Option<usize> {
+        let node_id = node_id as u32;
+        self.head_nodes.get(&node_id).map(|_| node_id as usize)
+    }
+
     fn count_nodes(&self) -> usize {
         self.head_nodes.len()
     }
