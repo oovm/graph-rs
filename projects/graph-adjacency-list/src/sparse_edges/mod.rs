@@ -1,38 +1,33 @@
-use graph_types::{
-    DirectedEdge, DynamicEdge, Edge, EdgeDirection, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, NodesVisitor,
-};
-use std::collections::BTreeMap;
+use graph_types::{Edge, EdgeDirection, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, NodesVisitor};
+use std::collections::{BTreeMap, BTreeSet};
 
+type NodeID = u32;
 type EdgeID = u32;
-type StartNodeID = u32;
-type EndNodeID = u32;
 
 #[doc = include_str!("AdjacencyEdgeList.html")]
 #[derive(Debug)]
 pub struct AdjacencyEdgeList {
+    nodes: BTreeSet<NodeID>,
     edges: BTreeMap<EdgeID, ShortEdge>,
 }
 
 #[derive(Debug)]
 pub struct ShortEdge {
-    from: StartNodeID,
-    goto: EndNodeID,
+    from: NodeID,
+    goto: NodeID,
 }
 
 impl GraphEngine for AdjacencyEdgeList {
     fn has_node(&self, node_id: usize) -> bool {
-        let id = node_id as u32;
-        for edge in self.edges.values() {
-            if edge.from == id || edge.goto == id {
-                return true;
-            }
-        }
-        false
+        self.nodes.contains(&(node_id as u32))
+    }
+
+    fn count_nodes(&self) -> usize {
+        self.nodes.len()
     }
 
     fn remove_node_with_edges(&mut self, node_id: usize) {
         let id = node_id as u32;
-
         todo!()
     }
 
@@ -84,6 +79,10 @@ impl GraphEngine for AdjacencyEdgeList {
 
     fn count_edges(&self) -> usize {
         self.edges.len()
+    }
+
+    fn size_hint(&self) -> usize {
+        todo!()
     }
 }
 

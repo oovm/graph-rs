@@ -1,7 +1,12 @@
 use graph_types::{Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, NodesVisitor};
-use std::fmt::{Debug, Display, Formatter};
+use std::{
+    fmt::{Debug, Display, Formatter},
+    mem::size_of,
+};
 
 mod display;
+#[cfg(feature = "wolfram_wxf")]
+mod wolfram;
 
 /// [CompleteGraph](https://reference.wolfram.com/language/ref/CompleteGraph.html)
 /// represents a graph where every node is connected to every other node.
@@ -55,6 +60,18 @@ impl GraphEngine for CompleteGraph {
         E: Into<EdgeQuery>,
     {
         self.exception("remove edge")
+    }
+
+    /// Takes O(1) space.
+    ///
+    /// ```
+    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
+    /// assert_eq!(CompleteGraph::new(3).size_hint(), 24);
+    /// assert_eq!(CompleteGraph::new(4).size_hint(), 24);
+    /// assert_eq!(CompleteGraph::new(5).size_hint(), 24);
+    /// ```
+    fn size_hint(&self) -> usize {
+        size_of::<CompleteGraph>()
     }
 
     fn count_edges(&self) -> usize {

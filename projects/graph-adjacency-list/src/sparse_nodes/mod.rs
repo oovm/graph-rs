@@ -100,6 +100,10 @@ impl GraphEngine for AdjacencyNodeList {
     fn count_edges(&self) -> usize {
         self.head_nodes.iter().map(|(_, v)| v.end_nodes.len()).sum()
     }
+
+    fn size_hint(&self) -> usize {
+        todo!()
+    }
 }
 
 impl AdjacencyNodeList {

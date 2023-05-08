@@ -23,10 +23,8 @@ pub use crate::{
         weighted::{EntryEngine, ValueProvider},
         GraphEngine,
     },
-    storage::{btree::DictStorage, vector::ListStorage},
     vertexes::{get_iter::NodesVisitor, Node},
 };
 
-pub use num_traits::Zero;
 #[cfg(feature = "wolfram_wxf")]
 pub use wolfram_wxf::{ToWolfram, WolframValue};

@@ -32,7 +32,7 @@ path = "../graph-types"
 [dev-dependencies]
 
 [features]
-default = []
+default = ["serde", "wolfram"]
 serde = ["graph-types/serde"]
 wolfram = ["graph-types/wolfram_wxf", "adjacency-matrix/wolfram", "graph-families/wolfram"]
 

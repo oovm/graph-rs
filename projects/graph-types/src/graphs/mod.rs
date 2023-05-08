@@ -2,6 +2,7 @@ use crate::{Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphError, NodesVis
 use std::{
     any::type_name,
     future::Future,
+    mem::size_of,
     ops::{Deref, DerefMut},
     pin::Pin,
 };
@@ -16,7 +17,10 @@ pub mod weighted;
 /// use graph_theory::GraphEngine;
 /// ```
 #[allow(unused_variables)]
-pub trait GraphEngine {
+pub trait GraphEngine
+where
+    Self: Sized,
+{
     /// Mark the graph engine does not support the ability.
     ///
     /// Currently, we can not detect the ability at compile time, so we use this method to mark the ability is not supported.
@@ -54,9 +58,7 @@ pub trait GraphEngine {
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
     /// assert_eq!(CompleteGraph::new(5).count_nodes(), 5);
     /// ```
-    fn count_nodes(&self) -> usize {
-        self.traverse_nodes().count()
-    }
+    fn count_nodes(&self) -> usize;
     /// Insert a node without any neighbors (edges).
     ///
     /// # Examples
@@ -193,4 +195,14 @@ pub trait GraphEngine {
     /// assert_eq!(CompleteGraph::new(5).count_edges(), 20);
     /// ```
     fn count_edges(&self) -> usize;
+
+    /// Query the total space occupied by the structure, return 0 if failed to query
+    ///
+    /// Note that this volume contains garbage data, call [GraphEngine::shrink] at the right time to perform garbage collection.
+    fn size_hint(&self) -> usize {
+        size_of::<Self>()
+    }
+
+    /// Remove invalid edges and nodes to improve the efficiency of subsequent queries.
+    fn shrink(&mut self) {}
 }
