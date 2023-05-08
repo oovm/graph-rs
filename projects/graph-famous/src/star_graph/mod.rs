@@ -56,3 +56,9 @@ impl GraphEngine for StarGraph {
         size_of::<StarGraph>()
     }
 }
+
+impl StarGraph {
+    pub fn new(rank: u32) -> Self {
+        Self { rank }
+    }
+}

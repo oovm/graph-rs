@@ -7,5 +7,6 @@
 mod complete_graph;
 mod cycle_graph;
 mod star_graph;
+mod wheel_graph;
 
-pub use crate::{complete_graph::CompleteGraph, cycle_graph::CycleGraph, star_graph::StarGraph};
+pub use crate::{complete_graph::CompleteGraph, cycle_graph::CycleGraph, star_graph::StarGraph, wheel_graph::WheelGraph};

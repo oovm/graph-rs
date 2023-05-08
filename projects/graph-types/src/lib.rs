@@ -21,7 +21,7 @@ pub use crate::{
     errors::{GraphError, GraphErrorKind, GraphResult},
     graphs::{
         weighted::{EntryEngine, ValueProvider},
-        GraphEngine,
+        DynamicGraph, GraphEngine,
     },
     vertexes::{get_iter::NodesVisitor, Node},
 };

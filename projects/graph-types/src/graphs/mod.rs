@@ -206,3 +206,5 @@ where
     /// Remove invalid edges and nodes to improve the efficiency of subsequent queries.
     fn shrink(&mut self) {}
 }
+
+pub trait DynamicGraph: GraphEngine {}

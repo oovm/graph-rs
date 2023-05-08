@@ -1,20 +1,21 @@
+use crate::StarGraph;
 use graph_types::{Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, NodesVisitor};
 use std::{fmt::Debug, mem::size_of};
 
-/// https://reference.wolfram.com/language/ref/CycleGraph.html
+// https://reference.wolfram.com/language/ref/WheelGraph.html
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct CycleGraph {
-    mask: i32,
+pub struct WheelGraph {
+    rank: u32,
 }
 
-impl GraphEngine for CycleGraph {
+impl GraphEngine for WheelGraph {
     fn has_node(&self, node_id: usize) -> bool {
-        node_id < self.rank()
+        node_id < self.rank as usize
     }
 
     fn count_nodes(&self) -> usize {
-        self.rank()
+        self.rank as usize
     }
 
     fn remove_node_with_edges(&mut self, _: usize) {
@@ -41,33 +42,24 @@ impl GraphEngine for CycleGraph {
     }
 
     fn count_edges(&self) -> usize {
-        if self.is_undirected() { self.rank() * 2 } else { self.rank() }
+        self.rank as usize * 2
     }
 
     /// Takes O(1) space, in fact it's always takes 32 bits.
     ///
     /// ```
-    /// use graph_theory::{graph_engines::CycleGraph, GraphEngine};
-    /// assert_eq!(CycleGraph::directed(3).size_hint(), 4);
-    /// assert_eq!(CycleGraph::directed(4).size_hint(), 4);
-    /// assert_eq!(CycleGraph::undirected(5).size_hint(), 4);
+    /// use graph_theory::{graph_engines::WheelGraph, GraphEngine};
+    /// assert_eq!(WheelGraph::new(3).size_hint(), 4);
+    /// assert_eq!(WheelGraph::new(4).size_hint(), 4);
+    /// assert_eq!(WheelGraph::new(5).size_hint(), 4);
     /// ```
     fn size_hint(&self) -> usize {
-        size_of::<CycleGraph>()
+        size_of::<WheelGraph>()
     }
 }
 
-impl CycleGraph {
-    pub fn directed(rank: usize) -> Self {
-        Self { mask: rank as i32 }
-    }
-    pub fn undirected(rank: usize) -> Self {
-        Self { mask: -(rank as i32) }
-    }
-    pub fn rank(&self) -> usize {
-        self.mask.abs() as usize
-    }
-    pub fn is_undirected(&self) -> bool {
-        self.mask < 0
+impl WheelGraph {
+    pub fn new(rank: usize) -> Self {
+        Self { rank: rank as u32 }
     }
 }
