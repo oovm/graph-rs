@@ -17,11 +17,11 @@ pub use crate::{
         typed_edges::{DirectedEdge, DynamicEdge, UndirectedEdge},
         Edge, EdgeDirection,
     },
-    entries::{Entry, Query},
+    entries::{GraphEntry, GraphKind, Query},
     errors::{GraphError, GraphErrorKind, GraphResult},
     graphs::{
         weighted::{EntryEngine, ValueProvider},
-        DynamicGraph, GraphEngine,
+        GraphEngine, MutableGraph,
     },
     vertexes::{get_iter::NodesVisitor, Node},
 };

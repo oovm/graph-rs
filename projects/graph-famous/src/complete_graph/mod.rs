@@ -1,4 +1,4 @@
-use graph_types::{Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, NodesVisitor};
+use graph_types::{Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
 use std::{
     fmt::{Debug, Display, Formatter},
     mem::size_of,
@@ -29,6 +29,10 @@ pub struct CompleteGraph {
 }
 
 impl GraphEngine for CompleteGraph {
+    fn graph_kind(&self) -> GraphKind {
+        todo!()
+    }
+
     fn has_node(&self, node_id: usize) -> bool {
         node_id < self.rank as usize
     }
@@ -37,30 +41,12 @@ impl GraphEngine for CompleteGraph {
         self.rank as usize
     }
 
-    #[track_caller]
-    fn remove_node_with_edges(&mut self, _: usize) {
-        self.exception("remove node")
-    }
-
     fn traverse_nodes(&self) -> NodesVisitor<Self> {
         NodesVisitor::range(self, 0..self.count_nodes())
     }
 
     fn get_edges(&self) -> GetEdgesVisitor<Self> {
         todo!()
-    }
-
-    #[track_caller]
-    fn insert_edge_with_nodes<E: Edge>(&mut self, _edge: E) -> EdgeInsertID {
-        self.exception("insert edge")
-    }
-
-    #[track_caller]
-    fn remove_edge<E>(&mut self, _: E)
-    where
-        E: Into<EdgeQuery>,
-    {
-        self.exception("remove edge")
     }
 
     fn count_edges(&self) -> usize {

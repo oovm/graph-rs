@@ -1,4 +1,4 @@
-use crate::{Entry, GraphError, Query, ValueProvider};
+use crate::{GraphEntry, GraphError, Query, ValueProvider};
 use dashmap::{
     mapref::one::{Ref, RefMut},
     DashMap,
@@ -59,8 +59,8 @@ impl<T> SharedStorage<T> {
     /// ```
     pub fn get_data(&self, query: Query) -> Option<Ref<usize, T>> {
         let item = match query.entry {
-            Entry::Node => self.nodes.get(&query.index)?,
-            Entry::Edge => self.edges.get(&query.index)?,
+            GraphEntry::Node => self.nodes.get(&query.index)?,
+            GraphEntry::Edge => self.edges.get(&query.index)?,
         };
         Some(item)
     }
@@ -78,8 +78,8 @@ impl<T> SharedStorage<T> {
     /// ```
     pub fn mut_data(&self, query: Query) -> Option<RefMut<usize, T>> {
         let item = match query.entry {
-            Entry::Node => self.nodes.get_mut(&query.index)?,
-            Entry::Edge => self.edges.get_mut(&query.index)?,
+            GraphEntry::Node => self.nodes.get_mut(&query.index)?,
+            GraphEntry::Edge => self.edges.get_mut(&query.index)?,
         };
         Some(item)
     }

@@ -30,6 +30,7 @@ version = "0.0.*"
 path = "../graph-types"
 
 [dev-dependencies]
+serde_json = "1.0.96"
 
 [features]
 default = ["serde", "wolfram"]

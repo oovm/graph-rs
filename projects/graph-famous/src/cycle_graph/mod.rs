@@ -1,4 +1,4 @@
-use graph_types::{Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, NodesVisitor};
+use graph_types::{Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
 use std::{fmt::Debug, mem::size_of};
 
 /// https://reference.wolfram.com/language/ref/CycleGraph.html
@@ -9,16 +9,19 @@ pub struct CycleGraph {
 }
 
 impl GraphEngine for CycleGraph {
+    fn graph_kind(&self) -> GraphKind {
+        match self.mask < 0 {
+            true => GraphKind::Undirected,
+            false => GraphKind::Directed,
+        }
+    }
+
     fn has_node(&self, node_id: usize) -> bool {
         node_id < self.rank()
     }
 
     fn count_nodes(&self) -> usize {
         self.rank()
-    }
-
-    fn remove_node_with_edges(&mut self, _: usize) {
-        self.exception("remove node")
     }
 
     fn traverse_nodes(&self) -> NodesVisitor<Self> {
@@ -29,28 +32,17 @@ impl GraphEngine for CycleGraph {
         todo!()
     }
 
-    fn insert_edge_with_nodes<E: Edge>(&mut self, edge: E) -> EdgeInsertID {
-        todo!()
-    }
-
-    fn remove_edge<E>(&mut self, _: E)
-    where
-        E: Into<EdgeQuery>,
-    {
-        self.exception("remove edge")
-    }
-
     fn count_edges(&self) -> usize {
-        if self.is_undirected() { self.rank() * 2 } else { self.rank() }
+        if self.is_two_way() { self.rank() * 2 } else { self.rank() }
     }
 
     /// Takes O(1) space, in fact it's always takes 32 bits.
     ///
     /// ```
     /// use graph_theory::{graph_engines::CycleGraph, GraphEngine};
-    /// assert_eq!(CycleGraph::directed(3).size_hint(), 4);
-    /// assert_eq!(CycleGraph::directed(4).size_hint(), 4);
-    /// assert_eq!(CycleGraph::undirected(5).size_hint(), 4);
+    /// assert_eq!(CycleGraph::one_way(3).size_hint(), 4);
+    /// assert_eq!(CycleGraph::one_way(4).size_hint(), 4);
+    /// assert_eq!(CycleGraph::two_way(5).size_hint(), 4);
     /// ```
     fn size_hint(&self) -> usize {
         size_of::<CycleGraph>()
@@ -58,16 +50,16 @@ impl GraphEngine for CycleGraph {
 }
 
 impl CycleGraph {
-    pub fn directed(rank: usize) -> Self {
+    pub fn one_way(rank: usize) -> Self {
         Self { mask: rank as i32 }
     }
-    pub fn undirected(rank: usize) -> Self {
+    pub fn two_way(rank: usize) -> Self {
         Self { mask: -(rank as i32) }
     }
     pub fn rank(&self) -> usize {
         self.mask.abs() as usize
     }
-    pub fn is_undirected(&self) -> bool {
+    pub fn is_two_way(&self) -> bool {
         self.mask < 0
     }
 }

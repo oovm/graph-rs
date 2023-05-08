@@ -1,4 +1,6 @@
-use graph_types::{Edge, EdgeDirection, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, NodesVisitor};
+use graph_types::{
+    Edge, EdgeDirection, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, GraphKind, MutableGraph, NodesVisitor,
+};
 use std::collections::BTreeMap;
 
 type EdgeID = u32;
@@ -24,6 +26,10 @@ impl Default for AdjacencyNodeList {
 }
 
 impl GraphEngine for AdjacencyNodeList {
+    fn graph_kind(&self) -> GraphKind {
+        GraphKind::Directed
+    }
+
     fn has_node(&self, node_id: usize) -> bool {
         self.head_nodes.contains_key(&(node_id as u32))
     }
@@ -32,22 +38,32 @@ impl GraphEngine for AdjacencyNodeList {
         self.head_nodes.len()
     }
 
-    fn insert_node(&mut self, node: usize) -> usize {
-        let id = node as u32;
-        self.head_nodes.entry(id).or_insert_with(|| NodeNeighbors { end_nodes: BTreeMap::new() });
-        node
-    }
-
-    fn remove_node_with_edges(&mut self, node_id: usize) {
-        self.head_nodes.remove(&(node_id as u32));
-    }
-
     fn traverse_nodes(&self) -> NodesVisitor<Self> {
         NodesVisitor::range(self, 0..self.count_nodes())
     }
 
     fn get_edges(&self) -> GetEdgesVisitor<Self> {
         todo!()
+    }
+
+    fn count_edges(&self) -> usize {
+        self.head_nodes.iter().map(|(_, v)| v.end_nodes.len()).sum()
+    }
+
+    fn size_hint(&self) -> usize {
+        todo!()
+    }
+}
+
+impl MutableGraph for AdjacencyNodeList {
+    fn insert_node(&mut self, node_id: usize) -> usize {
+        let id = node_id as u32;
+        self.head_nodes.entry(id).or_insert_with(|| NodeNeighbors { end_nodes: BTreeMap::new() });
+        node_id
+    }
+
+    fn remove_node_with_edges(&mut self, node_id: usize) {
+        self.head_nodes.remove(&(node_id as u32));
     }
 
     fn insert_edge_with_nodes<E: Edge>(&mut self, edge: E) -> EdgeInsertID {
@@ -96,13 +112,6 @@ impl GraphEngine for AdjacencyNodeList {
                 panic!("remove undirected edge {v} is not supported in directed graph");
             }
         }
-    }
-    fn count_edges(&self) -> usize {
-        self.head_nodes.iter().map(|(_, v)| v.end_nodes.len()).sum()
-    }
-
-    fn size_hint(&self) -> usize {
-        todo!()
     }
 }
 

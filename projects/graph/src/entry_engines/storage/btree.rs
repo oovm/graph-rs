@@ -1,4 +1,4 @@
-use crate::{Entry, GraphError, Query, ValueProvider};
+use crate::{GraphEntry, GraphError, Query, ValueProvider};
 use std::collections::BTreeMap;
 
 /// # Arguments
@@ -55,8 +55,8 @@ impl<T> DictStorage<T> {
     /// ```
     pub fn get_data(&self, query: Query) -> Option<&T> {
         let item = match query.entry {
-            Entry::Node => self.nodes.get(&query.index)?,
-            Entry::Edge => self.edges.get(&query.index)?,
+            GraphEntry::Node => self.nodes.get(&query.index)?,
+            GraphEntry::Edge => self.edges.get(&query.index)?,
         };
         Some(item)
     }
@@ -73,8 +73,8 @@ impl<T> DictStorage<T> {
     /// ```
     pub fn mut_data(&mut self, query: Query) -> Option<&mut T> {
         let item = match query.entry {
-            Entry::Node => self.nodes.get_mut(&query.index)?,
-            Entry::Edge => self.edges.get_mut(&query.index)?,
+            GraphEntry::Node => self.nodes.get_mut(&query.index)?,
+            GraphEntry::Edge => self.edges.get_mut(&query.index)?,
         };
         Some(item)
     }
@@ -91,10 +91,10 @@ impl<T> DictStorage<T> {
     /// ```
     pub fn set_data(&mut self, query: Query, data: T) {
         match query.entry {
-            Entry::Node => {
+            GraphEntry::Node => {
                 self.nodes.insert(query.index, data);
             }
-            Entry::Edge => {
+            GraphEntry::Edge => {
                 self.edges.insert(query.index, data);
             }
         };

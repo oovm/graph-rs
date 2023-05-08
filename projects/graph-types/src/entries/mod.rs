@@ -9,8 +9,9 @@
 /// ```
 /// use graph_theory::GraphEngine;
 /// ```
+#[repr(u8)]
 #[derive(Copy, Clone, Debug)]
-pub enum Entry {
+pub enum GraphEntry {
     /// # Arguments
     ///
     /// * `index`:
@@ -22,7 +23,7 @@ pub enum Entry {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    Node,
+    Node = 0,
     /// # Arguments
     ///
     /// * `index`:
@@ -34,7 +35,46 @@ pub enum Entry {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    Edge,
+    Edge = 1,
+}
+/// # Arguments
+///
+/// * `index`:
+///
+/// returns: Option<Cow<Self::Node>>
+///
+/// # Examples
+///
+/// ```
+/// use graph_theory::GraphEngine;
+/// ```
+#[repr(u8)]
+#[derive(Copy, Clone, Debug)]
+pub enum GraphKind {
+    /// # Arguments
+    ///
+    /// * `index`:
+    ///
+    /// returns: Option<Cow<Self::Node>>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::GraphEngine;
+    /// ```
+    Directed = 0,
+    /// # Arguments
+    ///
+    /// * `index`:
+    ///
+    /// returns: Option<Cow<Self::Node>>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::GraphEngine;
+    /// ```
+    Undirected = 1,
 }
 
 /// # Arguments
@@ -61,7 +101,7 @@ pub struct Query {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    pub entry: Entry,
+    pub entry: GraphEntry,
     /// # Arguments
     ///
     /// * `index`:
@@ -89,7 +129,7 @@ impl Query {
     /// use graph_theory::GraphEngine;
     /// ```
     pub fn node(id: usize) -> Self {
-        Self { entry: Entry::Node, index: id }
+        Self { entry: GraphEntry::Node, index: id }
     }
     /// # Arguments
     ///
@@ -103,6 +143,6 @@ impl Query {
     /// use graph_theory::GraphEngine;
     /// ```
     pub fn edge(id: usize) -> Self {
-        Self { entry: Entry::Edge, index: id }
+        Self { entry: GraphEntry::Edge, index: id }
     }
 }

@@ -1,4 +1,4 @@
-use crate::{Entry, Query};
+use crate::{GraphEntry, Query};
 use std::{
     error::Error,
     fmt::{Debug, Display, Formatter},
@@ -61,7 +61,7 @@ pub enum GraphErrorKind {
     /// ```
     NotFound {
         /// The entry type of the error.
-        entry: Entry,
+        entry: GraphEntry,
         /// The entry index you want to access.
         index: usize,
     },
@@ -78,7 +78,7 @@ pub enum GraphErrorKind {
     /// ```
     OutOfRange {
         /// The entry type of the error.
-        entry: Entry,
+        entry: GraphEntry,
         /// The entry index you want to access.
         index: usize,
         /// All elements count of the storage.
@@ -187,7 +187,7 @@ impl GraphError {
     /// GraphError::edge_not_found(0);
     /// ```
     pub fn node_not_found(id: usize) -> Self {
-        Self { kind: Box::new(GraphErrorKind::NotFound { entry: Entry::Node, index: id }) }
+        Self { kind: Box::new(GraphErrorKind::NotFound { entry: GraphEntry::Node, index: id }) }
     }
     /// Some index is not found in storage.
     ///
@@ -201,7 +201,7 @@ impl GraphError {
     /// GraphError::edge_not_found(0);
     /// ```
     pub fn edge_not_found(id: usize) -> Self {
-        Self { kind: Box::new(GraphErrorKind::NotFound { entry: Entry::Edge, index: id }) }
+        Self { kind: Box::new(GraphErrorKind::NotFound { entry: GraphEntry::Edge, index: id }) }
     }
     /// Fill where the io error occurred.
     ///
@@ -238,7 +238,7 @@ impl GraphError {
     /// GraphError::edge_not_found(0);
     /// ```
     pub fn node_out_of_range(index: usize, max: usize) -> Self {
-        Self { kind: Box::new(GraphErrorKind::OutOfRange { entry: Entry::Node, index, max }) }
+        Self { kind: Box::new(GraphErrorKind::OutOfRange { entry: GraphEntry::Node, index, max }) }
     }
     /// Some index is not found in storage.
     ///
@@ -251,6 +251,6 @@ impl GraphError {
     /// GraphError::not_found(Query::edge(0));
     /// ```
     pub fn edge_out_of_range(index: usize, max: usize) -> Self {
-        Self { kind: Box::new(GraphErrorKind::OutOfRange { entry: Entry::Edge, index, max }) }
+        Self { kind: Box::new(GraphErrorKind::OutOfRange { entry: GraphEntry::Edge, index, max }) }
     }
 }

@@ -1,4 +1,4 @@
-use crate::{Entry, GraphError, Query, ValueProvider};
+use crate::{GraphEntry, GraphError, Query, ValueProvider};
 
 /// # Arguments
 ///
@@ -54,8 +54,8 @@ impl<T> ListStorage<T> {
     /// ```
     pub fn get_data(&self, query: Query) -> Option<&T> {
         let item = match query.entry {
-            Entry::Node => self.nodes.get(query.index)?,
-            Entry::Edge => self.edges.get(query.index)?,
+            GraphEntry::Node => self.nodes.get(query.index)?,
+            GraphEntry::Edge => self.edges.get(query.index)?,
         };
         Some(item)
     }
@@ -72,8 +72,8 @@ impl<T> ListStorage<T> {
     /// ```
     pub fn mut_data(&mut self, query: Query) -> Option<&mut T> {
         let item = match query.entry {
-            Entry::Node => self.nodes.get_mut(query.index)?,
-            Entry::Edge => self.edges.get_mut(query.index)?,
+            GraphEntry::Node => self.nodes.get_mut(query.index)?,
+            GraphEntry::Edge => self.edges.get_mut(query.index)?,
         };
         Some(item)
     }

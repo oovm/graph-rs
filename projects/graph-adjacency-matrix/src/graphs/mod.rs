@@ -29,26 +29,11 @@ where
         self.count_nodes
     }
 
-    fn remove_node_with_edges(&mut self, _node_id: usize) {
-        todo!()
-    }
-
     fn traverse_nodes(&self) -> NodesVisitor<Self> {
         todo!()
     }
 
     fn get_edges(&self) -> GetEdgesVisitor<Self> {
-        todo!()
-    }
-
-    fn insert_edge_with_nodes<E: Edge>(&mut self, _edge: E) -> EdgeInsertID {
-        todo!()
-    }
-
-    fn remove_edge<E>(&mut self, _edge: E)
-    where
-        E: Into<EdgeQuery>,
-    {
         todo!()
     }
 

@@ -1,24 +1,34 @@
 use graph_types::{Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, NodesVisitor};
-use std::{fmt::Debug, mem::size_of};
+use std::{
+    fmt::{Debug, Formatter},
+    mem::size_of,
+};
 
 // https://reference.wolfram.com/language/ref/StarGraph.html
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct StarGraph {
-    rank: u32,
+    mask: i32,
+}
+
+impl Debug for StarGraph {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("StarGraph")
+            .field("two_way", &self.is_two_way())
+            .field("rank", &self.rank())
+            .field("node", &self.count_nodes())
+            .field("edge", &self.count_edges())
+            .finish()
+    }
 }
 
 impl GraphEngine for StarGraph {
     fn has_node(&self, node_id: usize) -> bool {
-        node_id < self.rank as usize
+        node_id < self.rank()
     }
 
     fn count_nodes(&self) -> usize {
-        self.rank as usize
-    }
-
-    fn remove_node_with_edges(&mut self, _: usize) {
-        self.exception("remove node")
+        self.rank()
     }
 
     fn traverse_nodes(&self) -> NodesVisitor<Self> {
@@ -29,28 +39,17 @@ impl GraphEngine for StarGraph {
         todo!()
     }
 
-    fn insert_edge_with_nodes<E: Edge>(&mut self, edge: E) -> EdgeInsertID {
-        todo!()
-    }
-
-    fn remove_edge<E>(&mut self, _: E)
-    where
-        E: Into<EdgeQuery>,
-    {
-        self.exception("remove edge")
-    }
-
     fn count_edges(&self) -> usize {
-        self.rank as usize * 2
+        if self.is_two_way() { self.rank() - 1 } else { self.rank() }
     }
 
     /// Takes O(1) space, in fact it's always takes 32 bits.
     ///
     /// ```
     /// use graph_theory::{graph_engines::StarGraph, GraphEngine};
-    /// assert_eq!(StarGraph::new(3).size_hint(), 4);
-    /// assert_eq!(StarGraph::new(4).size_hint(), 4);
-    /// assert_eq!(StarGraph::new(5).size_hint(), 4);
+    /// assert_eq!(StarGraph::one_way(3).size_hint() * 8, 32);
+    /// assert_eq!(StarGraph::one_way(4).size_hint() * 8, 32);
+    /// assert_eq!(StarGraph::two_way(5).size_hint() * 8, 32);
     /// ```
     fn size_hint(&self) -> usize {
         size_of::<StarGraph>()
@@ -58,7 +57,16 @@ impl GraphEngine for StarGraph {
 }
 
 impl StarGraph {
-    pub fn new(rank: u32) -> Self {
-        Self { rank }
+    pub fn one_way(rank: usize) -> Self {
+        Self { mask: rank as i32 }
+    }
+    pub fn two_way(rank: usize) -> Self {
+        Self { mask: -(rank as i32) }
+    }
+    pub fn rank(&self) -> usize {
+        self.mask.abs() as usize
+    }
+    pub fn is_two_way(&self) -> bool {
+        self.mask < 0
     }
 }

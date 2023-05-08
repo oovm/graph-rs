@@ -18,27 +18,12 @@ impl GraphEngine for WheelGraph {
         self.rank as usize
     }
 
-    fn remove_node_with_edges(&mut self, _: usize) {
-        self.exception("remove node")
-    }
-
     fn traverse_nodes(&self) -> NodesVisitor<Self> {
         NodesVisitor::range(self, 0..self.count_nodes())
     }
 
     fn get_edges(&self) -> GetEdgesVisitor<Self> {
         todo!()
-    }
-
-    fn insert_edge_with_nodes<E: Edge>(&mut self, edge: E) -> EdgeInsertID {
-        todo!()
-    }
-
-    fn remove_edge<E>(&mut self, _: E)
-    where
-        E: Into<EdgeQuery>,
-    {
-        self.exception("remove edge")
     }
 
     fn count_edges(&self) -> usize {
