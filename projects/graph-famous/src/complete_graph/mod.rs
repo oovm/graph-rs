@@ -25,32 +25,39 @@ mod wolfram;
 #[derive(Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct CompleteGraph {
-    rank: u32,
+    mask: u32,
 }
 
 impl GraphEngine for CompleteGraph {
     fn graph_kind(&self) -> GraphKind {
+        match self.mask < 0 {
+            true => GraphKind::Undirected,
+            false => GraphKind::Directed,
+        }
+    }
+
+    fn has_node(&self, node_id: usize) -> Option<usize> {
         todo!()
     }
 
-    fn has_node(&self, node_id: usize) -> bool {
-        node_id < self.rank as usize
-    }
-
     fn count_nodes(&self) -> usize {
-        self.rank as usize
+        self.mask as usize
     }
 
     fn traverse_nodes(&self) -> NodesVisitor<Self> {
         NodesVisitor::range(self, 0..self.count_nodes())
     }
 
-    fn get_edges(&self) -> GetEdgesVisitor<Self> {
+    fn has_edge<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
+        todo!()
+    }
+
+    fn traverse_edges(&self) -> GetEdgesVisitor<Self> {
         todo!()
     }
 
     fn count_edges(&self) -> usize {
-        let rank = self.rank as usize;
+        let rank = self.mask as usize;
         rank * (rank - 1) * 2
     }
 
@@ -81,10 +88,10 @@ impl CompleteGraph {
     /// let graph = CompleteGraph::new(3);
     /// ```
     pub fn new(rank: usize) -> Self {
-        Self { rank: rank as u32 }
+        Self { mask: rank as u32 }
     }
     pub fn directed(rank: usize) -> Self {
-        Self { rank: rank as u32 }
+        Self { mask: rank as u32 }
     }
     /// Check if the given graph is a complete graph, and if so, return it.
     pub fn check<G: GraphEngine>(graph: &G) -> Option<Self> {
@@ -92,7 +99,7 @@ impl CompleteGraph {
         let edges = graph.count_edges();
         if edges == nodes * (nodes - 1) {
             if is_directed(graph, nodes) {
-                return Some(Self { rank: nodes as u32 });
+                return Some(Self { mask: nodes as u32 });
             }
         }
         None

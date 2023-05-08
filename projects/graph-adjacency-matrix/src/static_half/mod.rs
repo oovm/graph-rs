@@ -3,12 +3,12 @@ use std::fmt::{Debug, Display};
 mod display;
 
 #[derive(Clone, Debug)]
-pub struct StaticUndirected {
+pub struct TriangularAdjacencyMatrix {
     /// edges, lower triangular matrix
     edges: Vec<usize>,
 }
 
-impl StaticUndirected {
+impl TriangularAdjacencyMatrix {
     pub fn new(nodes: usize) -> Self {
         Self { edges: vec![0; (nodes + 1) * nodes / 2] }
     }

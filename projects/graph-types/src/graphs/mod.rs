@@ -1,4 +1,5 @@
 use crate::{Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphError, GraphKind, NodesVisitor, Query};
+
 use std::{
     future::Future,
     mem::size_of,
@@ -28,9 +29,10 @@ where
     ///
     /// ```
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// assert_eq!(CompleteGraph::new(5).count_nodes(), 5);
+    /// assert_eq!(CompleteGraph::new(5).has_node(5), true);
+    /// assert_eq!(CompleteGraph::new(5).has_node(6), false);
     /// ```
-    fn has_node(&self, node_id: usize) -> bool;
+    fn has_node(&self, node_id: usize) -> Option<usize>;
 
     /// Check if the node exists, return the node id if exists.
     ///
@@ -64,6 +66,16 @@ where
     /// assert_eq!(graph.traverse_nodes().count(), 20)
     /// ```
     fn traverse_nodes(&self) -> NodesVisitor<Self>;
+    /// Check if the edge exists, return the node id if exists.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
+    /// assert_eq!(CompleteGraph::new(5).has_node(5), true);
+    /// assert_eq!(CompleteGraph::new(5).has_node(6), false);
+    /// ```
+    fn has_edge<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize>;
 
     /// Get the edges of the graph.
     ///
@@ -73,7 +85,7 @@ where
     /// let mut graph = CompleteGraph::new(5);
     /// assert_eq!(graph.traverse_nodes().count(), 20)
     /// ```
-    fn get_edges(&self) -> GetEdgesVisitor<Self>;
+    fn traverse_edges(&self) -> GetEdgesVisitor<Self>;
 
     /// Count the number of edges in the graph.
     ///

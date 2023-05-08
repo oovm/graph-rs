@@ -16,8 +16,8 @@ impl GraphEngine for CycleGraph {
         }
     }
 
-    fn has_node(&self, node_id: usize) -> bool {
-        node_id < self.rank()
+    fn has_node(&self, node_id: usize) -> Option<usize> {
+        (node_id < self.rank()).then_some(node_id)
     }
 
     fn count_nodes(&self) -> usize {
@@ -28,12 +28,19 @@ impl GraphEngine for CycleGraph {
         NodesVisitor::range(self, 0..self.count_nodes())
     }
 
-    fn get_edges(&self) -> GetEdgesVisitor<Self> {
+    fn has_edge<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
+        todo!()
+    }
+
+    fn traverse_edges(&self) -> GetEdgesVisitor<Self> {
         todo!()
     }
 
     fn count_edges(&self) -> usize {
-        if self.is_two_way() { self.rank() * 2 } else { self.rank() }
+        match self.graph_kind() {
+            GraphKind::Directed => self.rank(),
+            GraphKind::Undirected => self.rank() * 2,
+        }
     }
 
     /// Takes O(1) space, in fact it's always takes 32 bits.

@@ -1,4 +1,4 @@
-use graph_types::{Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, NodesVisitor};
+use graph_types::{Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
 use std::{
     fmt::{Debug, Formatter},
     mem::size_of,
@@ -14,7 +14,7 @@ pub struct StarGraph {
 impl Debug for StarGraph {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("StarGraph")
-            .field("two_way", &self.is_two_way())
+            .field("kind", &self.graph_kind())
             .field("rank", &self.rank())
             .field("node", &self.count_nodes())
             .field("edge", &self.count_edges())
@@ -23,8 +23,15 @@ impl Debug for StarGraph {
 }
 
 impl GraphEngine for StarGraph {
-    fn has_node(&self, node_id: usize) -> bool {
-        node_id < self.rank()
+    fn graph_kind(&self) -> GraphKind {
+        match self.mask < 0 {
+            true => GraphKind::Undirected,
+            false => GraphKind::Directed,
+        }
+    }
+
+    fn has_node(&self, node_id: usize) -> Option<usize> {
+        (node_id < self.rank()).then_some(node_id)
     }
 
     fn count_nodes(&self) -> usize {
@@ -35,12 +42,19 @@ impl GraphEngine for StarGraph {
         NodesVisitor::range(self, 0..self.count_nodes())
     }
 
-    fn get_edges(&self) -> GetEdgesVisitor<Self> {
+    fn has_edge<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
+        todo!()
+    }
+
+    fn traverse_edges(&self) -> GetEdgesVisitor<Self> {
         todo!()
     }
 
     fn count_edges(&self) -> usize {
-        if self.is_two_way() { self.rank() - 1 } else { self.rank() }
+        match self.graph_kind() {
+            GraphKind::Directed => self.rank(),
+            GraphKind::Undirected => self.rank() * 2,
+        }
     }
 
     /// Takes O(1) space, in fact it's always takes 32 bits.
@@ -65,8 +79,5 @@ impl StarGraph {
     }
     pub fn rank(&self) -> usize {
         self.mask.abs() as usize
-    }
-    pub fn is_two_way(&self) -> bool {
-        self.mask < 0
     }
 }

@@ -8,6 +8,6 @@ impl Debug for CompleteGraph {
 
 impl Display for CompleteGraph {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "CompleteGraph({})", self.rank)
+        write!(f, "CompleteGraph({})", self.mask)
     }
 }

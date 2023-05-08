@@ -3,7 +3,7 @@ use super::*;
 #[cfg(feature = "wolfram")]
 use graph_types::{ToWolfram, WolframValue};
 
-impl Display for StaticUndirected {
+impl Display for TriangularAdjacencyMatrix {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let size = self.max_degree().to_string().len();
         let max = self.nodes();
@@ -25,7 +25,7 @@ impl Display for StaticUndirected {
 }
 
 #[cfg(feature = "wolfram")]
-impl ToWolfram for StaticUndirected {
+impl ToWolfram for TriangularAdjacencyMatrix {
     fn to_wolfram(&self) -> WolframValue {
         let nodes = self.nodes();
         let mut rows = Vec::with_capacity(nodes);

@@ -30,8 +30,8 @@ impl GraphEngine for AdjacencyNodeList {
         GraphKind::Directed
     }
 
-    fn has_node(&self, node_id: usize) -> bool {
-        self.head_nodes.contains_key(&(node_id as u32))
+    fn has_node(&self, node_id: usize) -> Option<usize> {
+        self.head_nodes.contains_key(&(node_id as u32)).then(|| node_id)
     }
 
     fn count_nodes(&self) -> usize {
@@ -42,7 +42,11 @@ impl GraphEngine for AdjacencyNodeList {
         NodesVisitor::range(self, 0..self.count_nodes())
     }
 
-    fn get_edges(&self) -> GetEdgesVisitor<Self> {
+    fn has_edge<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
+        todo!()
+    }
+
+    fn traverse_edges(&self) -> GetEdgesVisitor<Self> {
         todo!()
     }
 

@@ -2,7 +2,7 @@ use super::*;
 #[cfg(feature = "wolfram")]
 use graph_types::{ToWolfram, WolframValue};
 
-impl Display for StaticDirected {
+impl Display for AdjacencyMatrix {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let size = self.max_degree().to_string().len();
         let max = self.nodes();
@@ -19,7 +19,7 @@ impl Display for StaticDirected {
 }
 
 #[cfg(feature = "wolfram")]
-impl ToWolfram for StaticDirected {
+impl ToWolfram for AdjacencyMatrix {
     fn to_wolfram(&self) -> WolframValue {
         let rows = self
             .edges

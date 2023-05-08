@@ -37,16 +37,18 @@ pub enum GraphEntry {
     /// ```
     Edge = 1,
 }
-/// # Arguments
+
+/// Mark the graph as directed or undirected.
 ///
-/// * `index`:
-///
-/// returns: Option<Cow<Self::Node>>
+/// Generally speaking, a directed graph engine can insert undirected edges,
+/// but a undirected graph engine cannot insert directed edges.
 ///
 /// # Examples
 ///
 /// ```
-/// use graph_theory::GraphEngine;
+/// use graph_theory::{graph_engines::CycleGraph, GraphEngine, GraphKind};
+/// assert_eq!(CycleGraph::one_way(5).graph_kind(), GraphKind::Directed);
+/// assert_eq!(CycleGraph::two_way(5).graph_kind(), GraphKind::Undirected);
 /// ```
 #[repr(u8)]
 #[derive(Copy, Clone, Debug)]

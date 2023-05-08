@@ -37,7 +37,7 @@ where
 
     fn next(&mut self) -> Option<Self::Item> {
         let index = self.indexer.next()?;
-        if self.graph.has_node(index) { Some(index) } else { self.next() }
+        if self.graph.has_node(index).is_some() { Some(index) } else { self.next() }
     }
 }
 
@@ -47,7 +47,7 @@ where
 {
     fn next_back(&mut self) -> Option<Self::Item> {
         let index = self.indexer.next_back()?;
-        if self.graph.has_node(index) { Some(index) } else { self.next_back() }
+        if self.graph.has_node(index).is_some() { Some(index) } else { self.next_back() }
     }
 }
 
