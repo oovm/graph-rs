@@ -11,7 +11,11 @@ edition = "2021"
 exclude = ["package.json", "tests/**"]
 
 [dependencies]
+dashmap = { version = "5.4.0", optional = true }
 
+[dependencies.graph-families]
+version = "0.0.*"
+path = "../graph-famous"
 
 [dependencies.adjacency-list]
 version = "0.0.*"
@@ -29,7 +33,8 @@ path = "../graph-types"
 
 [features]
 default = []
-wolfram = ["graph-types/wolfram_wxf", "adjacency-matrix/wolfram"]
+serde = ["graph-types/serde"]
+wolfram = ["graph-types/wolfram_wxf", "adjacency-matrix/wolfram", "graph-families/wolfram"]
 
 [package.metadata.docs.rs]
 all-features = true

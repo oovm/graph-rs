@@ -1,4 +1,4 @@
-use crate::{Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, NodesVisitor};
+use graph_types::{Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, NodesVisitor};
 use std::fmt::{Debug, Display, Formatter};
 
 mod display;

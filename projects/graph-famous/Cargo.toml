@@ -1,10 +1,10 @@
 [package]
-name = "graph-famous"
+name = "graph-families"
 version = "0.0.0"
 authors = ["Aster <192607617@qq.com>"]
 description = "Adjacency Matrix and Adjacency Graph"
 repository = "https://github.com/oovm/graph-rs"
-documentation = "https://docs.rs/adjacency-matrix"
+documentation = "https://docs.rs/graph-families"
 readme = "Readme.md"
 license = "MPL-2.0"
 edition = "2021"
@@ -18,6 +18,7 @@ path = "../graph-types"
 features = []
 
 [dev-dependencies]
+graph-theory = { version = "*", path = "../graph" }
 
 [features]
 default = []

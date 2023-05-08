@@ -5,3 +5,5 @@
 #![doc(html_favicon_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 
 mod complete_graph;
+
+pub use complete_graph::CompleteGraph;

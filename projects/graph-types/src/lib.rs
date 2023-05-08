@@ -8,7 +8,6 @@ mod edges;
 mod entries;
 mod errors;
 mod graphs;
-mod storage;
 mod vertexes;
 
 pub use crate::{
@@ -18,7 +17,7 @@ pub use crate::{
         typed_edges::{DirectedEdge, DynamicEdge, UndirectedEdge},
         Edge, EdgeDirection,
     },
-    entries::{Entry, EntryName, EntryWeight, Query},
+    entries::{Entry, Query},
     errors::{GraphError, GraphErrorKind, GraphResult},
     graphs::{
         weighted::{EntryEngine, ValueProvider},
@@ -31,6 +30,3 @@ pub use crate::{
 pub use num_traits::Zero;
 #[cfg(feature = "wolfram_wxf")]
 pub use wolfram_wxf::{ToWolfram, WolframValue};
-
-#[cfg(feature = "dashmap")]
-pub use crate::storage::shared::SharedStorage;
