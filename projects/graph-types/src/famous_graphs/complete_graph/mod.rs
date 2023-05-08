@@ -1,4 +1,4 @@
-use crate::{Edge, EdgeInsertID, EdgeRemoveAction, GetNodesVisitor, GraphEngine};
+use crate::{Edge, EdgeInsertID, EdgeRemoveAction, NodesVisitor, GraphEngine};
 use std::fmt::{Debug, Display, Formatter};
 
 mod display;
@@ -28,8 +28,8 @@ impl GraphEngine for CompleteGraph {
         if node_id < self.rank { Some(node_id) } else { None }
     }
 
-    fn get_nodes(&self) -> GetNodesVisitor<Self> {
-        GetNodesVisitor::range(self, 0..self.count_nodes())
+    fn get_nodes(&self) -> NodesVisitor<Self> {
+        NodesVisitor::range(self, 0..self.count_nodes())
     }
 
     fn count_nodes(&self) -> usize {

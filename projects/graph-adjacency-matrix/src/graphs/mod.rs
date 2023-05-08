@@ -1,5 +1,5 @@
 use crate::StaticDirected;
-use graph_types::{Edge, EdgeInsertID, EdgeRemoveAction, GetNodesVisitor, GraphEngine, Node};
+use graph_types::{Edge, EdgeInsertID, EdgeRemoveAction, NodesVisitor, GraphEngine, Node};
 use std::{collections::BTreeMap};
 
 #[derive(Clone, Debug)]
@@ -25,7 +25,7 @@ where
         todo!()
     }
 
-    fn get_nodes(&self) -> GetNodesVisitor<Self> {
+    fn get_nodes(&self) -> NodesVisitor<Self> {
         todo!()
     }
 

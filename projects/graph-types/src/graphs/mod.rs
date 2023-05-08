@@ -1,4 +1,4 @@
-use crate::{Edge, EdgeInsertID, EdgeRemoveAction, GetEdgesVisitor, GetNodesVisitor, GraphError, MutEdgesVisitor, Query};
+use crate::{Edge, EdgeInsertID, EdgeRemoveAction, GetEdgesVisitor, NodesVisitor, GraphError,  Query};
 use std::{
     future::Future,
     ops::{Deref, DerefMut},
@@ -40,7 +40,7 @@ pub trait GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn get_nodes(&self) -> GetNodesVisitor<Self>;
+    fn get_nodes(&self) -> NodesVisitor<Self>;
     /// Count the number of nodes in the graph.
     ///
     /// # Examples
@@ -103,20 +103,6 @@ pub trait GraphEngine {
     fn remove_node_with_edges(&mut self, node_id: usize);
     fn get_edges(&self) -> GetEdgesVisitor<Self> {
         GetEdgesVisitor::new(self)
-    }
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::GraphEngine;
-    /// ```
-    fn mut_edges(&mut self) -> MutEdgesVisitor<Self> {
-        MutEdgesVisitor::new(self)
     }
     /// Insert a edge between two nodes.
     ///

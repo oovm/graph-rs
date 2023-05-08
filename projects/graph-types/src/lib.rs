@@ -14,7 +14,7 @@ mod vertexes;
 
 pub use crate::{
     edges::{
-        typed_edges::{DirectedEdge, DynamicEdge, UndirectedEdge}, get_iter::GetEdgesVisitor, actions::{EdgeRemoveAction, EdgeInsertID}, mut_iter::MutEdgesVisitor,
+        typed_edges::{DirectedEdge, DynamicEdge, UndirectedEdge}, get_iter::GetEdgesVisitor, actions::{EdgeRemoveAction, EdgeInsertID},
         Edge, EdgeDirection,
     },
     entries::{Entry, EntryName, EntryWeight, Query},
@@ -25,7 +25,7 @@ pub use crate::{
         GraphEngine,
     },
     storage::{btree::DictStorage, vector::ListStorage},
-    vertexes::{get_iter::GetNodesVisitor, Node},
+    vertexes::{get_iter::NodesVisitor, Node},
 };
 
 pub use num_traits::Zero;
