@@ -1,11 +1,11 @@
 [package]
 name = "graph-types"
-version = "0.0.5"
+version = "0.0.6"
 authors = ["Aster <192607617@qq.com>"]
 description = "Shared types for graph theory."
 repository = "https://github.com/oovm/graph-rs"
-documentation = "https://docs.rs/distantia"
-readme = "Readme.md"
+documentation = "https://docs.rs/graph-types"
+readme = "readme.md"
 license = "MPL-2.0"
 edition = "2021"
 exclude = ["tests/", "package.json"]
