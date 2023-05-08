@@ -25,7 +25,7 @@ pub use crate::{
         GraphEngine,
     },
     storage::{btree::DictStorage, vector::ListStorage},
-    vertexes::{get_iter::GetNodesVisitor, mut_iter::MutNodesVisitor, Node},
+    vertexes::{get_iter::GetNodesVisitor, Node},
 };
 
 pub use num_traits::Zero;

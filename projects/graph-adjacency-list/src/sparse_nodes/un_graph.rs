@@ -1,3 +1,4 @@
+use graph_types::GetNodesVisitor;
 use super::*;
 
 
@@ -5,6 +6,10 @@ impl GraphEngine for UnGraph {
     fn has_node(&self, node_id: usize) -> Option<usize> {
         let node_id = node_id as u32;
         self.head_nodes.get(&node_id).map(|_| node_id as usize)
+    }
+
+    fn get_nodes(&self) -> GetNodesVisitor<Self> {
+        GetNodesVisitor::range(self, 0..self.count_nodes())
     }
 
     fn count_nodes(&self) -> usize {

@@ -7,6 +7,7 @@ use std::{
 use std::any::type_name;
 
 
+
 pub mod weighted;
 
 /// Represent a graph storage, with a set of nodes and edges.
@@ -25,7 +26,7 @@ pub trait GraphEngine {
         unreachable!("Graph engine {} does not support {ability}", type_name::<Self>())
     }
 
-    /// Check if the node exists.
+    /// Check if the node exists, return the node id if exists.
     fn has_node(&self, node_id: usize) -> Option<usize>;
 
     /// # Arguments
@@ -39,9 +40,7 @@ pub trait GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn get_nodes(&self) -> GetNodesVisitor<Self> {
-        GetNodesVisitor::new(self)
-    }
+    fn get_nodes(&self) -> GetNodesVisitor<Self>;
     /// Count the number of nodes in the graph.
     ///
     /// # Examples

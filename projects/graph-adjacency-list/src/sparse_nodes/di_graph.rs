@@ -1,3 +1,4 @@
+use graph_types::GetNodesVisitor;
 use super::*;
 
 
@@ -9,6 +10,10 @@ impl GraphEngine for DiGraph {
         } else {
             None
         }
+    }
+
+    fn get_nodes(&self) -> GetNodesVisitor<Self> {
+        GetNodesVisitor::range(self, 0..self.count_nodes())
     }
 
     fn count_nodes(&self) -> usize {
