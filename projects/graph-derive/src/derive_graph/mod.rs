@@ -10,16 +10,24 @@ use syn::{
     AttrStyle, Attribute, Error, ExprStruct, Fields, Ident, ItemStruct, Meta,
 };
 
+mod easy_tuple;
 mod simple;
+mod weighted;
 
 pub enum GraphDerive {
     Undefined,
-    Easy(EasyGraph),
+    EasyTuple(EasyTuple),
+    EasyTable(EasyTable),
 }
 
-pub struct EasyGraph {
+pub struct EasyTuple {
     graph_name: Ident,
-    field_name: Option<Ident>,
+    field_type: Ident,
+}
+
+pub struct EasyTable {
+    graph_name: Ident,
+    field_name: Ident,
     field_type: Ident,
 }
 
@@ -29,8 +37,8 @@ impl Parse for GraphDerive {
             Ok(o) => o,
             Err(_) => Err(Error::new(input.span(), "#[derive(Graph)] only work on struct"))?,
         };
-        match EasyGraph::new(&item) {
-            ParseResult::Ok(o) => return Ok(GraphDerive::Easy(o)),
+        match GraphDerive::easy_graph(&item) {
+            ParseResult::Ok(o) => return Ok(GraphDerive::EasyTable(o)),
             ParseResult::NotGood => {}
             ParseResult::Bad(e) => Err(e)?,
         }
@@ -38,57 +46,14 @@ impl Parse for GraphDerive {
     }
 }
 
-// pub fn extra_graph_attribute(expr: &ExprStruct) -> Option<AttrStyle> {
-//     for i in &expr.fields {
-//         for j in &i.attrs {
-//             panic!("{:?}", j.to_token_stream().to_string());
-//         }
-//     }
-//     ParseResult::Ok(())
-// }
-
 impl ToTokens for GraphDerive {
     fn to_tokens(&self, tokens: &mut TokenStream2) {
         match self {
             GraphDerive::Undefined => {
                 todo!()
             }
-            GraphDerive::Easy(e) => e.to_tokens(tokens),
+            GraphDerive::EasyTable(e) => e.to_tokens(tokens),
+            GraphDerive::EasyTuple(e) => e.to_tokens(tokens),
         }
-    }
-}
-
-impl ToTokens for EasyGraph {
-    fn to_tokens(&self, tokens: &mut TokenStream2) {
-        let name = &self.graph_name;
-
-        let copy = match self.field_name {
-            None => {
-                quote! {
-                impl Copy for #name {}
-                impl Clone for TupleGraph {
-                #[inline]
-                fn clone(&self) -> Self {
-                Self(self.0)
-                }
-                }
-                impl Eq for #name {}
-                }
-            }
-            Some(_) => {
-                quote! {
-                impl Copy for #name {}
-                impl Clone for TupleGraph {
-                #[inline]
-                fn clone(&self) -> Self {
-                Self(self.0)
-                }
-                }
-
-                impl Eq for #name {}
-                }
-            }
-        };
-        tokens.extend(copy);
     }
 }

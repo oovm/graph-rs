@@ -1,6 +1,6 @@
 use super::*;
 
-impl ToTokens for EasyTable {
+impl ToTokens for EasyTuple {
     fn to_tokens(&self, tokens: &mut TokenStream2) {
         let name = &self.graph_name;
 
