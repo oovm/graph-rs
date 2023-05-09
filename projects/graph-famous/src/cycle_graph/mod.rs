@@ -6,17 +6,12 @@ use std::{
     mem::size_of,
 };
 
-#[derive(Graph)]
-pub enum A {}
-
 /// https://reference.wolfram.com/language/ref/CycleGraph.html
-
+#[derive(Graph)]
 pub struct CycleGraph {
-    #[graph(easy)]
+    #[easy_graph]
     mask: i32,
 }
-
-impl Copy for CycleGraph {}
 
 impl Clone for CycleGraph {
     #[inline]
@@ -36,8 +31,6 @@ impl Debug for CycleGraph {
             .finish()
     }
 }
-
-impl Eq for CycleGraph {}
 
 impl PartialEq for CycleGraph {
     fn eq(&self, other: &Self) -> bool {
