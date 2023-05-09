@@ -41,6 +41,7 @@ impl ToTokens for EasyTable {
                 }
             }
         };
+        let methods = quote! {};
         let serde = quote! {
             #[cfg(feature = "serde")]
             impl serde::ser::Serialize for #name {
