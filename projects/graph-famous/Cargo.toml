@@ -18,8 +18,15 @@ version = "0.0.*"
 path = "../graph-types"
 features = []
 
+[dependencies.graph-derive]
+version = "0.0.*"
+path = "../graph-derive"
+features = []
+
 [dev-dependencies]
 graph-theory = { version = "*", path = "../graph" }
+
+
 
 [features]
 default = []

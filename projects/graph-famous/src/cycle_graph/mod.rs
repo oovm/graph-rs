@@ -1,11 +1,71 @@
+use graph_derive::Graph;
 use graph_types::{Edge, EdgeInsertID, EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
-use std::{fmt::Debug, mem::size_of};
+use serde::{ser::SerializeTupleStruct, Serialize, Serializer};
+use std::{
+    fmt::{Debug, Formatter},
+    mem::size_of,
+};
+
+#[derive(Graph)]
+pub enum A {}
 
 /// https://reference.wolfram.com/language/ref/CycleGraph.html
-#[derive(Copy, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+
 pub struct CycleGraph {
+    #[graph(easy)]
     mask: i32,
+}
+
+impl Copy for CycleGraph {}
+
+impl Clone for CycleGraph {
+    #[inline]
+    fn clone(&self) -> Self {
+        Self { mask: self.mask }
+    }
+}
+
+impl Debug for CycleGraph {
+    #[inline]
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("CycleGraph")
+            .field("kind", &self.graph_kind())
+            .field("rank", &self.rank())
+            .field("nodes", &self.count_nodes())
+            .field("edges", &self.count_edges())
+            .finish()
+    }
+}
+
+impl Eq for CycleGraph {}
+
+impl PartialEq for CycleGraph {
+    fn eq(&self, other: &Self) -> bool {
+        self.mask == other.mask
+    }
+}
+
+impl CycleGraph {
+    pub const fn one_way(rank: usize) -> Self {
+        Self { mask: rank as i32 }
+    }
+    pub const fn two_way(rank: usize) -> Self {
+        Self { mask: -(rank as i32) }
+    }
+    pub const fn rank(&self) -> usize {
+        self.mask.abs() as usize
+    }
+}
+
+impl Serialize for CycleGraph {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut ser = serializer.serialize_tuple_struct("CycleGraph", 1)?;
+        ser.serialize_field(&self.mask)?;
+        ser.end()
+    }
 }
 
 impl GraphEngine for CycleGraph {
@@ -53,20 +113,5 @@ impl GraphEngine for CycleGraph {
     /// ```
     fn size_hint(&self) -> usize {
         size_of::<CycleGraph>()
-    }
-}
-
-impl CycleGraph {
-    pub fn one_way(rank: usize) -> Self {
-        Self { mask: rank as i32 }
-    }
-    pub fn two_way(rank: usize) -> Self {
-        Self { mask: -(rank as i32) }
-    }
-    pub fn rank(&self) -> usize {
-        self.mask.abs() as usize
-    }
-    pub fn is_two_way(&self) -> bool {
-        self.mask < 0
     }
 }
