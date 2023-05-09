@@ -11,8 +11,8 @@ mod derive_graph;
 use crate::derive_graph::GraphDerive;
 
 use proc_macro::TokenStream;
-use quote::{quote, ToTokens};
-use syn::{parse::Parse, parse_macro_input, Error};
+use quote::{ToTokens};
+use syn::{parse_macro_input};
 
 pub(crate) mod entries;
 

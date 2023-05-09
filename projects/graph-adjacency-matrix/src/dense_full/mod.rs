@@ -1,8 +1,5 @@
-use graph_types::{
-    DirectedEdge, Edge, EdgeInsertID, EdgeQuery, EdgesVisitor, GraphEngine, GraphError, GraphKind, GraphResult, MutableGraph,
-    NodesVisitor,
-};
-use ndarray::{Array2, ArrayView, ArrayView2, ArrayViewMut, ArrayViewMut2};
+use graph_types::{Edge, EdgeInsertID, EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, MutableGraph, NodesVisitor};
+use ndarray::{Array2, ArrayView2, ArrayViewMut2};
 use std::{
     fmt::{Debug, Display},
     mem::size_of,
@@ -63,12 +60,12 @@ impl GraphEngine for AdjacencyMatrix {
     fn traverse_edges(&self) -> EdgesVisitor<Self> {
         todo!()
     }
-    fn size_hint(&self) -> usize {
-        size_of::<u32>() * (self.matrix.len() + 3) + size_of::<Vec<u32>>()
-    }
-
     fn count_edges(&self) -> usize {
         self.edges as usize
+    }
+
+    fn size_hint(&self) -> usize {
+        size_of::<u32>() * (self.matrix.len() + 3) + size_of::<Vec<u32>>()
     }
 }
 
@@ -78,19 +75,19 @@ impl MutableGraph for AdjacencyMatrix {
         panic!("Cannot insert node on adjacency matrix")
     }
 
-    fn remove_node(&mut self, node_id: usize) {
+    fn remove_node(&mut self, _node_id: usize) {
         todo!()
     }
 
     /// It means clean all edges
-    fn remove_node_with_edges(&mut self, node_id: usize) {
+    fn remove_node_with_edges(&mut self, _node_id: usize) {
         todo!()
     }
-    fn insert_edge<E: Edge>(&mut self, edge: E) -> EdgeInsertID {
+    fn insert_edge<E: Edge>(&mut self, _edge: E) -> EdgeInsertID {
         todo!()
     }
 
-    fn insert_edge_with_nodes<E: Edge>(&mut self, edge: E) -> EdgeInsertID {
+    fn insert_edge_with_nodes<E: Edge>(&mut self, _edge: E) -> EdgeInsertID {
         todo!()
     }
 

@@ -58,17 +58,17 @@ impl GraphEngine for AdjacencyEdgeList {
 }
 
 impl MutableGraph for AdjacencyEdgeList {
-    fn insert_node(&mut self, node_id: usize) -> usize {
+    fn insert_node(&mut self, _node_id: usize) -> usize {
         todo!()
     }
 
     fn remove_node_with_edges(&mut self, node_id: usize) {
-        let id = node_id as u32;
+        let _id = node_id as u32;
         todo!()
     }
     fn insert_edge_with_nodes<E: Edge>(&mut self, edge: E) -> EdgeInsertID {
-        let lhs = edge.lhs() as u32;
-        let rhs = edge.rhs() as u32;
+        let lhs = edge.lhs();
+        let rhs = edge.rhs();
         match edge.direction() {
             EdgeDirection::Disconnect => EdgeInsertID::Nothing,
             EdgeDirection::TwoWay => {
@@ -95,7 +95,7 @@ impl MutableGraph for AdjacencyEdgeList {
             EdgeQuery::EdgeID(i) => {
                 self.edges.remove(&(i as u32));
             }
-            EdgeQuery::Directed(di) => {
+            EdgeQuery::Directed(_di) => {
                 todo!()
             }
             EdgeQuery::Undirected(_) => {
@@ -106,9 +106,9 @@ impl MutableGraph for AdjacencyEdgeList {
 }
 
 impl AdjacencyEdgeList {
-    pub(crate) fn insert_one_way_edge(&mut self, start: u32, end: u32) -> usize {
+    pub(crate) fn insert_one_way_edge(&mut self, start: usize, end: usize) -> usize {
         let id = self.edges.len() as u32 + 1;
-        self.edges.insert(id, ShortEdge { from: start, goto: end });
+        self.edges.insert(id, ShortEdge::new(start, end));
         id as usize
     }
 }

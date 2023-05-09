@@ -1,4 +1,4 @@
-use proc_macro::TokenStream;
+
 use quote::ToTokens;
 use syn::{spanned::Spanned, Attribute, Error, Ident, Meta, __private::TokenStream2};
 

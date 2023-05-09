@@ -42,7 +42,7 @@ impl GraphEngine for AdjacencyNodeList {
         NodesVisitor::range(self, 0..self.count_nodes())
     }
 
-    fn has_edge<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
+    fn has_edge<E: Into<EdgeQuery>>(&self, _edge: E) -> Option<usize> {
         todo!()
     }
 

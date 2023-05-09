@@ -1,13 +1,12 @@
 use crate::entries::{GraphAttribute, ParseResult};
 use quote::{
     quote, ToTokens,
-    __private::{ext::RepToTokensExt, TokenStream},
+    __private::{ext::RepToTokensExt},
 };
 use syn::{
     __private::TokenStream2,
     parse::{Parse, ParseStream},
-    spanned::Spanned,
-    AttrStyle, Attribute, Error, ExprStruct, Fields, Ident, ItemStruct, Meta,
+    spanned::Spanned, Error, Ident, ItemStruct,
 };
 
 mod easy_graph;

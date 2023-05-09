@@ -14,7 +14,7 @@ impl ToTokens for EasyTuple {
         };
         let eq = quote! {
             impl Eq for #name {}
-            impl PartialEq for EasyGraphTable {
+            impl PartialEq for #name {
                 fn eq(&self, other: &Self) -> bool {
                     self.0 == other.0
                 }

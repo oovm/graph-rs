@@ -2,7 +2,7 @@ use graph_derive::Graph;
 use graph_types::{EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
 use serde::{ser::SerializeTupleStruct, Serialize, Serializer};
 use std::{
-    fmt::{Debug, Formatter},
+    fmt::{Debug, Display, Formatter},
     mem::size_of,
 };
 
@@ -11,18 +11,6 @@ use std::{
 pub struct CycleGraph {
     #[easy_graph]
     mask: i32,
-}
-
-impl Debug for CycleGraph {
-    #[inline]
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("CycleGraph")
-            .field("kind", &self.graph_kind())
-            .field("rank", &self.rank())
-            .field("nodes", &self.count_nodes())
-            .field("edges", &self.count_edges())
-            .finish()
-    }
 }
 
 impl CycleGraph {
