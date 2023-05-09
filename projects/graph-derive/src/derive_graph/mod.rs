@@ -1,4 +1,4 @@
-use crate::utils::{easy_display, GraphAttribute, ParseResult};
+use crate::utils::{easy_display, easy_wolfram, GraphAttribute, ParseResult};
 use quote::{quote, ToTokens};
 use syn::{
     __private::TokenStream2,
@@ -6,7 +6,6 @@ use syn::{
     spanned::Spanned,
     Error, Ident, ItemStruct,
 };
-
 mod easy_graph;
 mod easy_table;
 mod easy_tuple;

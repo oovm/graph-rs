@@ -13,7 +13,6 @@ impl ToTokens for EasyTuple {
                 }
             }
         };
-        let display = easy_display(&self.graph_name);
         let eq = quote! {
             impl Eq for #name {}
             impl PartialEq for #name {
@@ -72,7 +71,10 @@ impl ToTokens for EasyTuple {
             }
         };
         tokens.extend(copy);
-        tokens.extend(display);
+        tokens.extend(easy_display(&self.graph_name));
+        if self.config.has_wolfram() {
+            tokens.extend(easy_wolfram(name, &name.to_string()));
+        }
         tokens.extend(eq);
         tokens.extend(serde);
         if self.config.has_constructor() {

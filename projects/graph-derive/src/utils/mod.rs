@@ -42,6 +42,13 @@ impl GraphAttribute {
         }
         true
     }
+    pub fn has_wolfram(&self) -> bool {
+        let str = self.body.to_string();
+        if str.contains("constructor = false") {
+            return false;
+        }
+        true
+    }
 }
 
 pub fn easy_display(id: &Ident) -> TokenStream2 {
@@ -66,6 +73,37 @@ pub fn easy_display(id: &Ident) -> TokenStream2 {
                     .field(&self.rank())
                     .field(&self.graph_kind())
                     .finish()
+            }
+        }
+    }
+}
+
+pub fn easy_wolfram(rust: &Ident, wolfram_str: &str) -> TokenStream2 {
+    let name_str = LitStr::new(&rust.to_string(), rust.span());
+    let doc = format!(
+        "Convert rust [{}] to wolfram [{wolfram_str}](https://reference.wolfram.com/language/ref/{wolfram_str}.html)",
+        name_str.value()
+    );
+    quote! {
+        #[cfg(feature = "wolfram")]
+        impl graph_types::ToWolfram for #rust {
+            #[doc = "Convert rust ["]
+            #[doc = #name_str]
+            #[doc = "] to wolfram ["]
+            #[doc = #wolfram_str]
+            #[doc = "](https://reference.wolfram.com/language/ref/"]
+            #[doc = #wolfram_str]
+            #[doc = ".html)"]
+            fn to_wolfram(&self) -> graph_types::WolframValue {
+                let n = graph_types::WolframValue::Integer64(self.rank() as i64);
+                let args = match self.graph_kind() {
+                    GraphKind::Directed => {
+                        let arg1 = graph_types::WolframValue::pair("DirectedEdges", true, false);
+                        vec![n, arg1]
+                    }
+                    GraphKind::Undirected => vec![n],
+                };
+                graph_types::WolframValue::function(#wolfram_str, args)
             }
         }
     }

@@ -2,7 +2,7 @@ use graph_derive::Graph;
 use graph_types::{EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
 use std::mem::size_of;
 
-#[cfg(feature = "wolfram_wxf")]
+#[cfg(feature = "wolfram")]
 mod wolfram;
 
 /// [CompleteGraph](https://reference.wolfram.com/language/ref/CompleteGraph.html)
@@ -21,7 +21,7 @@ mod wolfram;
 #[repr(C)]
 #[derive(Graph)]
 pub struct CompleteGraph {
-    #[easy_graph(constructor = false, default = 5)]
+    #[easy_graph(constructor = false, default = 5, wolfram = "CompleteGraph")]
     mask: i32,
 }
 

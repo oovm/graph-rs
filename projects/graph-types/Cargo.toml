@@ -1,6 +1,6 @@
 [package]
 name = "graph-types"
-version = "0.0.8"
+version = "0.0.9"
 authors = ["Aster <192607617@qq.com>"]
 description = "Shared types for graph theory."
 repository = "https://github.com/oovm/graph-rs"
