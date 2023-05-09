@@ -5,9 +5,8 @@ use graph_types::{
 use ndarray::{Array2, ArrayView, ArrayView2, ArrayViewMut, ArrayViewMut2};
 use std::{
     fmt::{Debug, Display},
-    mem::{size_of, size_of_val},
+    mem::size_of,
     ops::Range,
-    sync::MutexGuard,
 };
 
 mod display;
