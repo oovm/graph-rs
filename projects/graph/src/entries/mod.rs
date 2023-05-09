@@ -11,7 +11,8 @@
 /// ```
 #[derive(Clone, Debug)]
 pub struct EntryWeight<N> {
-    weight: N,
+    /// # Arguments
+    pub weight: N,
 }
 /// # Arguments
 ///
@@ -26,5 +27,6 @@ pub struct EntryWeight<N> {
 /// ```
 #[derive(Clone, Debug)]
 pub struct EntryName {
-    name: String,
+    /// # Arguments
+    pub name: String,
 }

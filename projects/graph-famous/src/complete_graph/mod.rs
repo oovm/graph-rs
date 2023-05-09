@@ -1,10 +1,10 @@
+use graph_derive::Graph;
 use graph_types::{EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
 use std::{
     fmt::{Debug, Display, Formatter},
     mem::size_of,
 };
 
-mod display;
 #[cfg(feature = "wolfram_wxf")]
 mod wolfram;
 
@@ -22,9 +22,9 @@ mod wolfram;
 /// assert_eq!(graph.count_edges(), 12);
 /// ```
 #[repr(C)]
-#[derive(Clone, Copy, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Graph)]
 pub struct CompleteGraph {
+    #[easy_graph(!constructor)]
     mask: i32,
 }
 

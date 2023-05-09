@@ -1,10 +1,11 @@
+use graph_derive::Graph;
 use graph_types::{EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
 use std::mem::size_of;
 
 // https://reference.wolfram.com/language/ref/WheelGraph.html
-#[derive(Copy, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Graph)]
 pub struct WheelGraph {
+    #[easy_graph]
     mask: i32,
 }
 
@@ -68,17 +69,5 @@ impl GraphEngine for WheelGraph {
     /// ```
     fn size_hint(&self) -> usize {
         size_of::<WheelGraph>()
-    }
-}
-
-impl WheelGraph {
-    pub fn one_way(rank: usize) -> Self {
-        Self { mask: rank as i32 }
-    }
-    pub fn two_way(rank: usize) -> Self {
-        Self { mask: -(rank as i32) }
-    }
-    pub fn rank(&self) -> usize {
-        self.mask.abs() as usize
     }
 }

@@ -1,10 +1,11 @@
+use graph_derive::Graph;
 use graph_types::{EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
 use std::mem::size_of;
 
 // https://reference.wolfram.com/language/ref/StarGraph.html
-#[derive(Copy, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Graph)]
 pub struct StarGraph {
+    #[easy_graph(!constructor)]
     mask: i32,
 }
 
@@ -53,17 +54,5 @@ impl GraphEngine for StarGraph {
     /// ```
     fn size_hint(&self) -> usize {
         size_of::<StarGraph>()
-    }
-}
-
-impl StarGraph {
-    pub fn one_way(rank: usize) -> Self {
-        Self { mask: rank as i32 }
-    }
-    pub fn two_way(rank: usize) -> Self {
-        Self { mask: -(rank as i32) }
-    }
-    pub fn rank(&self) -> usize {
-        self.mask.abs() as usize
     }
 }

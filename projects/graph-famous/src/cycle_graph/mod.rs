@@ -1,39 +1,12 @@
 use graph_derive::Graph;
 use graph_types::{EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
-use serde::{ser::SerializeTupleStruct, Serialize, Serializer};
-use std::{
-    fmt::{Debug, Display, Formatter},
-    mem::size_of,
-};
+use std::mem::size_of;
 
 /// https://reference.wolfram.com/language/ref/CycleGraph.html
 #[derive(Graph)]
 pub struct CycleGraph {
-    #[easy_graph]
+    #[easy_graph(!constructor)]
     mask: i32,
-}
-
-impl CycleGraph {
-    pub const fn one_way(rank: usize) -> Self {
-        Self { mask: rank as i32 }
-    }
-    pub const fn two_way(rank: usize) -> Self {
-        Self { mask: -(rank as i32) }
-    }
-    pub const fn rank(&self) -> usize {
-        self.mask.abs() as usize
-    }
-}
-
-impl Serialize for CycleGraph {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        let mut ser = serializer.serialize_tuple_struct("CycleGraph", 1)?;
-        ser.serialize_field(&self.mask)?;
-        ser.end()
-    }
 }
 
 impl GraphEngine for CycleGraph {

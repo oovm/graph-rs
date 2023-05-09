@@ -11,10 +11,10 @@ mod derive_graph;
 use crate::derive_graph::GraphDerive;
 
 use proc_macro::TokenStream;
-use quote::{ToTokens};
-use syn::{parse_macro_input};
+use quote::ToTokens;
+use syn::parse_macro_input;
 
-pub(crate) mod entries;
+pub(crate) mod utils;
 
 /// Derive the `Graph` trait for a struct.
 #[proc_macro_derive(Graph, attributes(graph, easy_graph))]
