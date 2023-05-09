@@ -2,11 +2,11 @@ use graph_derive::Graph;
 use graph_types::{EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
 use std::mem::size_of;
 
-// https://reference.wolfram.com/language/ref/WheelGraph.html
+/// https://reference.wolfram.com/language/ref/WheelGraph.html
 #[repr(C)]
 #[derive(Graph)]
 pub struct WheelGraph {
-    #[easy_graph]
+    #[easy_graph(default = 5, wolfram = "WheelGraph")]
     mask: i32,
 }
 
@@ -19,38 +19,35 @@ impl GraphEngine for WheelGraph {
     }
 
     fn has_node(&self, node_id: usize) -> Option<usize> {
-        todo!()
+        (node_id < self.count_nodes()).then_some(node_id)
     }
 
     fn count_nodes(&self) -> usize {
-        self.mask as usize
+        self.rank()
     }
 
     fn traverse_nodes(&self) -> NodesVisitor<Self> {
         NodesVisitor::range(self, 0..self.count_nodes())
     }
 
+    /// Edges ids are counted from 0 to `self.count_edges() - 1`.
     fn has_edge<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
         match edge.into() {
-            EdgeQuery::EdgeID(i) => {
-                if i < self.count_edges() {
-                    Some(i)
-                }
-                else {
-                    None
-                }
-            }
+            EdgeQuery::EdgeID(edge_id) => (edge_id < self.count_edges()).then_some(edge_id),
             EdgeQuery::Directed(_) => {
                 todo!()
             }
-            EdgeQuery::Undirected(_) => {
-                todo!()
-            }
+            EdgeQuery::Undirected(_) => match self.graph_kind() {
+                GraphKind::Directed => None,
+                GraphKind::Undirected => {
+                    todo!()
+                }
+            },
         }
     }
 
     fn traverse_edges(&self) -> EdgesVisitor<Self> {
-        EdgesVisitor::range(self, 0..=self.count_edges())
+        EdgesVisitor::range(self, 0..self.count_edges())
     }
 
     fn count_edges(&self) -> usize {

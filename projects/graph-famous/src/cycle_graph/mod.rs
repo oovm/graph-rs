@@ -6,7 +6,7 @@ use std::mem::size_of;
 #[repr(C)]
 #[derive(Graph)]
 pub struct CycleGraph {
-    #[easy_graph(!constructor)]
+    #[easy_graph(default = 5, wolfram = "CycleGraph")]
     mask: i32,
 }
 
@@ -19,7 +19,7 @@ impl GraphEngine for CycleGraph {
     }
 
     fn has_node(&self, node_id: usize) -> Option<usize> {
-        (node_id < self.rank()).then_some(node_id)
+        (node_id < self.count_nodes()).then_some(node_id)
     }
 
     fn count_nodes(&self) -> usize {
@@ -30,12 +30,26 @@ impl GraphEngine for CycleGraph {
         NodesVisitor::range(self, 0..self.count_nodes())
     }
 
+    /// In a indirected graph, edges ids are counted from 0 to `self.count_edges() - 1`.
+    ///
+    /// And in a directed graph, edges ids are counted from 0 to `self.count_edges() - 1`.
     fn has_edge<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
-        todo!()
+        match edge.into() {
+            EdgeQuery::EdgeID(edge_id) => (edge_id < self.count_edges()).then_some(edge_id),
+            EdgeQuery::Directed(_) => {
+                todo!()
+            }
+            EdgeQuery::Undirected(_) => match self.graph_kind() {
+                GraphKind::Directed => None,
+                GraphKind::Undirected => {
+                    todo!()
+                }
+            },
+        }
     }
 
     fn traverse_edges(&self) -> EdgesVisitor<Self> {
-        todo!()
+        EdgesVisitor::range(self, 0..self.count_edges())
     }
 
     fn count_edges(&self) -> usize {
