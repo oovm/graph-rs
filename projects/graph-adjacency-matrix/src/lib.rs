@@ -4,7 +4,7 @@
 #![doc(html_logo_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 #![doc(html_favicon_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 
-mod static_full;
-mod static_half;
+mod dense_full;
+mod dense_half;
 
-pub use crate::{static_full::AdjacencyMatrix, static_half::TriangularAdjacencyMatrix};
+pub use crate::{dense_full::AdjacencyMatrix, dense_half::TriangularAdjacencyMatrix};

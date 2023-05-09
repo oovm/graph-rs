@@ -4,13 +4,10 @@ use graph_types::{ToWolfram, WolframValue};
 
 impl Display for AdjacencyMatrix {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let size = self.max_degree().to_string().len();
-        let max = self.nodes();
-        for i in 0..max {
-            for j in 0..max {
-                let index = i * max + j;
-                let edge = unsafe { self.edges.get_unchecked(index) };
-                write!(f, "{:width$} ", edge, width = size)?;
+        let size = self.degree.end.to_string().len();
+        for row in self.matrix.rows() {
+            for j in row.iter() {
+                write!(f, "{:width$} ", j, width = size)?;
             }
             writeln!(f)?;
         }
@@ -22,7 +19,7 @@ impl Display for AdjacencyMatrix {
 impl ToWolfram for AdjacencyMatrix {
     fn to_wolfram(&self) -> WolframValue {
         let rows = self
-            .edges
+            .matrix
             .chunks_exact(self.nodes())
             .map(|row| WolframValue::list(row.iter().map(|edge| WolframValue::Integer64(*edge as i64)).collect()))
             .collect();
