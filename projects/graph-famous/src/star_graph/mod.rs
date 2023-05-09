@@ -1,8 +1,5 @@
-use graph_types::{Edge, EdgeInsertID, EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
-use std::{
-    fmt::{Debug, Formatter},
-    mem::size_of,
-};
+use graph_types::{EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
+use std::mem::size_of;
 
 // https://reference.wolfram.com/language/ref/StarGraph.html
 #[derive(Copy, Clone, PartialEq, Eq)]

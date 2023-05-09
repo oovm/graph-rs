@@ -11,13 +11,14 @@ mod derive_graph;
 use crate::derive_graph::GraphDerive;
 
 use proc_macro::TokenStream;
+use quote::{quote, ToTokens};
 use syn::{parse::Parse, parse_macro_input, Error};
 
 pub(crate) mod entries;
 
 /// Derive the `Graph` trait for a struct.
-#[proc_macro_derive(Graph, attributes(graph))]
+#[proc_macro_derive(Graph, attributes(graph, easy_graph))]
 pub fn derive_graph(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as GraphDerive);
-    TokenStream::from(input.build())
+    TokenStream::from(ToTokens::to_token_stream(&input))
 }

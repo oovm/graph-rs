@@ -1,5 +1,5 @@
 use graph_derive::Graph;
-use graph_types::{Edge, EdgeInsertID, EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
+use graph_types::{EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
 use serde::{ser::SerializeTupleStruct, Serialize, Serializer};
 use std::{
     fmt::{Debug, Formatter},
@@ -8,19 +8,15 @@ use std::{
 
 /// https://reference.wolfram.com/language/ref/CycleGraph.html
 #[derive(Graph)]
-pub struct CycleGraph {
+pub struct EasyGraphTable {
     #[easy_graph]
     mask: i32,
 }
 
-impl Clone for CycleGraph {
-    #[inline]
-    fn clone(&self) -> Self {
-        Self { mask: self.mask }
-    }
-}
+#[derive(Graph)]
+pub struct EasyGraphTuple(#[easy_graph] i32);
 
-impl Debug for CycleGraph {
+impl Debug for EasyGraphTable {
     #[inline]
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("CycleGraph")
@@ -32,13 +28,13 @@ impl Debug for CycleGraph {
     }
 }
 
-impl PartialEq for CycleGraph {
+impl PartialEq for EasyGraphTable {
     fn eq(&self, other: &Self) -> bool {
         self.mask == other.mask
     }
 }
 
-impl CycleGraph {
+impl EasyGraphTable {
     pub const fn one_way(rank: usize) -> Self {
         Self { mask: rank as i32 }
     }
@@ -50,7 +46,7 @@ impl CycleGraph {
     }
 }
 
-impl Serialize for CycleGraph {
+impl Serialize for EasyGraphTable {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
@@ -61,7 +57,7 @@ impl Serialize for CycleGraph {
     }
 }
 
-impl GraphEngine for CycleGraph {
+impl GraphEngine for EasyGraphTable {
     fn graph_kind(&self) -> GraphKind {
         match self.mask < 0 {
             true => GraphKind::Undirected,
@@ -99,12 +95,12 @@ impl GraphEngine for CycleGraph {
     /// Takes O(1) space, in fact it's always takes 32 bits.
     ///
     /// ```
-    /// use graph_theory::{graph_engines::CycleGraph, GraphEngine};
-    /// assert_eq!(CycleGraph::one_way(3).size_hint(), 4);
-    /// assert_eq!(CycleGraph::one_way(4).size_hint(), 4);
-    /// assert_eq!(CycleGraph::two_way(5).size_hint(), 4);
+    /// use graph_theory::{graph_engines::EasyGraphTable, GraphEngine};
+    /// assert_eq!(EasyGraphTable::one_way(3).size_hint(), 4);
+    /// assert_eq!(EasyGraphTable::one_way(4).size_hint(), 4);
+    /// assert_eq!(EasyGraphTable::two_way(5).size_hint(), 4);
     /// ```
     fn size_hint(&self) -> usize {
-        size_of::<CycleGraph>()
+        size_of::<EasyGraphTable>()
     }
 }

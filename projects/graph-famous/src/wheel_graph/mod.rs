@@ -1,5 +1,5 @@
 use crate::StarGraph;
-use graph_types::{Edge, EdgeInsertID, EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
+use graph_types::{EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
 use std::{fmt::Debug, mem::size_of};
 
 // https://reference.wolfram.com/language/ref/WheelGraph.html
