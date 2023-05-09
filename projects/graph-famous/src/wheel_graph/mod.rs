@@ -3,6 +3,7 @@ use graph_types::{EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor}
 use std::mem::size_of;
 
 // https://reference.wolfram.com/language/ref/WheelGraph.html
+#[repr(C)]
 #[derive(Graph)]
 pub struct WheelGraph {
     #[easy_graph]

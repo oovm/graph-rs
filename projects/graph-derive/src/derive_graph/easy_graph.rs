@@ -17,7 +17,7 @@ impl GraphDerive {
                 None => {}
             }
         }
-        match attrs.as_slice() {
+        let easy_graph = match attrs.as_slice() {
             [g] if g.is_easy_graph() => g.clone(),
             _ => return ParseResult::NotGood,
         };
@@ -30,11 +30,11 @@ impl GraphDerive {
 
         match field.ident.clone() {
             Some(field_name) => {
-                let easy = EasyTable { graph_name, field_name, field_type };
+                let easy = EasyTable { graph_name, field_name, field_type, config: easy_graph };
                 ParseResult::Ok(GraphDerive::EasyTable(easy))
             }
             None => {
-                let easy = EasyTuple { graph_name, field_type };
+                let easy = EasyTuple { graph_name, field_type, config: easy_graph };
                 ParseResult::Ok(GraphDerive::EasyTuple(easy))
             }
         }

@@ -2,7 +2,7 @@
 name = "graph-families"
 version = "0.0.0"
 authors = ["Aster <192607617@qq.com>"]
-description = "Adjacency Matrix and Adjacency Graph"
+description = "Famous graph families in graph theory."
 repository = "https://github.com/oovm/graph-rs"
 documentation = "https://docs.rs/graph-families"
 readme = "Readme.md"
@@ -29,5 +29,5 @@ graph-theory = { version = "*", path = "../graph" }
 
 
 [features]
-default = []
+default = ["wolfram"]
 wolfram = ["graph-types/wolfram_wxf"]

@@ -34,6 +34,14 @@ impl GraphAttribute {
     pub fn is_easy_graph(&self) -> bool {
         self.head.eq("easy_graph")
     }
+    pub fn has_constructor(&self) -> bool {
+        // HACK: parse as map
+        let str = self.body.to_string();
+        if str.contains("constructor = false") {
+            return false;
+        }
+        true
+    }
 }
 
 pub fn easy_display(id: &Ident) -> TokenStream2 {

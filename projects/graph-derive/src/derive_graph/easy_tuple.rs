@@ -39,6 +39,10 @@ impl ToTokens for EasyTuple {
                 pub const fn two_way(rank: usize) -> Self {
                     Self(-(rank as #ty))
                 }
+            }
+        };
+        let methods = quote! {
+            impl #name {
                 /// Get the rank of the edge.
                 #[inline]
                 pub const fn rank(&self) -> usize {
@@ -71,6 +75,9 @@ impl ToTokens for EasyTuple {
         tokens.extend(display);
         tokens.extend(eq);
         tokens.extend(serde);
-        tokens.extend(ctor);
+        if self.config.has_constructor() {
+            tokens.extend(ctor);
+        };
+        tokens.extend(methods);
     }
 }

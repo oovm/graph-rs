@@ -30,18 +30,27 @@ impl ToTokens for EasyTable {
         };
         let ctor = quote! {
             impl #name {
+                /// Get the rank of the edge.
+                #[inline]
                 pub const fn one_way(rank: usize) -> Self {
-                    Self { mask: rank as #ty }
+                    Self { #field: rank as #ty }
                 }
+                /// Get the rank of the edge.
+                #[inline]
                 pub const fn two_way(rank: usize) -> Self {
-                    Self { mask: -(rank as #ty) }
-                }
-                pub const fn rank(&self) -> usize {
-                    self.mask.abs() as usize
+                    Self { #field: -(rank as #ty) }
                 }
             }
         };
-        let methods = quote! {};
+        let methods = quote! {
+            impl #name {
+                /// Get the rank of the edge.
+                #[inline]
+                pub const fn rank(&self) -> usize {
+                    self.#field.abs() as usize
+                }
+            }
+        };
         let serde = quote! {
             #[cfg(feature = "serde")]
             impl serde::ser::Serialize for #name {
@@ -67,6 +76,9 @@ impl ToTokens for EasyTable {
         tokens.extend(display);
         tokens.extend(eq);
         tokens.extend(serde);
-        tokens.extend(ctor);
+        if self.config.has_constructor() {
+            tokens.extend(ctor);
+        };
+        tokens.extend(methods);
     }
 }

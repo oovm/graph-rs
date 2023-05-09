@@ -20,12 +20,14 @@ pub enum GraphDerive {
 pub struct EasyTuple {
     graph_name: Ident,
     field_type: Ident,
+    config: GraphAttribute,
 }
 
 pub struct EasyTable {
     graph_name: Ident,
     field_name: Ident,
     field_type: Ident,
+    config: GraphAttribute,
 }
 
 impl Parse for GraphDerive {

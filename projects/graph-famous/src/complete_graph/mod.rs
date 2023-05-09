@@ -1,9 +1,6 @@
 use graph_derive::Graph;
 use graph_types::{EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
-use std::{
-    fmt::{Debug, Display, Formatter},
-    mem::size_of,
-};
+use std::mem::size_of;
 
 #[cfg(feature = "wolfram_wxf")]
 mod wolfram;
@@ -24,7 +21,7 @@ mod wolfram;
 #[repr(C)]
 #[derive(Graph)]
 pub struct CompleteGraph {
-    #[easy_graph(!constructor)]
+    #[easy_graph(constructor = false, default = 5)]
     mask: i32,
 }
 
@@ -79,17 +76,27 @@ impl CompleteGraph {
     ///
     /// ![](https://raw.githubusercontent.com/oovm/graph-rs/dev/projects/graph-types/src/famous_graphs/complete_graph/k-complete.svg)
     ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
+    /// let graph = CompleteGraph::one_way(3);
+    /// assert_eq!(graph.count_nodes(), 3);
+    /// ```
+    pub fn one_way(rank: usize) -> Self {
+        Self { mask: rank as i32 }
+    }
+    /// Creates a new complete graph with the given rank.
+    ///
     /// ![](https://raw.githubusercontent.com/oovm/graph-rs/dev/projects/graph-types/src/famous_graphs/complete_graph/d-complete.svg)
     ///
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::CompleteGraph;
-    /// let graph = CompleteGraph::new(3);
+    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
+    /// let graph = CompleteGraph::two_way(3);
+    /// assert_eq!(graph.count_nodes(), 6);
     /// ```
-    pub fn one_way(rank: usize) -> Self {
-        Self { mask: rank as i32 }
-    }
     pub fn two_way(rank: usize) -> Self {
         Self { mask: -(rank as i32) }
     }
@@ -99,7 +106,12 @@ impl CompleteGraph {
         let edges = graph.count_edges();
         if edges == nodes * (nodes - 1) {
             if is_directed(graph, nodes) {
-                return Some(Self { mask: nodes as i32 });
+                return Some(Self::one_way(nodes));
+            }
+        }
+        else if edges == nodes * (nodes - 1) * 2 {
+            if is_undirected(graph) {
+                return Some(Self::two_way(nodes));
             }
         }
         None
