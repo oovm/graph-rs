@@ -21,6 +21,15 @@ pub trait GraphEngine
 where
     Self: Sized,
 {
+    /// Check the graph kind, it can be directed or undirected.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
+    /// assert_eq!(CompleteGraph::one_way(5).has_node(5), true);
+    /// assert_eq!(CompleteGraph::one_way(5).has_node(6), false);
+    /// ```
     fn graph_kind(&self) -> GraphKind;
 
     /// Check if the node exists, return the node id if exists.
@@ -29,8 +38,8 @@ where
     ///
     /// ```
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// assert_eq!(CompleteGraph::new(5).has_node(5), true);
-    /// assert_eq!(CompleteGraph::new(5).has_node(6), false);
+    /// assert_eq!(CompleteGraph::one_way(5).has_node(5), true);
+    /// assert_eq!(CompleteGraph::one_way(5).has_node(6), false);
     /// ```
     fn has_node(&self, node_id: usize) -> Option<usize>;
 
@@ -42,7 +51,7 @@ where
     ///
     /// ```
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// assert_eq!(CompleteGraph::new(5).count_nodes(), 5);
+    /// assert_eq!(CompleteGraph::one_way(5).count_nodes(), 5);
     /// ```
     fn get_node_degree(&self, node_id: usize) -> Result<usize, GraphError> {
         todo!()
@@ -53,7 +62,7 @@ where
     ///
     /// ```
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// assert_eq!(CompleteGraph::new(5).count_nodes(), 5);
+    /// assert_eq!(CompleteGraph::one_way(5).count_nodes(), 5);
     /// ```
     fn count_nodes(&self) -> usize;
     /// Traverse all nodes in the graph.
@@ -62,7 +71,7 @@ where
     ///
     /// ```
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// let mut graph = CompleteGraph::new(5);
+    /// let mut graph = CompleteGraph::one_way(5);
     /// assert_eq!(graph.traverse_nodes().count(), 20)
     /// ```
     fn traverse_nodes(&self) -> NodesVisitor<Self>;
@@ -72,8 +81,8 @@ where
     ///
     /// ```
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// assert_eq!(CompleteGraph::new(5).has_node(5), true);
-    /// assert_eq!(CompleteGraph::new(5).has_node(6), false);
+    /// assert_eq!(CompleteGraph::one_way(5).has_node(5), true);
+    /// assert_eq!(CompleteGraph::one_way(5).has_node(6), false);
     /// ```
     fn has_edge<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize>;
 
@@ -82,7 +91,7 @@ where
     ///
     /// ```
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// let mut graph = CompleteGraph::new(5);
+    /// let mut graph = CompleteGraph::one_way(5);
     /// assert_eq!(graph.traverse_nodes().count(), 20)
     /// ```
     fn traverse_edges(&self) -> EdgesVisitor<Self>;
@@ -98,8 +107,8 @@ where
     /// assert_eq!(CycleGraph::two_way(5).count_edges(), 10);
     /// assert_eq!(StarGraph::one_way(5).count_edges(), 5);
     /// assert_eq!(StarGraph::two_way(5).count_edges(), 10);
-    /// assert_eq!(CompleteGraph::new(5).count_edges(), 5);
-    /// assert_eq!(CompleteGraph::new(5).count_edges(), 10);
+    /// assert_eq!(CompleteGraph::one_way(5).count_edges(), 5);
+    /// assert_eq!(CompleteGraph::one_way(5).count_edges(), 10);
     /// ```
     fn count_edges(&self) -> usize;
 

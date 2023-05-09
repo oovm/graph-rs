@@ -1,4 +1,4 @@
-use graph_types::{Edge, EdgeInsertID, EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
+use graph_types::{EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
 use std::{
     fmt::{Debug, Display, Formatter},
     mem::size_of,
@@ -17,7 +17,7 @@ mod wolfram;
 ///
 /// ```
 /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-/// let graph = CompleteGraph::new(3);
+/// let graph = CompleteGraph::one_way(3);
 /// assert_eq!(graph.count_nodes(), 3);
 /// assert_eq!(graph.count_edges(), 12);
 /// ```
@@ -25,7 +25,7 @@ mod wolfram;
 #[derive(Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct CompleteGraph {
-    mask: u32,
+    mask: i32,
 }
 
 impl GraphEngine for CompleteGraph {
@@ -65,9 +65,9 @@ impl GraphEngine for CompleteGraph {
     ///
     /// ```
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// assert_eq!(CompleteGraph::new(3).size_hint(), 4);
-    /// assert_eq!(CompleteGraph::new(4).size_hint(), 4);
-    /// assert_eq!(CompleteGraph::new(5).size_hint(), 4);
+    /// assert_eq!(CompleteGraph::one_way(3).size_hint(), 4);
+    /// assert_eq!(CompleteGraph::one_way(4).size_hint(), 4);
+    /// assert_eq!(CompleteGraph::one_way(5).size_hint(), 4);
     /// ```
     fn size_hint(&self) -> usize {
         size_of::<CompleteGraph>()
@@ -87,11 +87,11 @@ impl CompleteGraph {
     /// use graph_theory::CompleteGraph;
     /// let graph = CompleteGraph::new(3);
     /// ```
-    pub fn new(rank: usize) -> Self {
-        Self { mask: rank as u32 }
+    pub fn one_way(rank: usize) -> Self {
+        Self { mask: rank as i32 }
     }
-    pub fn directed(rank: usize) -> Self {
-        Self { mask: rank as u32 }
+    pub fn two_way(rank: usize) -> Self {
+        Self { mask: -(rank as i32) }
     }
     /// Check if the given graph is a complete graph, and if so, return it.
     pub fn check<G: GraphEngine>(graph: &G) -> Option<Self> {
@@ -99,7 +99,7 @@ impl CompleteGraph {
         let edges = graph.count_edges();
         if edges == nodes * (nodes - 1) {
             if is_directed(graph, nodes) {
-                return Some(Self { mask: nodes as u32 });
+                return Some(Self { mask: nodes as i32 });
             }
         }
         None

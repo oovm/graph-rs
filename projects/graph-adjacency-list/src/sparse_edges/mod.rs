@@ -1,7 +1,6 @@
 use crate::utils::ShortEdge;
 use graph_types::{
-    DirectedEdge, Edge, EdgeDirection, EdgeInsertID, EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, MutableGraph,
-    NodesVisitor,
+    Edge, EdgeDirection, EdgeInsertID, EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, MutableGraph, NodesVisitor,
 };
 use std::collections::{BTreeMap, BTreeSet};
 

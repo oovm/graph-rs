@@ -11,17 +11,6 @@ pub struct StarGraph {
     mask: i32,
 }
 
-impl Debug for StarGraph {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("StarGraph")
-            .field("kind", &self.graph_kind())
-            .field("rank", &self.rank())
-            .field("node", &self.count_nodes())
-            .field("edge", &self.count_edges())
-            .finish()
-    }
-}
-
 impl GraphEngine for StarGraph {
     fn graph_kind(&self) -> GraphKind {
         match self.mask < 0 {

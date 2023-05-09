@@ -2,7 +2,7 @@ use graph_types::{Edge, EdgeInsertID, EdgeQuery, EdgesVisitor, GraphEngine, Grap
 use std::{fmt::Debug, mem::size_of};
 
 /// https://reference.wolfram.com/language/ref/CycleGraph.html
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct CycleGraph {
     mask: i32,
