@@ -1,10 +1,13 @@
-use crate::entries::ParseResult;
-use quote::{quote, ToTokens};
+use crate::entries::{GraphAttribute, ParseResult};
+use quote::{
+    quote, ToTokens,
+    __private::{ext::RepToTokensExt, TokenStream},
+};
 use syn::{
     __private::TokenStream2,
     parse::{Parse, ParseStream},
     spanned::Spanned,
-    AttrStyle, Error, ExprStruct, Fields, Ident, ItemStruct,
+    AttrStyle, Attribute, Error, ExprStruct, Fields, Ident, ItemStruct, Meta,
 };
 
 pub enum GraphDerive {
@@ -22,7 +25,7 @@ impl Parse for GraphDerive {
     fn parse(input: ParseStream) -> syn::Result<Self> {
         let item = match input.parse::<ItemStruct>() {
             Ok(o) => o,
-            Err(_) => Err(Error::new(input.span(), "`Graph` only work on struct"))?,
+            Err(_) => Err(Error::new(input.span(), "#[derive(Graph)] only work on struct"))?,
         };
         match EasyGraph::new(&item) {
             ParseResult::Ok(o) => return Ok(GraphDerive::Easy(o)),
@@ -36,24 +39,39 @@ impl Parse for GraphDerive {
 impl EasyGraph {
     fn new(item: &ItemStruct) -> ParseResult<Self> {
         let name = item.ident.clone();
-        let mut is_tuple = false;
+
         let mut fields = item.fields.iter();
-        match fields.next() {
-            Some(field) => {
-                if field.ident.is_none() {
-                    is_tuple = true;
-                }
+        let field = match fields.next() {
+            Some(field) => field,
+            None => return ParseResult::Bad(Error::new(item.span(), "Graph must have at least one field")),
+        };
+
+        let mut attrs = vec![];
+        for i in &field.attrs {
+            match GraphAttribute::new(i) {
+                Some(s) => attrs.push(s),
+                None => {}
             }
-            None => Err(Error::new(item.span(), "Graph must have at least one field"))?,
         }
 
-        for field in &item.fields {
-            let is_tuple = field.ident.is_none();
-            for i in &field.attrs {
-                panic!("{:?}", i.to_token_stream().to_string());
-            }
-        }
-        ParseResult::Ok(Self { is_tuple: false, graph_name: name.clone(), field_name: name.clone(), field_type: name.clone() })
+        let g = match attrs {
+            [g] if g.is => g,
+            _ => return ParseResult::NotGood,
+        };
+
+        let field_name = field.ident.clone();
+        let str_type = field.ty.to_token_stream().to_string();
+        let field_type = match str_type.trim() {
+            "i8" => Ident::new("i8", field.ty.span()),
+            "i16" => Ident::new("i16", field.ty.span()),
+            "i32" => Ident::new("i32", field.ty.span()),
+            "i64" => Ident::new("i64", field.ty.span()),
+            "i128" => Ident::new("i128", field.ty.span()),
+            "isize" => Ident::new("isize", field.ty.span()),
+            _ => return ParseResult::Bad(Error::new(field.ty.span(), "Graph field must be a signed integer")),
+        };
+
+        ParseResult::Ok(Self { graph_name: name.clone(), field_name, field_type })
     }
 }
 
