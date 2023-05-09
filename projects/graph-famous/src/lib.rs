@@ -10,4 +10,4 @@ mod star_graph;
 pub(crate) mod utils;
 mod wheel_graph;
 
-pub use crate::{complete_graph::CompleteGraph, cycle_graph::EasyGraphTable, star_graph::StarGraph, wheel_graph::WheelGraph};
+pub use crate::{complete_graph::CompleteGraph, cycle_graph::CycleGraph, star_graph::StarGraph, wheel_graph::WheelGraph};

@@ -102,9 +102,9 @@ where
     ///
     /// ```
     /// # use graph_theory::{GraphEngine};
-    /// # use graph_theory::graph_engines::{EasyGraphTable, StarGraph, CompleteGraph};
-    /// assert_eq!(EasyGraphTable::one_way(5).count_edges(), 5);
-    /// assert_eq!(EasyGraphTable::two_way(5).count_edges(), 10);
+    /// # use graph_theory::graph_engines::{CycleGraph, StarGraph, CompleteGraph};
+    /// assert_eq!(CycleGraph::one_way(5).count_edges(), 5);
+    /// assert_eq!(CycleGraph::two_way(5).count_edges(), 10);
     /// assert_eq!(StarGraph::one_way(5).count_edges(), 5);
     /// assert_eq!(StarGraph::two_way(5).count_edges(), 10);
     /// assert_eq!(CompleteGraph::one_way(5).count_edges(), 5);

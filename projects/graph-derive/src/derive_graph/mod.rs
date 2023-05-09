@@ -10,9 +10,9 @@ use syn::{
     AttrStyle, Attribute, Error, ExprStruct, Fields, Ident, ItemStruct, Meta,
 };
 
+mod easy_graph;
+mod easy_table;
 mod easy_tuple;
-mod simple;
-mod weighted;
 
 pub enum GraphDerive {
     Undefined,
@@ -38,7 +38,7 @@ impl Parse for GraphDerive {
             Err(_) => Err(Error::new(input.span(), "#[derive(Graph)] only work on struct"))?,
         };
         match GraphDerive::easy_graph(&item) {
-            ParseResult::Ok(o) => return Ok(GraphDerive::EasyTable(o)),
+            ParseResult::Ok(o) => return Ok(o),
             ParseResult::NotGood => {}
             ParseResult::Bad(e) => Err(e)?,
         }

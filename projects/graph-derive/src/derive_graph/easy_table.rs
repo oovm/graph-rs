@@ -1,14 +1,15 @@
 use super::*;
 
-impl ToTokens for EasyTuple {
+impl ToTokens for EasyTable {
     fn to_tokens(&self, tokens: &mut TokenStream2) {
         let name = &self.graph_name;
+        let field = &self.field_name;
         let copy = quote! {
             impl Copy for #name {}
             impl Clone for #name {
                 #[inline]
                 fn clone(&self) -> Self {
-                    Self(self.0)
+                    Self(self.#field)
                 }
             }
         };
@@ -16,7 +17,7 @@ impl ToTokens for EasyTuple {
             impl Eq for #name {}
             impl PartialEq for EasyGraphTable {
                 fn eq(&self, other: &Self) -> bool {
-                    self.0 == other.0
+                    self.#field == other.#field
                 }
             }
         };

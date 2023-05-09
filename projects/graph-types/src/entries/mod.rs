@@ -46,9 +46,9 @@ pub enum GraphEntry {
 /// # Examples
 ///
 /// ```
-/// use graph_theory::{graph_engines::EasyGraphTable, GraphEngine, GraphKind};
-/// assert_eq!(EasyGraphTable::one_way(5).graph_kind(), GraphKind::Directed);
-/// assert_eq!(EasyGraphTable::two_way(5).graph_kind(), GraphKind::Undirected);
+/// use graph_theory::{graph_engines::CycleGraph, GraphEngine, GraphKind};
+/// assert_eq!(CycleGraph::one_way(5).graph_kind(), GraphKind::Directed);
+/// assert_eq!(CycleGraph::two_way(5).graph_kind(), GraphKind::Undirected);
 /// ```
 #[repr(u8)]
 #[derive(Copy, Clone, Debug)]

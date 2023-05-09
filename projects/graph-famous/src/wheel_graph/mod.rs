@@ -1,6 +1,5 @@
-use crate::StarGraph;
 use graph_types::{EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
-use std::{fmt::Debug, mem::size_of};
+use std::mem::size_of;
 
 // https://reference.wolfram.com/language/ref/WheelGraph.html
 #[derive(Copy, Clone, PartialEq, Eq)]
