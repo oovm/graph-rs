@@ -1,4 +1,4 @@
-use crate::{Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphError, GraphKind, NodesVisitor, Query};
+use crate::{Edge, EdgeInsertID, EdgeQuery, EdgesVisitor, GraphError, GraphKind, NodesVisitor, Query};
 
 use std::{
     future::Future,
@@ -85,7 +85,7 @@ where
     /// let mut graph = CompleteGraph::new(5);
     /// assert_eq!(graph.traverse_nodes().count(), 20)
     /// ```
-    fn traverse_edges(&self) -> GetEdgesVisitor<Self>;
+    fn traverse_edges(&self) -> EdgesVisitor<Self>;
 
     /// Count the number of edges in the graph.
     ///

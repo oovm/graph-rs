@@ -1,4 +1,9 @@
 use crate::GraphEngine;
+use std::{
+    any::type_name,
+    fmt::{Debug, Formatter},
+    ops::{Bound, Range, RangeBounds},
+};
 
 /// # Arguments
 ///
@@ -11,13 +16,42 @@ use crate::GraphEngine;
 /// ```
 /// use graph_theory::GraphEngine;
 /// ```
-#[derive(Debug)]
-pub struct GetEdgesVisitor<'a, G: GraphEngine + ?Sized> {
-    graph: &'a G,
-    index: usize,
+pub struct EdgesVisitor<'i, G: GraphEngine + ?Sized> {
+    graph: &'i G,
+    indexer: Box<dyn DoubleEndedIterator<Item = usize>>,
 }
 
-impl<'a, G> GetEdgesVisitor<'a, G>
+impl<'i, G: GraphEngine + ?Sized> Debug for EdgesVisitor<'i, G> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let name = type_name::<G>();
+        let nodes = self.graph.count_nodes();
+        f.debug_struct("EdgeVisitor").field("graph", &name).field("nodes", &nodes).finish()
+    }
+}
+
+impl<'i, G> Iterator for EdgesVisitor<'i, G>
+where
+    G: GraphEngine + ?Sized,
+{
+    type Item = usize;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let index = self.indexer.next()?;
+        if self.graph.has_node(index).is_some() { Some(index) } else { self.next() }
+    }
+}
+
+impl<'i, G> DoubleEndedIterator for EdgesVisitor<'i, G>
+where
+    G: GraphEngine + ?Sized,
+{
+    fn next_back(&mut self) -> Option<Self::Item> {
+        let index = self.indexer.next_back()?;
+        if self.graph.has_node(index).is_some() { Some(index) } else { self.next_back() }
+    }
+}
+
+impl<'i, G> EdgesVisitor<'i, G>
 where
     G: GraphEngine + ?Sized,
 {
@@ -32,7 +66,22 @@ where
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    pub fn new(graph: &'a G) -> Self {
-        Self { graph, index: 0 }
+    pub fn range<R>(graph: &'i G, range: R) -> Self
+    where
+        R: RangeBounds<usize>,
+    {
+        let start = match range.start_bound() {
+            Bound::Included(s) => *s,
+            Bound::Excluded(s) => *s + 1,
+            Bound::Unbounded => 0,
+        };
+        let end = match range.end_bound() {
+            Bound::Included(s) => *s + 1,
+            Bound::Excluded(s) => *s,
+            Bound::Unbounded => {
+                panic!("Upper bound must be specified")
+            }
+        };
+        Self { graph, indexer: Box::new(Range { start, end }) }
     }
 }

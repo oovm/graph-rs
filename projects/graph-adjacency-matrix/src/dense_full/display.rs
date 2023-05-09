@@ -18,11 +18,6 @@ impl Display for AdjacencyMatrix {
 #[cfg(feature = "wolfram")]
 impl ToWolfram for AdjacencyMatrix {
     fn to_wolfram(&self) -> WolframValue {
-        let rows = self
-            .matrix
-            .chunks_exact(self.nodes())
-            .map(|row| WolframValue::list(row.iter().map(|edge| WolframValue::Integer64(*edge as i64)).collect()))
-            .collect();
-        WolframValue::function("AdjacencyGraph", vec![WolframValue::list(rows)])
+        todo!()
     }
 }

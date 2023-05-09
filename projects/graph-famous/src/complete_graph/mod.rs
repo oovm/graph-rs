@@ -1,4 +1,4 @@
-use graph_types::{Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
+use graph_types::{Edge, EdgeInsertID, EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
 use std::{
     fmt::{Debug, Display, Formatter},
     mem::size_of,
@@ -52,7 +52,7 @@ impl GraphEngine for CompleteGraph {
         todo!()
     }
 
-    fn traverse_edges(&self) -> GetEdgesVisitor<Self> {
+    fn traverse_edges(&self) -> EdgesVisitor<Self> {
         todo!()
     }
 

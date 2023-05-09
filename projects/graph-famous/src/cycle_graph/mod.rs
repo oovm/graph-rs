@@ -1,4 +1,4 @@
-use graph_types::{Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
+use graph_types::{Edge, EdgeInsertID, EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
 use std::{fmt::Debug, mem::size_of};
 
 /// https://reference.wolfram.com/language/ref/CycleGraph.html
@@ -32,7 +32,7 @@ impl GraphEngine for CycleGraph {
         todo!()
     }
 
-    fn traverse_edges(&self) -> GetEdgesVisitor<Self> {
+    fn traverse_edges(&self) -> EdgesVisitor<Self> {
         todo!()
     }
 

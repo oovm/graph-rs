@@ -6,6 +6,7 @@
 
 mod sparse_edges;
 mod sparse_nodes;
+pub(crate) mod utils;
 
 pub use sparse_edges::AdjacencyEdgeList;
 pub use sparse_nodes::AdjacencyNodeList;

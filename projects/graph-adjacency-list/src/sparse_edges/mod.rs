@@ -1,5 +1,7 @@
+use crate::utils::ShortEdge;
 use graph_types::{
-    Edge, EdgeDirection, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, GraphKind, MutableGraph, NodesVisitor,
+    DirectedEdge, Edge, EdgeDirection, EdgeInsertID, EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, MutableGraph,
+    NodesVisitor,
 };
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -11,12 +13,6 @@ type EdgeID = u32;
 pub struct AdjacencyEdgeList {
     nodes: BTreeSet<NodeID>,
     edges: BTreeMap<EdgeID, ShortEdge>,
-}
-
-#[derive(Debug)]
-pub struct ShortEdge {
-    from: NodeID,
-    goto: NodeID,
 }
 
 impl GraphEngine for AdjacencyEdgeList {
@@ -33,15 +29,24 @@ impl GraphEngine for AdjacencyEdgeList {
     }
 
     fn traverse_nodes(&self) -> NodesVisitor<Self> {
-        todo!()
+        let max_id = self.nodes.last().map(|s| *s as usize).unwrap_or(0);
+        NodesVisitor::range(self, 0..=max_id)
     }
 
     fn has_edge<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
-        todo!()
+        match edge.into() {
+            EdgeQuery::EdgeID(i) => self.edges.contains_key(&(i as u32)).then_some(i),
+            EdgeQuery::Directed(_) => {
+                todo!()
+            }
+            EdgeQuery::Undirected(_) => {
+                todo!()
+            }
+        }
     }
 
-    fn traverse_edges(&self) -> GetEdgesVisitor<Self> {
-        GetEdgesVisitor::new(self)
+    fn traverse_edges(&self) -> EdgesVisitor<Self> {
+        EdgesVisitor::range(self, 0..=self.count_edges())
     }
 
     fn count_edges(&self) -> usize {

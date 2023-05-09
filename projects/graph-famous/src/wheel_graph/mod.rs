@@ -1,5 +1,5 @@
 use crate::StarGraph;
-use graph_types::{Edge, EdgeInsertID, EdgeQuery, GetEdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
+use graph_types::{Edge, EdgeInsertID, EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
 use std::{fmt::Debug, mem::size_of};
 
 // https://reference.wolfram.com/language/ref/WheelGraph.html
@@ -48,8 +48,8 @@ impl GraphEngine for WheelGraph {
         }
     }
 
-    fn traverse_edges(&self) -> GetEdgesVisitor<Self> {
-        GetEdgesVisitor::new(self)
+    fn traverse_edges(&self) -> EdgesVisitor<Self> {
+        EdgesVisitor::range(self, 0..=self.count_edges())
     }
 
     fn count_edges(&self) -> usize {
