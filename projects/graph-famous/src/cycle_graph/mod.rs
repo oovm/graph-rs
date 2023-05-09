@@ -1,5 +1,5 @@
 use graph_derive::Graph;
-use graph_types::{EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
+use graph_types::{Edge, EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
 use std::mem::size_of;
 
 /// https://reference.wolfram.com/language/ref/CycleGraph.html
@@ -36,16 +36,34 @@ impl GraphEngine for CycleGraph {
     fn has_edge<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
         match edge.into() {
             EdgeQuery::EdgeID(edge_id) => (edge_id < self.count_edges()).then_some(edge_id),
-            EdgeQuery::Directed(_) => {
-                todo!()
-            }
-            EdgeQuery::Undirected(_) => match self.graph_kind() {
-                GraphKind::Directed => None,
-                GraphKind::Undirected => {
-                    todo!()
+            EdgeQuery::Directed(v) if v.max_index() < self.count_nodes() => {
+                // if back, edge id + 1
+                let dir = if v.goto > v.from { 0 } else { 1 };
+                // adjacent nodes
+                if v.delta_index() == 1 {
+                    return Some(v.min_index() * 2 + dir);
                 }
+                // last edge
+                else if self.count_nodes() == v.delta_index() + 1 {
+                    return Some(v.max_index() * 2 + dir);
+                }
+            }
+            EdgeQuery::Undirected(v) => match self.graph_kind() {
+                GraphKind::Undirected if v.max_index() < self.count_nodes() => {
+                    // adjacent nodes
+                    if v.delta_index() == 1 {
+                        return Some(v.min_index());
+                    }
+                    // last edge
+                    else if self.count_nodes() == v.delta_index() + 1 {
+                        return Some(v.max_index());
+                    }
+                }
+                _ => {}
             },
+            _ => {}
         }
+        None
     }
 
     fn traverse_edges(&self) -> EdgesVisitor<Self> {
