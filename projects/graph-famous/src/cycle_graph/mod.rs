@@ -30,12 +30,14 @@ impl GraphEngine for CycleGraph {
         NodesVisitor::range(self, 0..self.count_nodes())
     }
 
+    /// Numbered clockwise, if edge comes back, then edge id extra + 1.
+    ///
     /// In a indirected graph, edges ids are counted from 0 to `self.count_edges() - 1`.
     ///
     /// And in a directed graph, edges ids are counted from 0 to `self.count_edges() - 1`.
     fn has_edge<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
         match edge.into() {
-            EdgeQuery::EdgeID(edge_id) => (edge_id < self.count_edges()).then_some(edge_id),
+            EdgeQuery::EdgeID(edge_id) => return (edge_id < self.count_edges()).then_some(edge_id),
             EdgeQuery::Directed(v) if v.max_index() < self.count_nodes() => {
                 // if back, edge id + 1
                 let dir = if v.goto > v.from { 0 } else { 1 };

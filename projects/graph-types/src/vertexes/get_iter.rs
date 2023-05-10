@@ -1,20 +1,13 @@
 use super::*;
-use std::{
-    any::type_name,
-    fmt::{Debug, Formatter},
-    ops::{Bound, Range, RangeBounds},
-};
 
-/// # Arguments
-///
-/// * `index`:
-///
-/// returns: Option<Cow<Self::Node>>
+/// A double-ended iterator over the nodes of a graph.
 ///
 /// # Examples
 ///
 /// ```
-/// use graph_theory::GraphEngine;
+/// use graph_theory::{graph_engines::CycleGraph, GraphEngine};
+/// let graph = CycleGraph::two_way(5);
+/// let mut visitor = graph.nodes();
 /// ```
 pub struct NodesVisitor<'i, G: GraphEngine + ?Sized> {
     graph: &'i G,

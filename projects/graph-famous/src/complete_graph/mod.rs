@@ -1,5 +1,5 @@
 use graph_derive::Graph;
-use graph_types::{EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
+use graph_types::{Edge, EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
 use std::mem::size_of;
 
 /// [CompleteGraph](https://reference.wolfram.com/language/ref/CompleteGraph.html)
@@ -45,17 +45,19 @@ impl GraphEngine for CompleteGraph {
     /// Edges ids are counted from 0 to `self.count_edges() - 1`.
     fn has_edge<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
         match edge.into() {
-            EdgeQuery::EdgeID(edge_id) => (edge_id < self.count_edges()).then_some(edge_id),
-            EdgeQuery::Directed(_) => {
+            EdgeQuery::EdgeID(edge_id) => return (edge_id < self.count_edges()).then_some(edge_id),
+            EdgeQuery::Directed(v) if v.max_index() < self.count_nodes() => {
                 todo!()
             }
             EdgeQuery::Undirected(_) => match self.graph_kind() {
-                GraphKind::Directed => None,
+                GraphKind::Directed => {}
                 GraphKind::Undirected => {
                     todo!()
                 }
             },
+            _ => {}
         }
+        None
     }
 
     fn traverse_edges(&self) -> EdgesVisitor<Self> {
