@@ -11,6 +11,7 @@ edition = "2021"
 exclude = ["tests/", "package.json"]
 
 [dependencies]
+color-core = "0.1.6"
 shape-core = "0.1.14"
 serde = { version = "1.0.162", features = ["derive"], optional = true }
 graph-theory = { version = "0.0.*", path = "../graph" }

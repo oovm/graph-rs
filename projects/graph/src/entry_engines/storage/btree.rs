@@ -14,8 +14,24 @@ use std::collections::BTreeMap;
 /// ```
 #[derive(Clone, Debug)]
 pub struct DictStorage<T> {
+    default: T,
     nodes: BTreeMap<usize, T>,
     edges: BTreeMap<usize, T>,
+}
+
+impl<T> Default for DictStorage<T>
+where
+    T: Default,
+{
+    fn default() -> Self {
+        Self { default: T::default(), nodes: BTreeMap::default(), edges: BTreeMap::default() }
+    }
+}
+
+impl<T> DictStorage<T> {
+    pub fn new(default: T) -> Self {
+        Self { default, nodes: BTreeMap::default(), edges: BTreeMap::default() }
+    }
 }
 
 // noinspection DuplicatedCode
@@ -26,18 +42,26 @@ where
     type ValueRef = &'i T;
     type ValueMut = &'i mut T;
 
-    fn get_value(&'i self, query: Query) -> Result<Self::ValueRef, GraphError> {
+    fn try_get_value(&'i self, query: Query) -> Result<Self::ValueRef, GraphError> {
         match self.get_data(query) {
             Some(item) => Ok(item),
             None => Err(GraphError::not_found(query)),
         }
     }
 
-    fn mut_value(&'i mut self, query: Query) -> Result<Self::ValueMut, GraphError> {
+    fn get_value(&'i self, query: Query) -> Self::ValueRef {
+        todo!()
+    }
+
+    fn try_mut_value(&'i mut self, query: Query) -> Result<Self::ValueMut, GraphError> {
         match self.mut_data(query) {
             Some(item) => Ok(item),
             None => Err(GraphError::not_found(query)),
         }
+    }
+
+    fn mut_value(&'i mut self, query: Query) -> Self::ValueMut {
+        todo!()
     }
 }
 

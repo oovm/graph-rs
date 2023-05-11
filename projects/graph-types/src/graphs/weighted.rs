@@ -1,20 +1,22 @@
 use super::*;
 use crate::GraphErrorKind;
+use std::{any::type_name, borrow::Cow};
 
 /// Extend the ability to get a value from a graph
 ///
 /// # Examples
 ///
 /// ```
-/// use graph_types::{EntryEngine, GraphEngine, ListStorage};
+/// use graph_theory::{entry_engines::ListStorage, EntryEngine, GraphEngine};
 /// ```
+#[allow(unused_variables)]
 pub trait ValueProvider<'a, V>: Send + Sync {
     /// The reference type of [V].
     ///
     /// # Examples
     ///
     /// ```
-    /// use graph_types::{EntryEngine, GraphEngine, ListStorage};
+    /// use graph_theory::{entry_engines::ListStorage, EntryEngine, GraphEngine};
     /// ```
     type ValueRef: Deref<Target = V>;
     /// The mutable reference type of [V].
@@ -22,7 +24,7 @@ pub trait ValueProvider<'a, V>: Send + Sync {
     /// # Examples
     ///
     /// ```
-    /// use graph_types::{EntryEngine, GraphEngine, ListStorage};
+    /// use graph_theory::{entry_engines::ListStorage, EntryEngine, GraphEngine};
     /// ```
     type ValueMut: DerefMut<Target = V>;
     /// Get the value reference from the graph by [Query].
@@ -30,28 +32,39 @@ pub trait ValueProvider<'a, V>: Send + Sync {
     /// # Examples
     ///
     /// ```
-    /// use graph_types::{EntryEngine, GraphEngine, ListStorage};
+    /// use graph_theory::{entry_engines::ListStorage, EntryEngine, GraphEngine};
     /// ```
-    fn get_value(&'a self, query: Query) -> Result<Self::ValueRef, GraphError>;
+    fn try_get_value(&'a self, query: Query) -> Result<Self::ValueRef, GraphError>;
+    /// Get the value reference from the graph by [Query].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::{entry_engines::ListStorage, EntryEngine, GraphEngine};
+    /// ```
+    fn get_value(&'a self, query: Query) -> Self::ValueRef;
     /// Get the mutable value reference from the graph by [Query].
     ///
     /// # Examples
     ///
     /// ```
-    /// use graph_types::{EntryEngine, GraphEngine, ListStorage};
+    /// use graph_theory::{entry_engines::ListStorage, EntryEngine, GraphEngine};
     /// ```
-    fn mut_value(&'a mut self, query: Query) -> Result<Self::ValueMut, GraphError>;
+    fn try_mut_value(&'a mut self, query: Query) -> Result<Self::ValueMut, GraphError>;
+
+    fn mut_value(&'a mut self, query: Query) -> Self::ValueMut;
+
     /// Set the owned value to the graph by [Query], return the old value if it exists,
     /// return [NotFound](GraphErrorKind::NotFound) error missing this entry.
     ///
     /// # Examples
     ///
     /// ```
-    /// use graph_types::{EntryEngine, GraphEngine, ListStorage};
+    /// use graph_theory::{entry_engines::ListStorage, EntryEngine, GraphEngine};
     /// ```
     fn set_value(&'a mut self, query: Query, value: V) -> Result<V, GraphError> {
         let mut new = value;
-        let mut old = self.mut_value(query)?;
+        let mut old = self.try_mut_value(query)?;
         std::mem::swap(&mut new, &mut old);
         Ok(new)
     }
@@ -96,7 +109,7 @@ pub trait EntryEngine<V>: GraphEngine {
         data: &'p Self::Provider,
         query: Query,
     ) -> Result<<Self::Provider as ValueProvider<'p, V>>::ValueRef, GraphError> {
-        data.get_value(query)
+        data.try_get_value(query)
     }
     /// # Arguments
     ///
@@ -138,7 +151,7 @@ pub trait EntryEngine<V>: GraphEngine {
         V: Send + 'async_trait,
         Self: Sync + 'async_trait,
     {
-        Box::pin(async move { data.get_value(query) })
+        Box::pin(async move { data.try_get_value(query) })
     }
     /// # Arguments
     ///

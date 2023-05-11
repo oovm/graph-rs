@@ -29,14 +29,14 @@ where
     type ValueRef = Ref<'i, usize, T>;
     type ValueMut = RefMut<'i, usize, T>;
 
-    fn get_value(&'i self, query: Query) -> Result<Self::ValueRef, GraphError> {
+    fn try_get_value(&'i self, query: Query) -> Result<Self::ValueRef, GraphError> {
         match self.get_data(query) {
             Some(item) => Ok(item),
             None => Err(GraphError::not_found(query)),
         }
     }
 
-    fn mut_value(&'i mut self, query: Query) -> Result<Self::ValueMut, GraphError> {
+    fn try_mut_value(&'i mut self, query: Query) -> Result<Self::ValueMut, GraphError> {
         match self.mut_data(query) {
             Some(item) => Ok(item),
             None => Err(GraphError::not_found(query)),

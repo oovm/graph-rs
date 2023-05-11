@@ -13,13 +13,17 @@ use crate::{GraphEntry, GraphError, Query, ValueProvider};
 /// ```
 #[derive(Clone, Debug)]
 pub struct ListStorage<T> {
+    default: T,
     nodes: Vec<T>,
     edges: Vec<T>,
 }
 
-impl<T> Default for ListStorage<T> {
+impl<T> Default for ListStorage<T>
+where
+    T: Default,
+{
     fn default() -> Self {
-        Self { nodes: Vec::new(), edges: Vec::new() }
+        Self { default: T::default(), nodes: Vec::new(), edges: Vec::new() }
     }
 }
 
@@ -31,18 +35,26 @@ where
     type ValueRef = &'i T;
     type ValueMut = &'i mut T;
 
-    fn get_value(&'i self, query: Query) -> Result<Self::ValueRef, GraphError> {
+    fn try_get_value(&'i self, query: Query) -> Result<Self::ValueRef, GraphError> {
         match self.get_data(query) {
             Some(item) => Ok(item),
             None => Err(GraphError::not_found(query)),
         }
     }
 
-    fn mut_value(&'i mut self, query: Query) -> Result<Self::ValueMut, GraphError> {
+    fn get_value(&'i self, query: Query) -> Self::ValueRef {
+        todo!()
+    }
+
+    fn try_mut_value(&'i mut self, query: Query) -> Result<Self::ValueMut, GraphError> {
         match self.mut_data(query) {
             Some(item) => Ok(item),
             None => Err(GraphError::not_found(query)),
         }
+    }
+
+    fn mut_value(&'i mut self, query: Query) -> Self::ValueMut {
+        todo!()
     }
 }
 
