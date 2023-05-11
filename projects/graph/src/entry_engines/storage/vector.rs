@@ -13,7 +13,6 @@ use crate::{GraphEntry, GraphError, Query, ValueProvider};
 /// ```
 #[derive(Clone, Debug)]
 pub struct ListStorage<T> {
-    default: T,
     nodes: Vec<T>,
     edges: Vec<T>,
 }
@@ -23,7 +22,7 @@ where
     T: Default,
 {
     fn default() -> Self {
-        Self { default: T::default(), nodes: Vec::new(), edges: Vec::new() }
+        Self { nodes: Vec::new(), edges: Vec::new() }
     }
 }
 
@@ -35,35 +34,23 @@ where
     type ValueRef = &'i T;
     type ValueMut = &'i mut T;
 
-    fn try_get_value(&'i self, query: Query) -> Result<Self::ValueRef, GraphError> {
+    fn get_value(&'i self, query: Query) -> Result<Self::ValueRef, GraphError> {
         match self.get_data(query) {
             Some(item) => Ok(item),
             None => Err(GraphError::not_found(query)),
         }
     }
 
-    fn get_value(&'i self, query: Query) -> Self::ValueRef {
-        todo!()
-    }
-
-    fn try_mut_value(&'i mut self, query: Query) -> Result<Self::ValueMut, GraphError> {
+    fn mut_value(&'i mut self, query: Query) -> Result<Self::ValueMut, GraphError> {
         match self.mut_data(query) {
             Some(item) => Ok(item),
             None => Err(GraphError::not_found(query)),
         }
     }
-
-    fn mut_value(&'i mut self, query: Query) -> Self::ValueMut {
-        todo!()
-    }
 }
 
 impl<T> ListStorage<T> {
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
+    /// Get the reference of data by given query from the storage.
     ///
     /// # Examples
     ///
@@ -77,11 +64,7 @@ impl<T> ListStorage<T> {
         };
         Some(item)
     }
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
+    /// Get the mutable reference of data by given query from the storage.
     ///
     /// # Examples
     ///

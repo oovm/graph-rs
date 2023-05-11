@@ -2,7 +2,6 @@ use super::*;
 
 impl Node for usize {
     type Name = String;
-    type Weight = ();
 
     fn index(&self) -> usize {
         *self

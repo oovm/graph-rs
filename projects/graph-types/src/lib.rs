@@ -23,7 +23,7 @@ pub use crate::{
         weighted::{EntryEngine, ValueProvider},
         GraphEngine, MutableGraph,
     },
-    vertexes::{get_iter::NodesVisitor, Node},
+    vertexes::{get_iter::NodesVisitor, Node, NodeQuery},
 };
 
 #[cfg(feature = "wolfram_wxf")]
