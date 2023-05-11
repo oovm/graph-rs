@@ -17,6 +17,12 @@ pub struct ListStorage<T> {
     edges: Vec<T>,
 }
 
+impl<T> Default for ListStorage<T> {
+    fn default() -> Self {
+        Self { nodes: Vec::new(), edges: Vec::new() }
+    }
+}
+
 // noinspection DuplicatedCode
 impl<'i, T> ValueProvider<'i, T> for ListStorage<T>
 where

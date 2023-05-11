@@ -1,0 +1,24 @@
+[package]
+name = "graphviz"
+version = "0.0.0"
+authors = ["Aster <192607617@qq.com>"]
+description = "Graphviz in rust."
+repository = "https://github.com/oovm/graph-rs"
+documentation = "https://docs.rs/graph-types"
+readme = "readme.md"
+license = "MPL-2.0"
+edition = "2021"
+exclude = ["tests/", "package.json"]
+
+[dependencies]
+shape-core = "0.1.14"
+serde = { version = "1.0.162", features = ["derive"], optional = true }
+graph-theory = { version = "0.0.*", path = "../graph" }
+
+[dev-dependencies]
+async-trait = "0.1.68"
+
+
+[features]
+default = ["serde"]
+serde = ["dep:serde", "graph-theory/serde"]

@@ -1,11 +1,7 @@
 use super::*;
+use crate::GraphErrorKind;
 
-/// # Arguments
-///
-/// * `index`:
-/// * `data`:
-///
-/// returns: Result<<Self::Provider as ValueProvider>::ValueRef, GraphError>
+/// Extend the ability to get a value from a graph
 ///
 /// # Examples
 ///
@@ -13,12 +9,7 @@ use super::*;
 /// use graph_types::{EntryEngine, GraphEngine, ListStorage};
 /// ```
 pub trait ValueProvider<'a, V>: Send + Sync {
-    /// # Arguments
-    ///
-    /// * `index`:
-    /// * `data`:
-    ///
-    /// returns: Result<<Self::Provider as ValueProvider>::ValueRef, GraphError>
+    /// The reference type of [V].
     ///
     /// # Examples
     ///
@@ -26,12 +17,7 @@ pub trait ValueProvider<'a, V>: Send + Sync {
     /// use graph_types::{EntryEngine, GraphEngine, ListStorage};
     /// ```
     type ValueRef: Deref<Target = V>;
-    /// # Arguments
-    ///
-    /// * `index`:
-    /// * `data`:
-    ///
-    /// returns: Result<<Self::Provider as ValueProvider>::ValueRef, GraphError>
+    /// The mutable reference type of [V].
     ///
     /// # Examples
     ///
@@ -39,12 +25,7 @@ pub trait ValueProvider<'a, V>: Send + Sync {
     /// use graph_types::{EntryEngine, GraphEngine, ListStorage};
     /// ```
     type ValueMut: DerefMut<Target = V>;
-    /// # Arguments
-    ///
-    /// * `index`:
-    /// * `data`:
-    ///
-    /// returns: Result<<Self::Provider as ValueProvider>::ValueRef, GraphError>
+    /// Get the value reference from the graph by [Query].
     ///
     /// # Examples
     ///
@@ -52,12 +33,7 @@ pub trait ValueProvider<'a, V>: Send + Sync {
     /// use graph_types::{EntryEngine, GraphEngine, ListStorage};
     /// ```
     fn get_value(&'a self, query: Query) -> Result<Self::ValueRef, GraphError>;
-    /// # Arguments
-    ///
-    /// * `index`:
-    /// * `data`:
-    ///
-    /// returns: Result<<Self::Provider as ValueProvider>::ValueRef, GraphError>
+    /// Get the mutable value reference from the graph by [Query].
     ///
     /// # Examples
     ///
@@ -65,12 +41,8 @@ pub trait ValueProvider<'a, V>: Send + Sync {
     /// use graph_types::{EntryEngine, GraphEngine, ListStorage};
     /// ```
     fn mut_value(&'a mut self, query: Query) -> Result<Self::ValueMut, GraphError>;
-    /// # Arguments
-    ///
-    /// * `index`:
-    /// * `data`:
-    ///
-    /// returns: Result<<Self::Provider as ValueProvider>::ValueRef, GraphError>
+    /// Set the owned value to the graph by [Query], return the old value if it exists,
+    /// return [NotFound](GraphErrorKind::NotFound) error missing this entry.
     ///
     /// # Examples
     ///
@@ -86,14 +58,7 @@ pub trait ValueProvider<'a, V>: Send + Sync {
 }
 
 /// A graph that has extra data associated with each node and edge.
-///
-/// # Arguments
-///
-/// * `index`:
-/// * `data`:
-///
-/// returns: Result<<Self::Provider as ValueProvider>::ValueRef, GraphError>
-///
+//
 /// # Examples
 ///
 /// ```
