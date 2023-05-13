@@ -3,13 +3,14 @@ use crate::{
 };
 
 pub mod weighted;
-use crate::vertexes::NodeDegree;
+use crate::{edges::typed_edges::IndeterminateEdge, vertexes::NodeDegree};
 use std::{
     future::Future,
     mem::size_of,
     ops::{Deref, DerefMut},
     pin::Pin,
 };
+
 pub mod named;
 
 /// Represent a graph storage, with a set of nodes and edges.
@@ -31,7 +32,7 @@ where
     /// An iterator over the edges.
     type EdgeIterator: DoubleEndedIterator<Item = EdgeID>;
     /// An iterator over the edges.
-    type DirectionIterator: DoubleEndedIterator<Item = DirectedEdge>;
+    type DirectionIterator: DoubleEndedIterator<Item = IndeterminateEdge>;
     /// Check the graph kind, it can be directed or undirected.
     ///
     /// # Examples

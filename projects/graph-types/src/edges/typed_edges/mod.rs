@@ -17,6 +17,34 @@ mod wolfram;
 /// use graph_theory::GraphEngine;
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct IndeterminateEdge {
+    /// The index of the node that the edge is coming from.
+    pub from: usize,
+    /// The index of the node that the edge is going to.
+    pub goto: usize,
+}
+
+impl Display for IndeterminateEdge {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        todo!()
+    }
+}
+
+impl Edge for IndeterminateEdge {
+    fn direction(&self) -> EdgeDirection {
+        EdgeDirection::TwoWay
+    }
+
+    fn lhs(&self) -> usize {
+        todo!()
+    }
+
+    fn rhs(&self) -> usize {
+        todo!()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct DynamicEdge {
     /// The direction of the edge.
     pub bidi: EdgeDirection,

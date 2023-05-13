@@ -101,6 +101,8 @@ pub trait Edge: Display {
 pub enum EdgeDirection {
     /// Two nodes that are not connected.
     Disconnect,
+    /// [EdgeDirection::Forward] in a directed graph, [EdgeDirection::TwoWay] in an undirected graph
+    Indeterminate,
     /// This edge is bidirectional
     TwoWay,
     /// This edge is unidirectional

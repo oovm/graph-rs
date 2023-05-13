@@ -34,3 +34,7 @@ Each of the entry can be stored in different data structures.
 For example, weights can be stored in a vector, labels can be stored in a hash map, some complex structures can even be stored in disk or a database.
 
 - [graphviz](): edge list implementation
+
+
+## Algorithms
+

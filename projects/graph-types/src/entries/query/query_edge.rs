@@ -1,4 +1,4 @@
-use crate::{DirectedEdge, Query, UndirectedEdge};
+use crate::{edges::typed_edges::IndeterminateEdge, DirectedEdge, Query, UndirectedEdge};
 
 /// # Arguments
 ///
@@ -19,6 +19,8 @@ pub enum EdgeQuery {
     Directed(DirectedEdge),
     /// Removed two nodes, return these node ids
     Undirected(UndirectedEdge),
+    /// Account for the fact that the graph is dynamic
+    Dynamic(IndeterminateEdge),
 }
 
 impl From<usize> for EdgeQuery {
@@ -45,6 +47,7 @@ impl From<EdgeQuery> for Query {
             EdgeQuery::EdgeID(id) => Query::EdgeID(id),
             EdgeQuery::Directed(edge) => Query::Directed(edge),
             EdgeQuery::Undirected(edge) => Query::Undirected(edge),
+            EdgeQuery::Dynamic(edge) => Query::Indeterminate(edge),
         }
     }
 }

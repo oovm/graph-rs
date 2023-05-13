@@ -1,6 +1,9 @@
 #![allow(unused_variables)]
 
-use crate::{DirectedEdge, Edge, EdgeID, EdgeInsertID, EdgeQuery, GraphEngine, GraphKind, MutableGraph, NodeQuery};
+use crate::{
+    edges::typed_edges::IndeterminateEdge, DirectedEdge, Edge, EdgeID, EdgeInsertID, EdgeQuery, GraphEngine, GraphKind,
+    MutableGraph, NodeQuery,
+};
 
 /// A placeholder graph engine.
 #[derive(Copy, Clone, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -52,7 +55,7 @@ impl GraphEngine for PlaceholderGraph {
 }
 
 impl Iterator for PlaceholderDirectionIterator {
-    type Item = DirectedEdge;
+    type Item = IndeterminateEdge;
 
     fn next(&mut self) -> Option<Self::Item> {
         unreachable!()
