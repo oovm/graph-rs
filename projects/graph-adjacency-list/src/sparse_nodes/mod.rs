@@ -1,5 +1,7 @@
 use graph_types::{
-    Edge, EdgeDirection, EdgeInsertID, EdgeQuery, GraphEngine, GraphKind, MutableGraph, NodeRangeVisitor, NodesVisitor,
+    placeholder::{PlaceholderDirectionIterator, PlaceholderNodeIterator},
+    Edge, EdgeDirection, EdgeInsertID, EdgeQuery, GraphEngine, GraphKind, MutableGraph, NodeQuery, NodeRangeVisitor,
+    NodesVisitor,
 };
 use std::collections::BTreeMap;
 
@@ -26,35 +28,32 @@ impl Default for AdjacencyNodeList {
 }
 
 impl GraphEngine for AdjacencyNodeList {
+    type NodeIterator = PlaceholderNodeIterator;
+    type NeighborIterator = PlaceholderNodeIterator;
+    type EdgeIterator = PlaceholderNodeIterator;
+    type DirectionIterator = PlaceholderDirectionIterator;
+
     fn graph_kind(&self) -> GraphKind {
-        GraphKind::Directed
-    }
-
-    fn has_node(&self, node_id: usize) -> Option<usize> {
-        self.head_nodes.contains_key(&(node_id as u32)).then(|| node_id)
-    }
-
-    fn count_nodes(&self) -> usize {
-        self.head_nodes.len()
-    }
-
-    fn traverse_nodes(&self) -> NodesVisitor<Self> {
-        NodesVisitor::range(self, 0..self.count_nodes())
-    }
-
-    fn has_edge<E: Into<EdgeQuery>>(&self, _edge: E) -> Option<usize> {
         todo!()
     }
 
-    fn traverse_edges(&self) -> NodeRangeVisitor<Self> {
+    fn has_node<Q: Into<NodeQuery>>(&self, node: Q) -> Option<usize> {
         todo!()
     }
 
-    fn count_edges(&self) -> usize {
-        self.head_nodes.iter().map(|(_, v)| v.end_nodes.len()).sum()
+    fn traverse_nodes(&self) -> Self::NodeIterator {
+        todo!()
     }
 
-    fn size_hint(&self) -> usize {
+    fn has_edge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Option<graph_types::EdgeID> {
+        todo!()
+    }
+
+    fn traverse_edges(&self) -> Self::EdgeIterator {
+        todo!()
+    }
+
+    fn traverse_directions(&self) -> Self::DirectionIterator {
         todo!()
     }
 }

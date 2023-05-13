@@ -56,7 +56,7 @@ pub enum GraphEntry {
 /// assert_eq!(CycleGraph::two_way(5).graph_kind(), GraphKind::Undirected);
 /// ```
 #[repr(u8)]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum GraphKind {
     /// # Arguments
     ///
@@ -82,6 +82,15 @@ pub enum GraphKind {
     /// use graph_theory::GraphEngine;
     /// ```
     Undirected = 1,
+}
+
+impl GraphKind {
+    pub const fn is_one_way(&self) -> bool {
+        matches!(self, GraphKind::Directed)
+    }
+    pub const fn is_two_way(&self) -> bool {
+        matches!(self, GraphKind::Undirected)
+    }
 }
 
 pub trait EntryEngine<'i, V> {

@@ -1,4 +1,6 @@
-use crate::{Edge, EdgeID, EdgeInsertID, EdgeQuery, GraphKind, NodeQuery, NodeRangeVisitor, NodesVisitor, Query};
+use crate::{
+    DirectedEdge, Edge, EdgeID, EdgeInsertID, EdgeQuery, GraphKind, NodeID, NodeQuery, NodeRangeVisitor, NodesVisitor, Query,
+};
 
 pub mod weighted;
 use crate::vertexes::NodeDegree;
@@ -23,11 +25,13 @@ where
     Self: Sized,
 {
     /// An iterator over the nodes.
-    type NodeIterator: DoubleEndedIterator<Item = NodeQuery>;
-    /// An iterator over the edges.
-    type EdgeIterator: DoubleEndedIterator<Item = EdgeQuery>;
+    type NodeIterator: DoubleEndedIterator<Item = NodeID>;
     /// An iterator over the neighbors.
-    type NeighborIterator: DoubleEndedIterator<Item = NodeQuery>;
+    type NeighborIterator: DoubleEndedIterator<Item = NodeID>;
+    /// An iterator over the edges.
+    type EdgeIterator: DoubleEndedIterator<Item = EdgeID>;
+    /// An iterator over the edges.
+    type DirectionIterator: DoubleEndedIterator<Item = DirectedEdge>;
     /// Check the graph kind, it can be directed or undirected.
     ///
     /// # Examples
@@ -48,7 +52,7 @@ where
     /// assert_eq!(CompleteGraph::one_way(5).has_node(5), true);
     /// assert_eq!(CompleteGraph::one_way(5).has_node(6), false);
     /// ```
-    fn has_node(&self, query: NodeQuery) -> Option<usize>;
+    fn has_node<Q: Into<NodeQuery>>(&self, node: Q) -> Option<usize>;
 
     /// Check if the node exists, return the node id if exists.
     ///
@@ -135,7 +139,7 @@ where
     /// assert_eq!(CompleteGraph::one_way(5).has_node(5), true);
     /// assert_eq!(CompleteGraph::one_way(5).has_node(6), false);
     /// ```
-    fn has_edge(&self, query: EdgeQuery) -> Option<EdgeID>;
+    fn has_edge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Option<EdgeID>;
     /// Get the edges of the graph.
     ///
     ///
@@ -145,6 +149,15 @@ where
     /// assert_eq!(graph.traverse_nodes().count(), 20)
     /// ```
     fn traverse_edges(&self) -> Self::EdgeIterator;
+    /// Get the edges of the graph.
+    ///
+    ///
+    /// ```
+    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
+    /// let mut graph = CompleteGraph::one_way(5);
+    /// assert_eq!(graph.traverse_nodes().count(), 20)
+    /// ```
+    fn traverse_directions(&self) -> Self::DirectionIterator;
 
     /// Count the number of edges in the graph.
     ///
