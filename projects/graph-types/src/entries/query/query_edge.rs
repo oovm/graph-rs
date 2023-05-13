@@ -1,4 +1,4 @@
-use crate::{DirectedEdge, UndirectedEdge};
+use crate::{DirectedEdge, Query, UndirectedEdge};
 
 /// # Arguments
 ///
@@ -36,5 +36,15 @@ impl From<UndirectedEdge> for EdgeQuery {
 impl From<DirectedEdge> for EdgeQuery {
     fn from(edge: DirectedEdge) -> Self {
         Self::Directed(edge)
+    }
+}
+
+impl From<EdgeQuery> for Query {
+    fn from(value: EdgeQuery) -> Self {
+        match value {
+            EdgeQuery::EdgeID(id) => Query::EdgeID(id),
+            EdgeQuery::Directed(edge) => Query::Directed(edge),
+            EdgeQuery::Undirected(edge) => Query::Undirected(edge),
+        }
     }
 }

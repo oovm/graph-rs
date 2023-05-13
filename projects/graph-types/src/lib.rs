@@ -19,10 +19,15 @@ pub use crate::{
     },
     entries::{
         query::{query_dynamic::Query, query_edge::EdgeQuery, query_node::NodeQuery},
+        storages::{btree::DictStorage, vector::ListStorage},
         GraphEntry, GraphKind,
     },
-    errors::{GraphError, GraphErrorKind, GraphResult},
+    errors::{
+        placeholder::{PlaceholderEdgeIterator, PlaceholderGraph, PlaceholderNodeIterator},
+        GraphError, GraphErrorKind, GraphResult,
+    },
     graphs::{
+        named::NamedGraph,
         valued::{EntryEngine, ValueProvider},
         weighted::WeightedGraph,
         GraphEngine, MutableGraph,

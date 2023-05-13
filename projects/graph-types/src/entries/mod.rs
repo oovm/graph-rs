@@ -1,5 +1,7 @@
 pub mod query;
 
+pub mod storages;
+
 /// # Arguments
 ///
 /// * `index`:
