@@ -7,7 +7,7 @@ use super::*;
 /// ```
 /// use graph_theory::GraphEngine;
 /// ```
-pub trait WeightedGraph<V>: GraphEngine {
+pub trait NamedGraph: GraphEngine {
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics
@@ -21,7 +21,7 @@ pub trait WeightedGraph<V>: GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    type WeightRef: Deref<Target = V>;
+    type NameRef: Deref<Target = str>;
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics
@@ -35,7 +35,7 @@ pub trait WeightedGraph<V>: GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    type WeightMut: DerefMut<Target = V>;
+    type NameMut: DerefMut<Target = str>;
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics
@@ -49,7 +49,7 @@ pub trait WeightedGraph<V>: GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn get_node_weight<Q: Into<NodeQuery>>(&self, node: Q) -> Option<Self::WeightRef>;
+    fn get_node_name<Q: Into<NodeQuery>>(&self, node: Q) -> Option<Self::NameRef>;
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics
@@ -63,7 +63,7 @@ pub trait WeightedGraph<V>: GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn mut_node_weight<Q: Into<NodeQuery>>(&self, node: Q) -> Option<Self::WeightMut>;
+    fn mut_node_name<Q: Into<NodeQuery>>(&self, node: Q) -> Option<Self::NameMut>;
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics
@@ -77,7 +77,7 @@ pub trait WeightedGraph<V>: GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn set_node_weight<Q: Into<NodeQuery>>(&mut self, node: Q, weight: V);
+    fn set_node_name<Q: Into<NodeQuery>>(&mut self, node: Q, name: &str);
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics
@@ -91,7 +91,7 @@ pub trait WeightedGraph<V>: GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn get_edge_weight<Q: Into<EdgeQuery>>(&self, edge: Q) -> Option<Self::WeightRef>;
+    fn get_edge_weight<Q: Into<EdgeQuery>>(&self, edge: Q) -> Option<Self::NameRef>;
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics
@@ -105,7 +105,7 @@ pub trait WeightedGraph<V>: GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn mut_edge_weight<Q: Into<EdgeQuery>>(&self, edge: Q) -> Option<Self::WeightMut>;
+    fn mut_edge_weight<Q: Into<EdgeQuery>>(&self, edge: Q) -> Option<Self::NameMut>;
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics

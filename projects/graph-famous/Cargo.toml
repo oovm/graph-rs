@@ -14,12 +14,12 @@ exclude = ["package.json", "tests/**"]
 serde = { version = "1.0.162", features = ["derive"], optional = true }
 
 [dependencies.graph-types]
-version = "0.0.*"
+version = "0.0.10"
 path = "../graph-types"
 features = []
 
 [dependencies.graph-derive]
-version = "0.0.*"
+version = "0.0.1"
 path = "../graph-derive"
 features = []
 

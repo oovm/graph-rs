@@ -9,6 +9,25 @@ use std::{
     ops::{Bound, Range, RangeBounds},
 };
 
+/// used to determine the direction of an edge
+pub type NodeID = usize;
+/// used to determine the direction of an edge
+
+#[derive(Copy, Clone, Debug)]
+pub struct NodeDegree {
+    /// used to determine the direction of an edge
+    pub in_coming: usize,
+    /// used to determine the direction of an edge
+    pub out_going: usize,
+}
+
+impl NodeDegree {
+    /// used to determine the direction of an edge
+    pub fn total(&self) -> usize {
+        self.in_coming + self.out_going
+    }
+}
+
 /// Represents a node in a graph
 ///
 /// ```
@@ -24,7 +43,7 @@ pub trait Node {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn index(&self) -> usize;
+    fn index(&self) -> NodeID;
     /// The weight of the node, only weighted graph nodes has a weight
     ///
     /// # Examples

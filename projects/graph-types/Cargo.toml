@@ -1,6 +1,6 @@
 [package]
 name = "graph-types"
-version = "0.0.9"
+version = "0.0.10"
 authors = ["Aster <192607617@qq.com>"]
 description = "Shared types for graph theory."
 repository = "https://github.com/oovm/graph-rs"
@@ -16,7 +16,7 @@ wolfram_wxf = { version = "0.6.3", optional = true }
 
 [dev-dependencies]
 async-trait = "0.1.68"
-graph-theory = { version = "0.0.*", path = "../graph" }
+graph-theory = { version = "*", path = "../graph" }
 
 [features]
 default = []

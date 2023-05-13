@@ -1,3 +1,5 @@
+use crate::{DirectedEdge, UndirectedEdge};
+
 /// # Arguments
 ///
 /// * `index`:

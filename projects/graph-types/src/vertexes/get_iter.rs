@@ -1,4 +1,5 @@
 use super::*;
+use crate::NodeQuery;
 
 /// A double-ended iterator over the nodes of a graph.
 ///
@@ -26,11 +27,10 @@ impl<'i, G> Iterator for NodesVisitor<'i, G>
 where
     G: GraphEngine + ?Sized,
 {
-    type Item = usize;
+    type Item = NodeQuery;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let index = self.indexer.next()?;
-        if self.graph.has_node(index).is_some() { Some(index) } else { self.next() }
+        todo!()
     }
 }
 
@@ -39,8 +39,7 @@ where
     G: GraphEngine + ?Sized,
 {
     fn next_back(&mut self) -> Option<Self::Item> {
-        let index = self.indexer.next_back()?;
-        if self.graph.has_node(index).is_some() { Some(index) } else { self.next_back() }
+        todo!()
     }
 }
 

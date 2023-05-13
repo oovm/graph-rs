@@ -31,7 +31,7 @@ impl<T> DictDefault<T> {
     /// ```
     pub fn get_data(&self, query: Query) -> &T {
         match self.dict.get_data(query) {
-            None => match query.entry {
+            None => match query.as_entry() {
                 GraphEntry::Node => &self.node_default,
                 GraphEntry::Edge => &self.edge_default,
             },
@@ -56,7 +56,7 @@ impl<T> DictDefault<T> {
     /// use graph_theory::GraphEngine;
     /// ```
     pub fn set_data(&mut self, query: Query, data: T) {
-        self.dict.set_data(query, data)
+        self.dict.set_data(query, data);
     }
     /// Set the data with given query to the storage.
     ///

@@ -12,18 +12,22 @@ mod vertexes;
 
 pub use crate::{
     edges::{
-        actions::{EdgeInsertID, EdgeQuery},
+        actions::EdgeInsertID,
         get_iter::EdgesVisitor,
         typed_edges::{DirectedEdge, DynamicEdge, UndirectedEdge},
-        Edge, EdgeDirection,
+        Edge, EdgeDirection, EdgeID,
     },
-    entries::{GraphEntry, GraphKind, Query},
+    entries::{
+        query::{query_dynamic::Query, query_edge::EdgeQuery, query_node::NodeQuery},
+        GraphEntry, GraphKind,
+    },
     errors::{GraphError, GraphErrorKind, GraphResult},
     graphs::{
-        weighted::{EntryEngine, ValueProvider},
+        valued::{EntryEngine, ValueProvider},
+        weighted::WeightedGraph,
         GraphEngine, MutableGraph,
     },
-    vertexes::{get_iter::NodesVisitor, Node, NodeQuery},
+    vertexes::{get_iter::NodesVisitor, Node, NodeID},
 };
 
 #[cfg(feature = "wolfram_wxf")]

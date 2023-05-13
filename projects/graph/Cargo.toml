@@ -1,8 +1,8 @@
 [package]
 name = "graph-theory"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["Aster <192607617@qq.com>"]
-description = "Adjacency Matrix and Adjacency Graph"
+description = "graph theory library for rust"
 repository = "https://github.com/oovm/graph-rs"
 documentation = "https://docs.rs/graph-theory"
 readme = "Readme.md"

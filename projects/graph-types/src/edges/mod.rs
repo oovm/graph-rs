@@ -1,4 +1,3 @@
-use crate::DirectedEdge;
 use std::{
     cmp::{max, min},
     ops::Range,
@@ -15,11 +14,10 @@ mod simple;
 pub mod get_iter;
 pub mod mut_iter;
 
-/// # Arguments
-///
-/// * `index`:
-///
-/// returns: Option<Cow<Self::Node>>
+/// used to determine the direction of an edge
+pub type EdgeID = usize;
+
+/// Marker trait for edges
 ///
 /// # Examples
 ///

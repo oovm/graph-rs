@@ -1,3 +1,5 @@
+use crate::{DirectedEdge, EdgeQuery, GraphEntry, NodeQuery, UndirectedEdge};
+
 /// # Arguments
 ///
 /// * `index`:
@@ -10,31 +12,14 @@
 /// use graph_theory::GraphEngine;
 /// ```
 #[derive(Clone, Copy, Debug)]
-pub struct Query {
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::GraphEngine;
-    /// ```
-    pub entry: GraphEntry,
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::GraphEngine;
-    /// ```
-    pub index: usize,
+pub enum Query {
+    NodeID(usize),
+    /// No need to remove anything
+    EdgeID(usize),
+    /// Removed one node, return the node id
+    Directed(DirectedEdge),
+    /// Removed two nodes, return these node ids
+    Undirected(UndirectedEdge),
 }
 
 impl Query {
@@ -49,21 +34,12 @@ impl Query {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    pub fn node(id: usize) -> Self {
-        Self { entry: GraphEntry::Node, index: id }
-    }
-    /// # Arguments
-    ///
-    /// * `index`:
-    ///
-    /// returns: Option<Cow<Self::Node>>
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::GraphEngine;
-    /// ```
-    pub fn edge(id: usize) -> Self {
-        Self { entry: GraphEntry::Edge, index: id }
+    pub fn as_entry(&self) -> GraphEntry {
+        match self {
+            Self::NodeID(_) => GraphEntry::Node,
+            Self::EdgeID(_) => GraphEntry::Edge,
+            Self::Directed(_) => GraphEntry::Edge,
+            Self::Undirected(_) => GraphEntry::Edge,
+        }
     }
 }

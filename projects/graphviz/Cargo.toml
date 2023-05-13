@@ -14,12 +14,21 @@ exclude = ["tests/", "package.json"]
 color-core = "0.1.6"
 shape-core = "0.1.14"
 serde = { version = "1.0.162", features = ["derive"], optional = true }
-graph-theory = { version = "0.0.*", path = "../graph" }
+
+[dependencies.graph-types]
+version = "0.0.10"
+path = "../graph-types"
+
+#[dependencies.adjacency-list]
+#version = "0.0.1"
+#path = "../graph-adjacency-list"
 
 [dev-dependencies]
-async-trait = "0.1.68"
+#graph-theory = { version = "*", path = "../graph" }
+#async-trait = "0.1.68"
 
 
 [features]
-default = ["serde"]
-serde = ["dep:serde", "graph-theory/serde"]
+default = ["serde", "wolfram"]
+wolfram = ["graph-types/wolfram_wxf"]
+serde = ["dep:serde", "graph-types/serde"]
