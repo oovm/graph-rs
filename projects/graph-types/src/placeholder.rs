@@ -41,12 +41,16 @@ impl<'a> GraphEngine<'a> for PlaceholderGraph {
         unreachable!()
     }
 
-    fn get_edge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError> {
+    fn get_edge(&self, edge: usize) -> Result<EdgeID, GraphError> {
         unreachable!()
     }
 
     fn all_edges(&self) -> Self::EdgeTraverser {
         unreachable!()
+    }
+
+    fn get_bridge(&self, edge: NodeID) -> Result<IndeterminateEdge, GraphError> {
+        todo!()
     }
 
     fn get_bridges(&'a self, from: NodeID, goto: NodeID) -> Self::BridgeIterator {

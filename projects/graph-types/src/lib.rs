@@ -10,6 +10,7 @@ mod edges;
 mod entries;
 pub mod errors;
 mod graphs;
+pub mod iterators;
 pub mod placeholder;
 pub mod storages;
 mod vertexes;

@@ -49,4 +49,8 @@ impl Query {
     pub fn check_node_range(index: NodeID, count: usize) -> Result<NodeID, GraphError> {
         if index < count { Ok(index) } else { Err(GraphError::node_out_of_range(index, count)) }
     }
+    /// Returns the node as a node ID.
+    pub fn check_edge_range(index: NodeID, count: usize) -> Result<NodeID, GraphError> {
+        if index < count { Ok(index) } else { Err(GraphError::node_out_of_range(index, count)) }
+    }
 }

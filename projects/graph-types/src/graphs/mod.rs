@@ -147,7 +147,7 @@ where
     /// assert_eq!(CompleteGraph::one_way(5).get_node(5), true);
     /// assert_eq!(CompleteGraph::one_way(5).get_node(6), false);
     /// ```
-    fn get_edge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError>;
+    fn get_edge(&self, edge: EdgeID) -> Result<EdgeID, GraphError>;
     /// Get the edges of the graph.
     ///
     ///
@@ -174,6 +174,7 @@ where
     fn count_edges(&'a self) -> usize {
         self.all_edges().count()
     }
+    fn get_bridge(&self, edge: NodeID) -> Result<IndeterminateEdge, GraphError>;
     /// Give all edges matching the start and end points
     ///
     /// # Examples
