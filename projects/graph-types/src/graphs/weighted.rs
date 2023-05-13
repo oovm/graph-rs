@@ -7,7 +7,7 @@ use super::*;
 /// ```
 /// use graph_theory::GraphEngine;
 /// ```
-pub trait WeightedGraph<V>: GraphEngine {
+pub trait WeightedGraph<V>: for<'a> GraphEngine<'a> {
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics
@@ -49,7 +49,7 @@ pub trait WeightedGraph<V>: GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn get_node_weight<Q: Into<NodeQuery>>(&self, node: Q) -> Option<Self::WeightRef>;
+    fn get_node_weight(&self, node: NodeID) -> Option<Self::WeightRef>;
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics
@@ -63,7 +63,7 @@ pub trait WeightedGraph<V>: GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn mut_node_weight<Q: Into<NodeQuery>>(&self, node: Q) -> Option<Self::WeightMut>;
+    fn mut_node_weight(&self, node: NodeID) -> Option<Self::WeightMut>;
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics
@@ -77,7 +77,7 @@ pub trait WeightedGraph<V>: GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn set_node_weight<Q: Into<NodeQuery>>(&mut self, node: Q, weight: V);
+    fn set_node_weight(&mut self, node: NodeID, weight: V);
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics

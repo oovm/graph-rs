@@ -27,9 +27,9 @@ pub struct CompleteGraph {
 }
 
 impl GraphEngine for CompleteGraph {
-    type NodeIterator = PlaceholderNodeIterator;
+    type NodeTraverser = PlaceholderNodeIterator;
     type NeighborIterator = PlaceholderNodeIterator;
-    type EdgeIterator = PlaceholderNodeIterator;
+    type EdgeTraverser = PlaceholderNodeIterator;
     type BridgeIterator = PlaceholderEdgeIterator;
 
     fn graph_kind(&self) -> GraphKind {
@@ -39,7 +39,7 @@ impl GraphEngine for CompleteGraph {
         }
     }
 
-    fn get_node_id<Q: Into<NodeQuery>>(&self, node: Q) -> Result<NodeID, GraphError> {
+    fn get_node(&self, node: NodeID) -> Result<NodeID, GraphError> {
         todo!()
     }
 
@@ -47,15 +47,15 @@ impl GraphEngine for CompleteGraph {
         self.rank()
     }
 
-    fn all_node_ids(&self) -> Self::NodeIterator {
+    fn all_nodes(&self) -> Self::NodeTraverser {
         todo!()
     }
 
-    fn get_edge_id<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError> {
+    fn get_edge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError> {
         todo!()
     }
 
-    fn all_edge_ids(&self) -> Self::EdgeIterator {
+    fn all_edges(&self) -> Self::EdgeTraverser {
         todo!()
     }
 

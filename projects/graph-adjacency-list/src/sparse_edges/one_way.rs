@@ -3,16 +3,16 @@ use crate::DiGraphSEAL;
 use graph_types::{errors::GraphError, EdgeID, IndeterminateEdge, NodeID, Query};
 
 impl GraphEngine for DiGraphSEAL {
-    type NodeIterator = PlaceholderNodeIterator;
+    type NodeTraverser = PlaceholderNodeIterator;
     type NeighborIterator = PlaceholderNodeIterator;
-    type EdgeIterator = PlaceholderNodeIterator;
+    type EdgeTraverser = PlaceholderNodeIterator;
     type BridgeIterator = PlaceholderEdgeIterator;
 
     fn graph_kind(&self) -> GraphKind {
         GraphKind::Directed
     }
 
-    fn get_node_id<Q: Into<NodeQuery>>(&self, node: Q) -> Result<NodeID, GraphError> {
+    fn get_node(&self, node: NodeID) -> Result<NodeID, GraphError> {
         match node.into() {
             NodeQuery::NodeID(v) => {
                 if self.nodes.contains(&(v as u32)) {
@@ -25,11 +25,11 @@ impl GraphEngine for DiGraphSEAL {
         }
     }
 
-    fn all_node_ids(&self) -> Self::NodeIterator {
+    fn all_nodes(&self) -> Self::NodeTraverser {
         todo!()
     }
 
-    fn get_edge_id<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError> {
+    fn get_edge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError> {
         let query = edge.into();
         match query {
             EdgeQuery::EdgeID(v) => {
@@ -46,7 +46,7 @@ impl GraphEngine for DiGraphSEAL {
         }
     }
 
-    fn all_edge_ids(&self) -> Self::EdgeIterator {
+    fn all_edges(&self) -> Self::EdgeTraverser {
         todo!()
     }
 

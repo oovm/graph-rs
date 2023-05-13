@@ -2,7 +2,6 @@ use super::*;
 use crate::{errors::GraphError, Query};
 #[cfg(feature = "datasize")]
 use datasize::DataSize;
-use datasize::MemUsageNode;
 
 mod constructors;
 mod display;

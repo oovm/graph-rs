@@ -1,4 +1,4 @@
-use crate::{edges::typed_edges::IndeterminateEdge, DirectedEdge, GraphEntry, UndirectedEdge};
+use crate::{edges::typed_edges::IndeterminateEdge, errors::GraphError, DirectedEdge, GraphEntry, NodeID, UndirectedEdge};
 
 /// # Arguments
 ///
@@ -44,5 +44,9 @@ impl Query {
             Self::Undirected(_) => GraphEntry::Edge,
             Self::Indeterminate(_) => GraphEntry::Edge,
         }
+    }
+    /// Returns the node as a node ID.
+    pub fn check_node_range(index: NodeID, count: usize) -> Result<NodeID, GraphError> {
+        if index < count { Ok(index) } else { Err(GraphError::node_out_of_range(index, count)) }
     }
 }

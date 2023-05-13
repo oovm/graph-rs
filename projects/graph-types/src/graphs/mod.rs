@@ -1,6 +1,4 @@
-use crate::{
-    DirectedEdge, Edge, EdgeID, EdgeInsertID, EdgeQuery, GraphKind, NodeID, NodeQuery, NodeRangeVisitor, NodesVisitor, Query,
-};
+use crate::{Edge, EdgeID, EdgeInsertID, EdgeQuery, GraphKind, NodeID};
 
 pub mod weighted;
 use crate::{edges::typed_edges::IndeterminateEdge, errors::GraphError, vertexes::NodeDegree};
@@ -8,7 +6,6 @@ use std::{
     future::Future,
     mem::size_of,
     ops::{Deref, DerefMut},
-    pin::Pin,
 };
 
 pub mod named;
@@ -25,22 +22,25 @@ pub trait GraphEngine<'a>
 where
     Self: Sized,
 {
-    /// An iterator over the nodes.
-    type NodeIterator: DoubleEndedIterator<Item = NodeID>;
-    /// An iterator over the neighbors.
+    /// According to a given vertex, find all neighbor nodes
     type NeighborIterator: DoubleEndedIterator<Item = NodeID>;
     /// An iterator over the edges.
-    type EdgeIterator: DoubleEndedIterator<Item = EdgeID>;
-    /// An iterator over the edges.
     type BridgeIterator: DoubleEndedIterator<Item = IndeterminateEdge>;
+    /// An iterator over the nodes.
+    type NodeTraverser: DoubleEndedIterator<Item = NodeID>;
+    /// An iterator over the edges.
+    type EdgeTraverser: DoubleEndedIterator<Item = EdgeID>;
+    /// An iterator over the edges.
+    type BridgeTraverser: DoubleEndedIterator<Item = IndeterminateEdge>;
+
     /// Check the graph kind, it can be directed or undirected.
     ///
     /// # Examples
     ///
     /// ```
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// assert_eq!(CompleteGraph::one_way(5).get_node_id(5), true);
-    /// assert_eq!(CompleteGraph::one_way(5).get_node_id(6), false);
+    /// assert_eq!(CompleteGraph::one_way(5).get_node(5), true);
+    /// assert_eq!(CompleteGraph::one_way(5).get_node(6), false);
     /// ```
     fn graph_kind(&self) -> GraphKind;
 
@@ -50,66 +50,20 @@ where
     ///
     /// ```
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// assert_eq!(CompleteGraph::one_way(5).get_node_id(5), true);
-    /// assert_eq!(CompleteGraph::one_way(5).get_node_id(6), false);
+    /// assert_eq!(CompleteGraph::one_way(5).get_node(5), true);
+    /// assert_eq!(CompleteGraph::one_way(5).get_node(6), false);
     /// ```
-    fn get_node_id<Q: Into<NodeQuery>>(&self, node: Q) -> Result<NodeID, GraphError>;
-
-    /// Check if the node exists, return the node id if exists.
-    ///
-    /// Return [None] if the node does not exist.
+    fn get_node(&self, node: NodeID) -> Result<NodeID, GraphError>;
+    /// Traverse all nodes in the graph.
     ///
     /// # Examples
     ///
     /// ```
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// assert_eq!(CompleteGraph::one_way(5).count_nodes(), 5);
+    /// let mut graph = CompleteGraph::one_way(5);
+    /// assert_eq!(graph.all_nodes().count(), 20)
     /// ```
-    fn get_neighbors<Q: Into<NodeQuery>>(&'a self, node: Q) -> Self::NeighborIterator {
-        todo!()
-    }
-    /// Check if the node exists, return the node id if exists.
-    ///
-    /// Return [None] if the node does not exist.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// assert_eq!(CompleteGraph::one_way(5).count_nodes(), 5);
-    /// ```
-    fn get_outgoing<Q: Into<NodeQuery>>(&'a self, node: Q) -> Self::NeighborIterator {
-        todo!()
-    }
-    /// Check if the node exists, return the node id if exists.
-    ///
-    /// Return [None] if the node does not exist.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// assert_eq!(CompleteGraph::one_way(5).count_nodes(), 5);
-    /// ```
-    fn get_incoming<Q: Into<NodeQuery>>(&'a self, node: Q) -> Self::NeighborIterator {
-        todo!()
-    }
-
-    /// Check if the node exists, return the node id if exists.
-    ///
-    /// Return [None] if the node does not exist.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// assert_eq!(CompleteGraph::one_way(5).count_nodes(), 5);
-    /// ```
-    fn get_degree<Q: Into<NodeQuery>>(&self, node: Q) -> NodeDegree {
-        let query = node.into();
-        NodeDegree { in_coming: self.get_incoming(query).count(), out_going: self.get_outgoing(query).count() }
-    }
-
+    fn all_nodes(&'a self) -> Self::NodeTraverser;
     /// Count the number of nodes in the graph.
     ///
     /// # Examples
@@ -118,19 +72,68 @@ where
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
     /// assert_eq!(CompleteGraph::one_way(5).count_nodes(), 5);
     /// ```
-    fn count_nodes(&self) -> usize {
-        self.all_node_ids().count()
+    fn count_nodes(&'a self) -> usize {
+        self.all_nodes().count()
     }
-    /// Traverse all nodes in the graph.
+    /// Check if the node exists, return the node id if exists.
+    ///
+    /// Return [None] if the node does not exist.
     ///
     /// # Examples
     ///
     /// ```
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// let mut graph = CompleteGraph::one_way(5);
-    /// assert_eq!(graph.all_node_ids().count(), 20)
+    /// assert_eq!(CompleteGraph::one_way(5).count_nodes(), 5);
     /// ```
-    fn all_node_ids(&'a self) -> Self::NodeIterator;
+    fn all_neighbors(&'a self, node: NodeID) -> Self::NeighborIterator;
+    /// Find all vertices ending at a given point
+    ///
+    /// Return [None] if the node does not exist.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
+    /// assert_eq!(CompleteGraph::one_way(5).count_nodes(), 5);
+    /// ```
+    fn get_outgoing(&'a self, node: NodeID) -> Self::NeighborIterator {
+        debug_assert!(self.graph_kind() == GraphKind::Undirected);
+        self.all_neighbors(node)
+    }
+    /// Check if the node exists, return the node id if exists.
+    ///
+    /// Return [None] if the node does not exist.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
+    /// assert_eq!(CompleteGraph::one_way(5).count_nodes(), 5);
+    /// ```
+    fn get_incoming(&'a self, node: NodeID) -> Self::NeighborIterator {
+        debug_assert!(self.graph_kind() == GraphKind::Undirected);
+        self.all_neighbors(node)
+    }
+
+    /// Check if the node exists, return the node id if exists.
+    ///
+    /// Return [None] if the node does not exist.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
+    /// assert_eq!(CompleteGraph::one_way(5).count_nodes(), 5);
+    /// ```
+    fn count_degree(&'a self, node: NodeID) -> NodeDegree {
+        match self.graph_kind() {
+            GraphKind::Directed => {
+                NodeDegree::Directed { in_coming: self.get_incoming(node).count(), out_going: self.get_outgoing(node).count() }
+            }
+            GraphKind::Undirected => NodeDegree::Undirected { total: self.all_neighbors(node).count() },
+        }
+    }
+
     /// Check if the edge exists, return the node id if exists.
     ///
     /// At most one element will be returned, even if there are multiple edges with the same starting point and ending point.
@@ -141,38 +144,19 @@ where
     ///
     /// ```
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// assert_eq!(CompleteGraph::one_way(5).get_node_id(5), true);
-    /// assert_eq!(CompleteGraph::one_way(5).get_node_id(6), false);
+    /// assert_eq!(CompleteGraph::one_way(5).get_node(5), true);
+    /// assert_eq!(CompleteGraph::one_way(5).get_node(6), false);
     /// ```
-    fn get_edge_id<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError>;
+    fn get_edge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError>;
     /// Get the edges of the graph.
     ///
     ///
     /// ```
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
     /// let mut graph = CompleteGraph::one_way(5);
-    /// assert_eq!(graph.all_node_ids().count(), 20)
+    /// assert_eq!(graph.all_nodes().count(), 20)
     /// ```
-    fn all_edge_ids(&'a self) -> Self::EdgeIterator;
-    /// Give all edges matching the start and end points
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// assert_eq!(CompleteGraph::one_way(5).get_node_id(5), true);
-    /// assert_eq!(CompleteGraph::one_way(5).get_node_id(6), false);
-    /// ```
-    fn get_bridges<Q: Into<EdgeQuery>>(&'a self, edge: Q) -> Self::BridgeIterator;
-    /// Get the edges of the graph.
-    ///
-    ///
-    /// ```
-    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// let mut graph = CompleteGraph::one_way(5);
-    /// assert_eq!(graph.all_node_ids().count(), 20)
-    /// ```
-    fn all_bridges(&'a self) -> Self::BridgeIterator;
+    fn all_edges(&'a self) -> Self::EdgeTraverser;
     /// Count the number of edges in the graph.
     ///
     /// # Examples
@@ -187,10 +171,28 @@ where
     /// assert_eq!(CompleteGraph::one_way(5).count_edges(), 5);
     /// assert_eq!(CompleteGraph::one_way(5).count_edges(), 10);
     /// ```
-    fn count_edges(&self) -> usize {
-        self.all_edge_ids().count()
+    fn count_edges(&'a self) -> usize {
+        self.all_edges().count()
     }
-
+    /// Give all edges matching the start and end points
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
+    /// assert_eq!(CompleteGraph::one_way(5).get_node(5), true);
+    /// assert_eq!(CompleteGraph::one_way(5).get_node(6), false);
+    /// ```
+    fn get_bridges(&'a self, from: NodeID, goto: NodeID) -> Self::BridgeIterator;
+    /// Get the edges of the graph.
+    ///
+    ///
+    /// ```
+    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
+    /// let mut graph = CompleteGraph::one_way(5);
+    /// assert_eq!(graph.all_nodes().count(), 20)
+    /// ```
+    fn all_bridges(&'a self) -> Self::BridgeTraverser;
     /// Query the total space occupied by the structure, return 0 if failed to query
     ///
     /// Note that this volume contains garbage data, call [GraphEngine::shrink] at the right time to perform garbage collection.
@@ -200,7 +202,7 @@ where
 }
 
 /// Mark a graph engine that can add and delete edges or points
-pub trait MutableGraph: GraphEngine {
+pub trait MutableGraph: for<'a> GraphEngine<'a> {
     /// Insert a node without any neighbors (edges).
     ///
     /// # Examples

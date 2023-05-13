@@ -2,7 +2,7 @@
 
 use crate::{
     edges::typed_edges::IndeterminateEdge, errors::GraphError, DirectedEdge, Edge, EdgeID, EdgeInsertID, EdgeQuery,
-    GraphEngine, GraphKind, MutableGraph, NodeID, NodeQuery,
+    GraphEngine, GraphKind, MutableGraph, NodeID,
 };
 
 /// A placeholder graph engine.
@@ -15,33 +15,41 @@ pub struct PlaceholderNodeIterator;
 #[derive(Copy, Clone, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct PlaceholderEdgeIterator;
 
-impl GraphEngine for PlaceholderGraph {
-    type NodeIterator = PlaceholderNodeIterator;
+impl<'a> GraphEngine<'a> for PlaceholderGraph {
     type NeighborIterator = PlaceholderNodeIterator;
-    type EdgeIterator = PlaceholderNodeIterator;
+
     type BridgeIterator = PlaceholderEdgeIterator;
+
+    /// A placeholder node iterator.
+    type NodeTraverser = PlaceholderNodeIterator;
+    type EdgeTraverser = PlaceholderNodeIterator;
+    type BridgeTraverser = PlaceholderEdgeIterator;
 
     fn graph_kind(&self) -> GraphKind {
         unreachable!()
     }
 
-    fn get_node_id<Q: Into<NodeQuery>>(&self, node: Q) -> Result<NodeID, GraphError> {
+    fn get_node(&self, node: NodeID) -> Result<NodeID, GraphError> {
         unreachable!()
     }
 
-    fn all_node_ids(&self) -> Self::NodeIterator {
+    fn all_nodes(&self) -> Self::NodeTraverser {
         unreachable!()
     }
 
-    fn get_edge_id<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError> {
+    fn all_neighbors(&'a self, node: usize) -> Self::NeighborIterator {
         unreachable!()
     }
 
-    fn all_edge_ids(&self) -> Self::EdgeIterator {
+    fn get_edge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError> {
         unreachable!()
     }
 
-    fn get_bridges<Q: Into<EdgeQuery>>(&self, edge: Q) -> Self::BridgeIterator {
+    fn all_edges(&self) -> Self::EdgeTraverser {
+        unreachable!()
+    }
+
+    fn get_bridges(&'a self, from: NodeID, goto: NodeID) -> Self::BridgeIterator {
         unreachable!()
     }
 

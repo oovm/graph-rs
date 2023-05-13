@@ -29,17 +29,17 @@ impl<'i> NamedGraph<'i> for Graphviz {
     type NameRef = &'i str;
     type NameMut = &'i mut String;
 
-    fn get_node_name<Q: Into<NodeQuery>>(&'i self, node: Q) -> Option<Self::NameRef> {
+    fn get_node_name(&'i self, node: NodeID) -> Option<Self::NameRef> {
         let name = self.name.get_data(node.into().into())?;
         Some(name.as_str())
     }
 
-    fn mut_node_name<Q: Into<NodeQuery>>(&'i mut self, node: Q) -> Option<Self::NameMut> {
+    fn mut_node_name(&'i mut self, node: NodeID) -> Option<Self::NameMut> {
         let name = self.name.mut_data(node.into().into())?;
         Some(name)
     }
 
-    fn set_node_name<Q: Into<NodeQuery>>(&'i mut self, node: Q, name: &str) {
+    fn set_node_name(&'i mut self, node: NodeID, name: &str) {
         match self.mut_node_name(node) {
             Some(s) => *s = name.to_string(),
             None => {}

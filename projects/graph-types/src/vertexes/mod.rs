@@ -16,17 +16,26 @@ pub type NodeID = usize;
 /// used to determine the direction of an edge
 
 #[derive(Copy, Clone, Debug)]
-pub struct NodeDegree {
-    /// used to determine the direction of an edge
-    pub in_coming: usize,
-    /// used to determine the direction of an edge
-    pub out_going: usize,
+pub enum NodeDegree {
+    Directed {
+        /// used to determine the direction of an edge
+        in_coming: usize,
+        /// used to determine the direction of an edge
+        out_going: usize,
+    },
+    Undirected {
+        /// used to determine the direction of an edge
+        total: usize,
+    },
 }
 
 impl NodeDegree {
     /// used to determine the direction of an edge
     pub fn total(&self) -> usize {
-        self.in_coming + self.out_going
+        match self {
+            NodeDegree::Directed { in_coming, out_going } => in_coming + out_going,
+            NodeDegree::Undirected { total } => *total,
+        }
     }
 }
 

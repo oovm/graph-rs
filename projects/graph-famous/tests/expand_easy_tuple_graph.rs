@@ -10,7 +10,7 @@ impl GraphEngine for EasyTupleGraph {
         todo!()
     }
 
-    fn get_node_id(&self, node_id: usize) -> Option<usize> {
+    fn get_node(&self, node_id: usize) -> Option<usize> {
         todo!()
     }
 
@@ -18,15 +18,15 @@ impl GraphEngine for EasyTupleGraph {
         todo!()
     }
 
-    fn all_node_ids(&self) -> NodesVisitor<Self> {
+    fn all_nodes(&self) -> NodesVisitor<Self> {
         todo!()
     }
 
-    fn get_edge_id<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
+    fn get_edge<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
         todo!()
     }
 
-    fn all_edge_ids(&self) -> NodeRangeVisitor<Self> {
+    fn all_edges(&self) -> NodeRangeVisitor<Self> {
         todo!()
     }
 

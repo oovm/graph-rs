@@ -1,5 +1,4 @@
 use super::*;
-use crate::NodeQuery;
 
 /// A double-ended iterator over the nodes of a graph.
 ///
@@ -10,12 +9,15 @@ use crate::NodeQuery;
 /// let graph = CycleGraph::two_way(5);
 /// let mut visitor = graph.nodes();
 /// ```
-pub struct NodesVisitor<'i, G: GraphEngine + ?Sized> {
+pub struct NodesVisitor<'i, G: GraphEngine<'i> + ?Sized> {
     graph: &'i G,
     indexer: Box<dyn DoubleEndedIterator<Item = usize>>,
 }
 
-impl<'i, G: GraphEngine + ?Sized> Debug for NodesVisitor<'i, G> {
+impl<'i, G> Debug for NodesVisitor<'i, G>
+where
+    G: GraphEngine<'i> + ?Sized,
+{
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let name = type_name::<G>();
         let nodes = self.graph.count_nodes();
@@ -25,9 +27,9 @@ impl<'i, G: GraphEngine + ?Sized> Debug for NodesVisitor<'i, G> {
 
 impl<'i, G> Iterator for NodesVisitor<'i, G>
 where
-    G: GraphEngine + ?Sized,
+    G: GraphEngine<'i> + ?Sized,
 {
-    type Item = NodeQuery;
+    type Item = usize;
 
     fn next(&mut self) -> Option<Self::Item> {
         todo!()
@@ -36,14 +38,17 @@ where
 
 impl<'i, G> DoubleEndedIterator for NodesVisitor<'i, G>
 where
-    G: GraphEngine + ?Sized,
+    G: GraphEngine<'i> + ?Sized,
 {
     fn next_back(&mut self) -> Option<Self::Item> {
         todo!()
     }
 }
 
-impl<'i, G: GraphEngine + ?Sized> NodesVisitor<'i, G> {
+impl<'i, G> NodesVisitor<'i, G>
+where
+    G: GraphEngine<'i> + ?Sized,
+{
     /// Create a custom node visitor
     ///
     /// # Examples

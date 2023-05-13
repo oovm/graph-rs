@@ -1,4 +1,4 @@
-use crate::{errors::GraphError, EdgeQuery, NodeQuery, Query};
+use crate::{errors::GraphError, EdgeQuery, Query};
 use std::ops::{Deref, DerefMut};
 
 pub mod query;
@@ -112,17 +112,17 @@ pub trait EntryEngine<'i, V> {
         *entry_ref.deref_mut() = entry;
         Ok(())
     }
-    fn get_node_data<Q: Into<NodeQuery>>(&'i self, node: Q) -> V {
-        self.get_entry(Query::from(node.into()))
+    fn get_node_data(&'i self, node: usize) -> V {
+        self.get_entry(Query::NodeID(node))
     }
-    fn try_node_data<Q: Into<NodeQuery>>(&'i self, node: Q) -> Option<Self::EntryRef> {
-        self.try_entry(Query::from(node.into())).ok()
+    fn try_node_data(&'i self, node: usize) -> Option<Self::EntryRef> {
+        self.try_entry(Query::NodeID(node)).ok()
     }
-    fn mut_node_data<Q: Into<NodeQuery>>(&'i mut self, node: Q) -> Option<Self::EntryMut> {
-        self.mut_entry(Query::from(node.into())).ok()
+    fn mut_node_data(&'i mut self, node: usize) -> Option<Self::EntryMut> {
+        self.mut_entry(Query::NodeID(node)).ok()
     }
-    fn set_node_data<Q: Into<NodeQuery>>(&'i mut self, node: Q, data: V) {
-        self.set_entry(Query::from(node.into()), data).ok();
+    fn set_node_data(&'i mut self, node: usize, data: V) {
+        self.set_entry(Query::NodeID(node), data).ok();
     }
     fn get_edge_data<Q: Into<EdgeQuery>>(&'i self, edge: Q) -> V {
         self.get_entry(Query::from(edge.into()))

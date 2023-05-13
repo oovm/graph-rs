@@ -1,4 +1,4 @@
-use crate::{errors::GraphError, EdgeQuery, EntryEngine, GraphEntry, NodeQuery, Query};
+use crate::{errors::GraphError, EntryEngine, Query};
 use std::ops::{Deref, DerefMut};
 
 mod btree;

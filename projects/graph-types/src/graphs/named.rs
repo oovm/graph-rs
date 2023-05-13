@@ -49,7 +49,7 @@ pub trait NamedGraph<'i> {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn get_node_name<Q: Into<NodeQuery>>(&'i self, node: Q) -> Option<Self::NameRef>;
+    fn get_node_name(&'i self, node: NodeID) -> Option<Self::NameRef>;
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics
@@ -63,7 +63,7 @@ pub trait NamedGraph<'i> {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn mut_node_name<Q: Into<NodeQuery>>(&'i mut self, node: Q) -> Option<Self::NameMut>;
+    fn mut_node_name(&'i mut self, node: NodeID) -> Option<Self::NameMut>;
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics
@@ -77,7 +77,7 @@ pub trait NamedGraph<'i> {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn set_node_name<Q: Into<NodeQuery>>(&'i mut self, node: Q, name: &str);
+    fn set_node_name(&'i mut self, node: NodeID, name: &str);
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics

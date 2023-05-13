@@ -21,7 +21,7 @@ pub use crate::{
         Edge, EdgeDirection, EdgeID,
     },
     entries::{
-        query::{query_dynamic::Query, query_edge::EdgeQuery, query_node::NodeQuery},
+        query::{query_dynamic::Query, query_edge::EdgeQuery},
         EntryEngine, GraphEntry, GraphKind,
     },
     graphs::{named::NamedGraph, weighted::WeightedGraph, GraphEngine, MutableGraph},
