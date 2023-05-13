@@ -21,7 +21,7 @@ pub mod named;
 /// use graph_theory::GraphEngine;
 /// ```
 #[allow(unused_variables)]
-pub trait GraphEngine
+pub trait GraphEngine<'a>
 where
     Self: Sized,
 {
@@ -65,7 +65,7 @@ where
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
     /// assert_eq!(CompleteGraph::one_way(5).count_nodes(), 5);
     /// ```
-    fn get_neighbors<Q: Into<NodeQuery>>(&self, node: Q) -> Self::NeighborIterator {
+    fn get_neighbors<Q: Into<NodeQuery>>(&'a self, node: Q) -> Self::NeighborIterator {
         todo!()
     }
     /// Check if the node exists, return the node id if exists.
@@ -78,7 +78,7 @@ where
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
     /// assert_eq!(CompleteGraph::one_way(5).count_nodes(), 5);
     /// ```
-    fn get_outgoing<Q: Into<NodeQuery>>(&self, node: Q) -> Self::NeighborIterator {
+    fn get_outgoing<Q: Into<NodeQuery>>(&'a self, node: Q) -> Self::NeighborIterator {
         todo!()
     }
     /// Check if the node exists, return the node id if exists.
@@ -91,7 +91,7 @@ where
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
     /// assert_eq!(CompleteGraph::one_way(5).count_nodes(), 5);
     /// ```
-    fn get_incoming<Q: Into<NodeQuery>>(&self, node: Q) -> Self::NeighborIterator {
+    fn get_incoming<Q: Into<NodeQuery>>(&'a self, node: Q) -> Self::NeighborIterator {
         todo!()
     }
 
@@ -119,7 +119,7 @@ where
     /// assert_eq!(CompleteGraph::one_way(5).count_nodes(), 5);
     /// ```
     fn count_nodes(&self) -> usize {
-        self.traverse_nodes().count()
+        self.all_node_ids().count()
     }
     /// Traverse all nodes in the graph.
     ///
@@ -128,10 +128,14 @@ where
     /// ```
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
     /// let mut graph = CompleteGraph::one_way(5);
-    /// assert_eq!(graph.traverse_nodes().count(), 20)
+    /// assert_eq!(graph.all_node_ids().count(), 20)
     /// ```
-    fn traverse_nodes(&self) -> Self::NodeIterator;
+    fn all_node_ids(&'a self) -> Self::NodeIterator;
     /// Check if the edge exists, return the node id if exists.
+    ///
+    /// At most one element will be returned, even if there are multiple edges with the same starting point and ending point.
+    ///
+    /// If you need to return all eligible edges, use [Self::get_bridges].
     ///
     /// # Examples
     ///
@@ -147,10 +151,10 @@ where
     /// ```
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
     /// let mut graph = CompleteGraph::one_way(5);
-    /// assert_eq!(graph.traverse_nodes().count(), 20)
+    /// assert_eq!(graph.all_node_ids().count(), 20)
     /// ```
-    fn traverse_edges(&self) -> Self::EdgeIterator;
-    /// Check if the edge exists, return the node id if exists.
+    fn all_edge_ids(&'a self) -> Self::EdgeIterator;
+    /// Give all edges matching the start and end points
     ///
     /// # Examples
     ///
@@ -159,16 +163,16 @@ where
     /// assert_eq!(CompleteGraph::one_way(5).get_node_id(5), true);
     /// assert_eq!(CompleteGraph::one_way(5).get_node_id(6), false);
     /// ```
-    fn get_bridge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<IndeterminateEdge, GraphError>;
+    fn get_bridges<Q: Into<EdgeQuery>>(&'a self, edge: Q) -> Self::BridgeIterator;
     /// Get the edges of the graph.
     ///
     ///
     /// ```
     /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
     /// let mut graph = CompleteGraph::one_way(5);
-    /// assert_eq!(graph.traverse_nodes().count(), 20)
+    /// assert_eq!(graph.all_node_ids().count(), 20)
     /// ```
-    fn traverse_bridges(&self) -> Self::BridgeIterator;
+    fn all_bridges(&'a self) -> Self::BridgeIterator;
     /// Count the number of edges in the graph.
     ///
     /// # Examples
@@ -184,7 +188,7 @@ where
     /// assert_eq!(CompleteGraph::one_way(5).count_edges(), 10);
     /// ```
     fn count_edges(&self) -> usize {
-        self.traverse_edges().count()
+        self.all_edge_ids().count()
     }
 
     /// Query the total space occupied by the structure, return 0 if failed to query

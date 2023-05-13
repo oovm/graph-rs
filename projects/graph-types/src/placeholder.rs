@@ -29,7 +29,7 @@ impl GraphEngine for PlaceholderGraph {
         unreachable!()
     }
 
-    fn traverse_nodes(&self) -> Self::NodeIterator {
+    fn all_node_ids(&self) -> Self::NodeIterator {
         unreachable!()
     }
 
@@ -37,15 +37,15 @@ impl GraphEngine for PlaceholderGraph {
         unreachable!()
     }
 
-    fn traverse_edges(&self) -> Self::EdgeIterator {
+    fn all_edge_ids(&self) -> Self::EdgeIterator {
         unreachable!()
     }
 
-    fn get_bridge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<IndeterminateEdge, GraphError> {
+    fn get_bridges<Q: Into<EdgeQuery>>(&self, edge: Q) -> Self::BridgeIterator {
         unreachable!()
     }
 
-    fn traverse_bridges(&self) -> Self::BridgeIterator {
+    fn all_bridges(&self) -> Self::BridgeIterator {
         unreachable!()
     }
 

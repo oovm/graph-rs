@@ -11,6 +11,7 @@ edition = "2021"
 exclude = ["tests/", "package.json"]
 
 [dependencies]
+datasize = { version = "0.2.14", optional = true, features = ["detailed"] }
 serde = { version = "1.0.162", optional = true }
 wolfram_wxf = { version = "0.6.6", optional = true }
 

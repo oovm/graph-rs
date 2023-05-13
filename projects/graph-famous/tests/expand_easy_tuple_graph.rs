@@ -18,7 +18,7 @@ impl GraphEngine for EasyTupleGraph {
         todo!()
     }
 
-    fn traverse_nodes(&self) -> NodesVisitor<Self> {
+    fn all_node_ids(&self) -> NodesVisitor<Self> {
         todo!()
     }
 
@@ -26,7 +26,7 @@ impl GraphEngine for EasyTupleGraph {
         todo!()
     }
 
-    fn traverse_edges(&self) -> NodeRangeVisitor<Self> {
+    fn all_edge_ids(&self) -> NodeRangeVisitor<Self> {
         todo!()
     }
 

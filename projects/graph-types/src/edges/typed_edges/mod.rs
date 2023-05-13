@@ -1,4 +1,8 @@
 use super::*;
+use crate::{errors::GraphError, Query};
+#[cfg(feature = "datasize")]
+use datasize::DataSize;
+use datasize::MemUsageNode;
 
 mod constructors;
 mod display;
@@ -22,6 +26,15 @@ pub struct IndeterminateEdge {
     pub from: usize,
     /// The index of the node that the edge is going to.
     pub goto: usize,
+}
+#[cfg(feature = "datasize")]
+impl DataSize for IndeterminateEdge {
+    const IS_DYNAMIC: bool = false;
+    const STATIC_HEAP_SIZE: usize = 0;
+
+    fn estimate_heap_size(&self) -> usize {
+        self.from.estimate_heap_size() + self.goto.estimate_heap_size()
+    }
 }
 
 impl Display for IndeterminateEdge {
@@ -87,6 +100,18 @@ pub struct UndirectedEdge {
     pub from: usize,
     /// The index of the node that the edge is going to, usually the larger index.
     pub goto: usize,
+}
+impl DirectedEdge {
+    /// Returns the edge as a directed edge, with the smaller index as the `from` node.
+    pub fn as_unsupported<T>(&self) -> Result<T, GraphError> {
+        Err(GraphError::not_support(Query::Directed(*self)))
+    }
+}
+impl UndirectedEdge {
+    /// Returns the edge as a directed edge, with the smaller index as the `from` node.
+    pub fn as_unsupported<T>(&self) -> Result<T, GraphError> {
+        Err(GraphError::not_support(Query::Undirected(*self)))
+    }
 }
 
 impl Edge for DynamicEdge {

@@ -19,10 +19,7 @@ pub type UnGraphSEAL = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_t
 pub type DiGraphSNAL = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_one_way() }>;
 /// Sparse, node-first, adjacency list-based undirected graph.
 pub type UnGraphSNAL = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_two_way() }>;
-/// Dense, node-first, adjacency matrix-based directed graph.
-pub type DiGraphDNAM = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_one_way() }>;
-/// Dense, node-first, adjacency matrix-based undirected graph.
-pub type UnGraphDNAM = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_two_way() }>;
+
 /// Dense, node-first, incidence matrix-based directed graph.
 pub type DiGraphDNIM = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_one_way() }>;
 /// Dense, node-first, incidence matrix-based undirected graph.

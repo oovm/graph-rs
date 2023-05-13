@@ -47,7 +47,7 @@ impl GraphEngine for CompleteGraph {
         self.rank()
     }
 
-    fn traverse_nodes(&self) -> Self::NodeIterator {
+    fn all_node_ids(&self) -> Self::NodeIterator {
         todo!()
     }
 
@@ -55,15 +55,15 @@ impl GraphEngine for CompleteGraph {
         todo!()
     }
 
-    fn traverse_edges(&self) -> Self::EdgeIterator {
+    fn all_edge_ids(&self) -> Self::EdgeIterator {
         todo!()
     }
 
-    fn get_bridge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<IndeterminateEdge, GraphError> {
+    fn get_bridges<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<IndeterminateEdge, GraphError> {
         todo!()
     }
 
-    fn traverse_bridges(&self) -> Self::BridgeIterator {
+    fn all_bridges(&self) -> Self::BridgeIterator {
         todo!()
     }
 

@@ -1,10 +1,13 @@
+use crate::{utils::AdjacencyCell, DiGraphAM};
+use datasize::{DataSize, MemUsageNode};
 use graph_types::{
     errors::GraphError,
     placeholder::{PlaceholderEdgeIterator, PlaceholderNodeIterator},
     Edge, EdgeID, EdgeInsertID, EdgeQuery, GraphEngine, GraphKind, IndeterminateEdge, MutableGraph, NodeID, NodeQuery,
-    NodeRangeVisitor, NodesVisitor,
+    NodeRangeVisitor, NodesVisitor, Query,
 };
 use std::{
+    collections::HashMap,
     fmt::{Debug, Display},
     mem::size_of,
     ops::Range,
@@ -13,142 +16,143 @@ use std::{
 mod display;
 
 #[derive(Clone, Debug)]
-pub struct AdjacencyMatrix {
-    matrix: Vec<Cell>,
+pub struct AdjacencyMatrix<const ONE_WAY: bool> {
+    rank: usize,
+    edges: Vec<IndeterminateEdge>,
+    matrix: Vec<AdjacencyCell>,
 }
 
-struct Cell {}
+impl<const ONE_WAY: bool> DataSize for AdjacencyMatrix<ONE_WAY> {
+    const IS_DYNAMIC: bool = true;
+    const STATIC_HEAP_SIZE: usize = 0;
 
-impl GraphEngine for AdjacencyMatrix {
-    type NodeIterator = PlaceholderNodeIterator;
+    fn estimate_heap_size(&self) -> usize {
+        self.edges.estimate_heap_size() + self.matrix.estimate_heap_size()
+    }
+    fn estimate_detailed_heap_size(&self) -> MemUsageNode {
+        let mut mem = HashMap::new();
+        mem.insert("edges", self.edges.estimate_detailed_heap_size());
+        mem.insert("matrix", self.matrix.estimate_detailed_heap_size());
+        MemUsageNode::Detailed(mem)
+    }
+}
+
+pub struct DiGraphBridges<'a> {
+    graph: &'a DiGraphAM,
+    task: Task,
+    index: usize,
+}
+pub enum Task {
+    Empty,
+}
+
+impl<'a> Iterator for DiGraphBridges<'a> {
+    type Item = ();
+
+    fn next(&mut self) -> Option<Self::Item> {
+        todo!()
+    }
+}
+
+impl<'a> DoubleEndedIterator for DiGraphBridges<'a> {
+    fn next_back(&mut self) -> Option<Self::Item> {
+        todo!()
+    }
+}
+
+impl GraphEngine for DiGraphAM {
+    type NodeIterator = Range<usize>;
     type NeighborIterator = PlaceholderNodeIterator;
-    type EdgeIterator = PlaceholderNodeIterator;
-    type BridgeIterator = PlaceholderEdgeIterator;
+    type EdgeIterator = Range<usize>;
+    type BridgeIterator = DiGraphBridges<'a>;
 
     fn graph_kind(&self) -> GraphKind {
         GraphKind::Directed
     }
 
     fn get_node_id<Q: Into<NodeQuery>>(&self, node: Q) -> Result<NodeID, GraphError> {
-        todo!()
+        match node.into() {
+            NodeQuery::NodeID(v) => NodeQuery::check_range(v, self.matrix.len()),
+        }
     }
 
     fn count_nodes(&self) -> usize {
-        self.matrix.shape()[0]
+        self.matrix.len()
     }
 
-    fn traverse_nodes(&self) -> Self::NodeIterator {
-        todo!()
+    fn all_node_ids(&self) -> Self::NodeIterator {
+        0..self.rank
     }
 
     fn get_edge_id<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError> {
-        todo!()
+        match edge.into() {
+            EdgeQuery::EdgeID(v) => {
+                let max = self.edges.len();
+                if v < max { Ok(v) } else { Err(GraphError::edge_out_of_range(v, max)) }
+            }
+            EdgeQuery::Dynamic(v) => {
+                todo!()
+            }
+            EdgeQuery::Directed(v) => {
+                todo!()
+            }
+            EdgeQuery::Undirected(v) => v.as_unsupported(),
+        }
     }
 
-    fn traverse_edges(&self) -> Self::EdgeIterator {
-        todo!()
+    fn all_edge_ids(&self) -> Self::EdgeIterator {
+        0..self.edges.len()
     }
 
-    fn get_bridge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<IndeterminateEdge, GraphError> {
-        todo!()
+    fn get_bridges<Q: Into<EdgeQuery>>(&self, edge: Q) -> Self::BridgeIterator {
+        match edge.into() {
+            EdgeQuery::EdgeID(_) => {
+                todo!()
+            }
+            EdgeQuery::Dynamic(v) => {
+                todo!()
+            }
+            EdgeQuery::Directed(v) => {
+                todo!()
+            }
+            EdgeQuery::Undirected(v) => todo!(),
+        }
     }
 
-    fn traverse_bridges(&self) -> Self::BridgeIterator {
+    fn all_bridges(&self) -> Self::BridgeIterator {
         todo!()
     }
 
     fn count_edges(&self) -> usize {
-        self.edges as usize
+        self.edges.len()
     }
 
     fn size_hint(&self) -> usize {
-        size_of::<u32>() * (self.matrix.len() + 3) + size_of::<Vec<u32>>()
+        size_of::<Self>()
+            + self.edges.capacity() * size_of::<IndeterminateEdge>()
+            + self.matrix.capacity() * size_of::<AdjacencyCell>()
     }
 }
 
-impl AdjacencyMatrix {
-    pub fn new(nodes: usize) -> Self {
-        Self { matrix: vec![] }
+impl DiGraphAM {
+    pub fn new(nodes: usize, edges: usize) -> Self {
+        Self {
+            rank: nodes,
+            edges: vec![IndeterminateEdge { from: 0, goto: 0 }; edges],
+            matrix: vec![AdjacencyCell::default(); nodes * nodes],
+        }
+    }
+    pub fn shrink_to_fit(&mut self) {
+        self.edges.shrink_to_fit();
+        self.matrix.shrink_to_fit();
     }
 }
 
 #[test]
 fn fast_test() {
-    let mut matrix = AdjacencyMatrix::new(10);
+    let mut matrix = DiGraphAM::new(11, 13);
     println!("{:?}", matrix.size_hint());
-    matrix.mut_matrix().fill(1);
+    // matrix.mut_matrix().fill(1);
 
-    println!("{:?}", matrix.size_hint())
+    println!("{:#?}", vec![0].estimate_detailed_heap_size())
 }
-
-// impl AdjacencyMatrix {
-//     pub fn new(nodes: usize) -> Self {
-//         Self { edges: vec![0; nodes * nodes] }
-//     }
-//     pub fn nodes(&self) -> usize {
-//         // edges == nodes * nodes
-//         (self.edges.len() as f64).sqrt() as usize
-//     }
-//     pub fn edges(&self) -> usize {
-//         self.edges.len()
-//     }
-//     pub fn max_degree(&self) -> usize {
-//         self.edges.iter().max().copied().unwrap_or(0)
-//     }
-//     pub fn min_degree(&self) -> usize {
-//         self.edges.iter().min().copied().unwrap_or(0)
-//     }
-//     pub fn get_edge<T>(&self, undirected: T) -> GraphResult<usize>
-//     where
-//         T: Into<DirectedEdge>,
-//     {
-//         let edge = undirected.into();
-//         let index = edge_index(&edge, self.nodes());
-//         match self.edges.get(index) {
-//             Some(s) => Ok(*s),
-//             None => Err(GraphError::edge_out_of_range(index, self.edges.len())),
-//         }
-//     }
-//     pub fn mut_edge<T>(&mut self, undirected: T) -> GraphResult<&mut usize>
-//     where
-//         T: Into<DirectedEdge>,
-//     {
-//         let edge = undirected.into();
-//         let index = edge_index(&edge, self.nodes());
-//         let count = self.edges.len();
-//         match self.edges.get_mut(index) {
-//             Some(s) => Ok(s),
-//             None => Err(GraphError::edge_out_of_range(index, count)),
-//         }
-//     }
-//     pub fn set_edge<T>(&mut self, undirected: T, mut connection: usize) -> GraphResult<usize>
-//     where
-//         T: Into<DirectedEdge>,
-//     {
-//         let new = &mut connection;
-//         let old = self.mut_edge(undirected)?;
-//         std::mem::swap(new, old);
-//         Ok(*new)
-//     }
-//
-//     pub fn connect<T>(&mut self, edge: T) -> GraphResult<usize>
-//     where
-//         T: Into<DirectedEdge>,
-//     {
-//         let edge = self.mut_edge(edge)?;
-//         *edge = edge.saturating_add(1);
-//         Ok(*edge)
-//     }
-//     pub fn disconnect<T>(&mut self, edge: T) -> GraphResult<usize>
-//     where
-//         T: Into<DirectedEdge>,
-//     {
-//         let edge = self.mut_edge(edge)?;
-//         *edge = edge.saturating_sub(1);
-//         Ok(*edge)
-//     }
-// }
-//
-// fn edge_index(edge: &DirectedEdge, rank: usize) -> usize {
-//     edge.from * rank + edge.goto
-// }

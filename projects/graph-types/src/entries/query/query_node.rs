@@ -1,4 +1,4 @@
-use crate::Query;
+use crate::{errors::GraphError, NodeID, Query};
 
 /// Represents a node in a graph
 ///
@@ -15,5 +15,12 @@ impl From<NodeQuery> for Query {
         match value {
             NodeQuery::NodeID(id) => Query::NodeID(id),
         }
+    }
+}
+
+impl NodeQuery {
+    /// Returns the node as a node ID.
+    pub fn check_range(index: NodeID, count: usize) -> Result<NodeID, GraphError> {
+        if index < count { Ok(index) } else { Err(GraphError::node_out_of_range(index, count)) }
     }
 }

@@ -6,5 +6,11 @@
 
 mod dense_full;
 mod dense_half;
+mod utils;
 
 pub use crate::{dense_full::AdjacencyMatrix, dense_half::TriangularAdjacencyMatrix};
+
+/// Dense, adjacency matrix-based directed graph.
+pub type DiGraphAM = AdjacencyMatrix<{ graph_types::GraphKind::Directed.is_one_way() }>;
+/// Dense, adjacency matrix-based undirected graph.
+pub type UnGraphAM = AdjacencyMatrix<{ graph_types::GraphKind::Directed.is_two_way() }>;
