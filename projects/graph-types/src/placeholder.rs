@@ -1,8 +1,8 @@
 #![allow(unused_variables)]
 
 use crate::{
-    edges::typed_edges::IndeterminateEdge, DirectedEdge, Edge, EdgeID, EdgeInsertID, EdgeQuery, GraphEngine, GraphKind,
-    MutableGraph, NodeQuery,
+    edges::typed_edges::IndeterminateEdge, errors::GraphError, DirectedEdge, Edge, EdgeID, EdgeInsertID, EdgeQuery,
+    GraphEngine, GraphKind, MutableGraph, NodeID, NodeQuery,
 };
 
 /// A placeholder graph engine.
@@ -23,13 +23,13 @@ impl GraphEngine for PlaceholderGraph {
     type NeighborIterator = PlaceholderNodeIterator;
     type EdgeIterator = PlaceholderEdgeIterator;
 
-    type DirectionIterator = PlaceholderDirectionIterator;
+    type BridgeIterator = PlaceholderDirectionIterator;
 
     fn graph_kind(&self) -> GraphKind {
         unreachable!()
     }
 
-    fn has_node<Q: Into<NodeQuery>>(&self, node: Q) -> Option<usize> {
+    fn get_node_id<Q: Into<NodeQuery>>(&self, node: Q) -> Result<NodeID, GraphError> {
         unreachable!()
     }
 
@@ -37,7 +37,7 @@ impl GraphEngine for PlaceholderGraph {
         unreachable!()
     }
 
-    fn has_edge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Option<EdgeID> {
+    fn get_edge_id<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError> {
         unreachable!()
     }
 
@@ -45,7 +45,11 @@ impl GraphEngine for PlaceholderGraph {
         unreachable!()
     }
 
-    fn traverse_directions(&self) -> Self::DirectionIterator {
+    fn get_bridge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<IndeterminateEdge, GraphError> {
+        unreachable!()
+    }
+
+    fn traverse_bridges(&self) -> Self::BridgeIterator {
         unreachable!()
     }
 
@@ -69,7 +73,11 @@ impl DoubleEndedIterator for PlaceholderDirectionIterator {
 }
 
 impl MutableGraph for PlaceholderGraph {
-    fn insert_node(&mut self, node_id: usize) -> usize {
+    fn insert_node(&mut self, node_id: usize) -> bool {
+        unreachable!()
+    }
+
+    fn create_node(&mut self) -> usize {
         unreachable!()
     }
 

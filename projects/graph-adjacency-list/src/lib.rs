@@ -10,3 +10,8 @@ pub(crate) mod utils;
 
 pub use sparse_edges::AdjacencyEdgeList;
 pub use sparse_nodes::AdjacencyNodeList;
+
+/// A directed graph using an adjacency list as its underlying storage.
+pub type DiGraphAEL = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_one_way() }>;
+/// An undirected graph using an adjacency list as its underlying storage.
+pub type UnGraphAEL = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_two_way() }>;

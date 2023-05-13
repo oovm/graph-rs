@@ -18,7 +18,7 @@ impl GraphEngine for CycleGraph {
         }
     }
 
-    fn has_node(&self, node_id: usize) -> Option<usize> {
+    fn get_node_id(&self, node_id: usize) -> Option<usize> {
         (node_id < self.count_nodes()).then_some(node_id)
     }
 
@@ -35,7 +35,7 @@ impl GraphEngine for CycleGraph {
     /// In a indirected graph, edges ids are counted from 0 to `self.count_edges() - 1`.
     ///
     /// And in a directed graph, edges ids are counted from 0 to `self.count_edges() - 1`.
-    fn has_edge<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
+    fn get_edge_id<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
         match edge.into() {
             EdgeQuery::EdgeID(edge_id) => return (edge_id < self.count_edges()).then_some(edge_id),
             EdgeQuery::Directed(v) if v.max_index() < self.count_nodes() => {

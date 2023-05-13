@@ -48,8 +48,7 @@ where
                 Some(s) => Ok(s),
                 None => Err(GraphError::not_found(query)),
             },
-            Query::Directed(_) => Err(GraphError::custom("")),
-            Query::Undirected(_) => Err(GraphError::custom("")),
+            _ => Err(GraphError::not_support(query)),
         }
     }
 

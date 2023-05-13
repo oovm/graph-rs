@@ -1,16 +1,17 @@
 use super::*;
+use graph_types::{errors::GraphError, EdgeID, IndeterminateEdge, NodeID};
 
 impl GraphEngine for AdjacencyEdgeList<{ GraphKind::Undirected.is_one_way() }> {
     type NodeIterator = PlaceholderNodeIterator;
     type NeighborIterator = PlaceholderNodeIterator;
     type EdgeIterator = PlaceholderNodeIterator;
-    type DirectionIterator = PlaceholderDirectionIterator;
+    type BridgeIterator = PlaceholderDirectionIterator;
 
     fn graph_kind(&self) -> GraphKind {
         GraphKind::Directed
     }
 
-    fn has_node<Q: Into<NodeQuery>>(&self, node: Q) -> Option<usize> {
+    fn get_node_id<Q: Into<NodeQuery>>(&self, node: Q) -> Result<NodeID, GraphError> {
         todo!()
     }
 
@@ -18,7 +19,7 @@ impl GraphEngine for AdjacencyEdgeList<{ GraphKind::Undirected.is_one_way() }> {
         todo!()
     }
 
-    fn has_edge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Option<graph_types::EdgeID> {
+    fn get_edge_id<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError> {
         todo!()
     }
 
@@ -26,13 +27,21 @@ impl GraphEngine for AdjacencyEdgeList<{ GraphKind::Undirected.is_one_way() }> {
         todo!()
     }
 
-    fn traverse_directions(&self) -> Self::DirectionIterator {
+    fn get_bridge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<IndeterminateEdge, GraphError> {
+        todo!()
+    }
+
+    fn traverse_bridges(&self) -> Self::BridgeIterator {
         todo!()
     }
 }
 
 impl MutableGraph for AdjacencyEdgeList<{ GraphKind::Undirected.is_one_way() }> {
-    fn insert_node(&mut self, _node_id: usize) -> usize {
+    fn insert_node(&mut self, node_id: usize) -> bool {
+        todo!()
+    }
+
+    fn create_node(&mut self) -> usize {
         todo!()
     }
 
@@ -58,6 +67,9 @@ impl MutableGraph for AdjacencyEdgeList<{ GraphKind::Undirected.is_one_way() }> 
                 let e1 = self.insert_one_way_edge(rhs, lhs);
                 EdgeInsertID::OneEdge(e1)
             }
+            EdgeDirection::Indeterminate => {
+                todo!()
+            }
         }
     }
 
@@ -73,6 +85,9 @@ impl MutableGraph for AdjacencyEdgeList<{ GraphKind::Undirected.is_one_way() }> 
                 todo!()
             }
             EdgeQuery::Undirected(_) => {
+                todo!()
+            }
+            EdgeQuery::Dynamic(_) => {
                 todo!()
             }
         }

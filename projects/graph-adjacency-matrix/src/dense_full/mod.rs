@@ -20,7 +20,7 @@ impl GraphEngine for AdjacencyMatrix {
         GraphKind::Directed
     }
 
-    fn has_node(&self, node_id: usize) -> Option<usize> {
+    fn get_node_id(&self, node_id: usize) -> Option<usize> {
         if node_id < self.matrix.shape()[0] { Some(node_id) } else { None }
     }
 
@@ -33,7 +33,7 @@ impl GraphEngine for AdjacencyMatrix {
     }
 
     /// It will return id but id is meaningless
-    fn has_edge<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
+    fn get_edge_id<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
         match edge.into() {
             EdgeQuery::EdgeID(_) => {
                 panic!("Cannot query edge id on adjacency matrix")

@@ -9,12 +9,9 @@ use std::collections::{BTreeMap, BTreeSet};
 mod one_way;
 mod two_way;
 
-type NodeID = u32;
-type EdgeID = u32;
-
 #[doc = include_str!("AdjacencyEdgeList.html")]
 #[derive(Debug)]
 pub struct AdjacencyEdgeList<const ONE_WAY: bool> {
-    nodes: BTreeSet<NodeID>,
-    edges: BTreeMap<EdgeID, ShortEdge>,
+    nodes: BTreeSet<u32>,
+    edges: BTreeMap<u32, ShortEdge>,
 }

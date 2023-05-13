@@ -1,4 +1,4 @@
-use crate::{GraphEngine, NodeQuery};
+use crate::{GraphEngine, NodeID, NodeQuery};
 use std::{
     any::type_name,
     fmt::{Debug, Formatter},
@@ -33,21 +33,23 @@ impl<'i, G> Iterator for NodeRangeVisitor<'i, G>
 where
     G: GraphEngine + ?Sized,
 {
-    type Item = NodeQuery;
+    type Item = NodeID;
 
     fn next(&mut self) -> Option<Self::Item> {
         let index = self.indexer.next()?;
         let query = NodeQuery::NodeID(index);
-        match self.graph.has_node(query) {
-            Some(_) => Some(query),
-            None => self.next(),
+        match self.graph.get_node_id(query) {
+            Ok(_) => Some(index),
+            Err(_) => self.next(),
         }
     }
     fn nth(&mut self, n: usize) -> Option<Self::Item> {
         let id = self.indexer.nth(n)?;
         let query = NodeQuery::NodeID(id);
-        let i = self.graph.has_node(query)?;
-        Some(NodeQuery::NodeID(i))
+        match self.graph.get_node_id(query) {
+            Ok(_) => Some(id),
+            Err(_) => None,
+        }
     }
 }
 
@@ -58,17 +60,19 @@ where
     fn next_back(&mut self) -> Option<Self::Item> {
         let index = self.indexer.next_back()?;
         let query = NodeQuery::NodeID(index);
-        match self.graph.has_node(query) {
-            Some(_) => Some(query),
-            None => self.next_back(),
+        match self.graph.get_node_id(query) {
+            Ok(_) => Some(index),
+            Err(_) => self.next_back(),
         }
     }
 
     fn nth_back(&mut self, n: usize) -> Option<Self::Item> {
         let id = self.indexer.nth_back(n)?;
         let query = NodeQuery::NodeID(id);
-        let i = self.graph.has_node(query)?;
-        Some(NodeQuery::NodeID(i))
+        match self.graph.get_node_id(query) {
+            Ok(_) => Some(id),
+            Err(_) => None,
+        }
     }
 }
 

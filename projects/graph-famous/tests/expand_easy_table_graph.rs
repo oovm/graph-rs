@@ -13,7 +13,7 @@ impl GraphEngine for EasyTableGraph {
         todo!()
     }
 
-    fn has_node(&self, node_id: usize) -> Option<usize> {
+    fn get_node_id(&self, node_id: usize) -> Option<usize> {
         todo!()
     }
 
@@ -25,7 +25,7 @@ impl GraphEngine for EasyTableGraph {
         todo!()
     }
 
-    fn has_edge<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
+    fn get_edge_id<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
         todo!()
     }
 

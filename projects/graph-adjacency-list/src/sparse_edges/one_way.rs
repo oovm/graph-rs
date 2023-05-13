@@ -1,39 +1,73 @@
 use super::*;
+use crate::DiGraphAEL;
+use graph_types::{errors::GraphError, EdgeID, IndeterminateEdge, NodeID, Query};
 
-impl GraphEngine for AdjacencyEdgeList<{ GraphKind::Directed.is_one_way() }> {
+impl GraphEngine for DiGraphAEL {
     type NodeIterator = PlaceholderNodeIterator;
     type NeighborIterator = PlaceholderNodeIterator;
     type EdgeIterator = PlaceholderNodeIterator;
-    type DirectionIterator = PlaceholderDirectionIterator;
+    type BridgeIterator = PlaceholderDirectionIterator;
 
     fn graph_kind(&self) -> GraphKind {
         GraphKind::Directed
     }
 
-    fn has_node<Q: Into<NodeQuery>>(&self, node: Q) -> Option<usize> {
-        todo!()
+    fn get_node_id<Q: Into<NodeQuery>>(&self, node: Q) -> Result<NodeID, GraphError> {
+        match node.into() {
+            NodeQuery::NodeID(v) => {
+                if self.nodes.contains(&(v as u32)) {
+                    Ok(v)
+                }
+                else {
+                    Err(GraphError::not_found(Query::NodeID(v)))
+                }
+            }
+        }
     }
 
     fn traverse_nodes(&self) -> Self::NodeIterator {
         todo!()
     }
 
-    fn has_edge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Option<graph_types::EdgeID> {
-        todo!()
+    fn get_edge_id<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError> {
+        let query = edge.into();
+        match query {
+            EdgeQuery::EdgeID(v) => {
+                if self.edges.contains_key(&(v as u32)) {
+                    Ok(v)
+                }
+                else {
+                    Err(GraphError::not_found(Query::EdgeID(v)))
+                }
+            }
+            EdgeQuery::Dynamic(v) => self.find_edge_id(v.from as u32, v.goto as u32),
+            EdgeQuery::Directed(v) => self.find_edge_id(v.from as u32, v.goto as u32),
+            EdgeQuery::Undirected(_) => Err(GraphError::not_support(query)),
+        }
     }
 
     fn traverse_edges(&self) -> Self::EdgeIterator {
         todo!()
     }
 
-    fn traverse_directions(&self) -> Self::DirectionIterator {
+    fn get_bridge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<IndeterminateEdge, GraphError> {
+        todo!()
+    }
+
+    fn traverse_bridges(&self) -> Self::BridgeIterator {
         todo!()
     }
 }
 
-impl MutableGraph for AdjacencyEdgeList<{ GraphKind::Directed.is_one_way() }> {
-    fn insert_node(&mut self, _node_id: usize) -> usize {
-        todo!()
+impl MutableGraph for DiGraphAEL {
+    fn insert_node(&mut self, node_id: usize) -> bool {
+        self.nodes.insert(node_id as u32)
+    }
+
+    fn create_node(&mut self) -> usize {
+        let id = self.nodes.iter().last().map(|x| x + 1).unwrap_or(0);
+        self.nodes.insert(id);
+        id as usize
     }
 
     fn remove_node_with_edges(&mut self, node_id: usize) {
@@ -58,6 +92,9 @@ impl MutableGraph for AdjacencyEdgeList<{ GraphKind::Directed.is_one_way() }> {
                 let e1 = self.insert_one_way_edge(rhs, lhs);
                 EdgeInsertID::OneEdge(e1)
             }
+            EdgeDirection::Indeterminate => {
+                todo!()
+            }
         }
     }
 
@@ -75,11 +112,18 @@ impl MutableGraph for AdjacencyEdgeList<{ GraphKind::Directed.is_one_way() }> {
             EdgeQuery::Undirected(_) => {
                 todo!()
             }
+            EdgeQuery::Dynamic(_) => {
+                todo!()
+            }
         }
     }
 }
 
-impl AdjacencyEdgeList<{ GraphKind::Directed.is_one_way() }> {
+impl DiGraphAEL {
+    pub(crate) fn find_edge_id(&self, from: u32, goto: u32) -> Result<EdgeID, GraphError> {
+        todo!()
+    }
+
     pub(crate) fn insert_one_way_edge(&mut self, start: usize, end: usize) -> usize {
         let id = self.edges.len() as u32 + 1;
         self.edges.insert(id, ShortEdge::new(start, end));

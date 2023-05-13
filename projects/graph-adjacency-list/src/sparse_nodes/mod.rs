@@ -1,7 +1,8 @@
 use graph_types::{
+    errors::GraphError,
     placeholder::{PlaceholderDirectionIterator, PlaceholderNodeIterator},
-    Edge, EdgeDirection, EdgeInsertID, EdgeQuery, GraphEngine, GraphKind, MutableGraph, NodeQuery, NodeRangeVisitor,
-    NodesVisitor,
+    Edge, EdgeDirection, EdgeInsertID, EdgeQuery, GraphEngine, GraphKind, IndeterminateEdge, MutableGraph, NodeID, NodeQuery,
+    NodeRangeVisitor, NodesVisitor,
 };
 use std::collections::BTreeMap;
 
@@ -31,13 +32,13 @@ impl GraphEngine for AdjacencyNodeList {
     type NodeIterator = PlaceholderNodeIterator;
     type NeighborIterator = PlaceholderNodeIterator;
     type EdgeIterator = PlaceholderNodeIterator;
-    type DirectionIterator = PlaceholderDirectionIterator;
+    type BridgeIterator = PlaceholderDirectionIterator;
 
     fn graph_kind(&self) -> GraphKind {
         todo!()
     }
 
-    fn has_node<Q: Into<NodeQuery>>(&self, node: Q) -> Option<usize> {
+    fn get_node_id<Q: Into<NodeQuery>>(&self, node: Q) -> Result<NodeID, GraphError> {
         todo!()
     }
 
@@ -45,7 +46,7 @@ impl GraphEngine for AdjacencyNodeList {
         todo!()
     }
 
-    fn has_edge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Option<graph_types::EdgeID> {
+    fn get_edge_id<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<graph_types::EdgeID, GraphError> {
         todo!()
     }
 
@@ -53,16 +54,24 @@ impl GraphEngine for AdjacencyNodeList {
         todo!()
     }
 
-    fn traverse_directions(&self) -> Self::DirectionIterator {
+    fn get_bridge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<IndeterminateEdge, GraphError> {
+        todo!()
+    }
+
+    fn traverse_bridges(&self) -> Self::BridgeIterator {
         todo!()
     }
 }
 
 impl MutableGraph for AdjacencyNodeList {
-    fn insert_node(&mut self, node_id: usize) -> usize {
+    fn insert_node(&mut self, node_id: usize) -> bool {
         let id = node_id as u32;
         self.head_nodes.entry(id).or_insert_with(|| NodeNeighbors { end_nodes: BTreeMap::new() });
-        node_id
+        node_id < (u32::MAX as usize)
+    }
+
+    fn create_node(&mut self) -> usize {
+        todo!()
     }
 
     fn remove_node_with_edges(&mut self, node_id: usize) {
@@ -86,6 +95,9 @@ impl MutableGraph for AdjacencyNodeList {
                 let e1 = self.insert_directed_edge(lhs, rhs);
                 let e2 = self.insert_directed_edge(rhs, lhs);
                 EdgeInsertID::TwoEdges(e1, e2)
+            }
+            EdgeDirection::Indeterminate => {
+                todo!()
             }
         }
     }
@@ -113,6 +125,9 @@ impl MutableGraph for AdjacencyNodeList {
             }
             EdgeQuery::Undirected(v) => {
                 panic!("remove undirected edge {v} is not supported in directed graph");
+            }
+            EdgeQuery::Dynamic(_) => {
+                todo!()
             }
         }
     }
