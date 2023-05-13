@@ -11,7 +11,23 @@ pub(crate) mod utils;
 pub use sparse_edges::AdjacencyEdgeList;
 pub use sparse_nodes::AdjacencyNodeList;
 
-/// A directed graph using an adjacency list as its underlying storage.
-pub type DiGraphAEL = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_one_way() }>;
-/// An undirected graph using an adjacency list as its underlying storage.
-pub type UnGraphAEL = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_two_way() }>;
+/// Sparse, edge-first, adjacency list-based directed graph.
+pub type DiGraphSEAL = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_one_way() }>;
+/// Sparse, node-first, adjacency list-based undirected graph.
+pub type UnGraphSEAL = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_two_way() }>;
+/// Sparse, node-first, adjacency list-based directed graph.
+pub type DiGraphSNAL = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_one_way() }>;
+/// Sparse, node-first, adjacency list-based undirected graph.
+pub type UnGraphSNAL = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_two_way() }>;
+/// Dense, node-first, adjacency matrix-based directed graph.
+pub type DiGraphDNAM = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_one_way() }>;
+/// Dense, node-first, adjacency matrix-based undirected graph.
+pub type UnGraphDNAM = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_two_way() }>;
+/// Dense, node-first, incidence matrix-based directed graph.
+pub type DiGraphDNIM = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_one_way() }>;
+/// Dense, node-first, incidence matrix-based undirected graph.
+pub type UnGraphDNIM = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_two_way() }>;
+/// Compressed sparse row based directed graph.
+pub type DiGraphCSR = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_one_way() }>;
+/// Compressed sparse row based undirected graph.
+pub type UnGraphCSR = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_two_way() }>;

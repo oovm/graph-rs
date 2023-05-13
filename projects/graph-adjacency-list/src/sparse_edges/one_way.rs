@@ -1,12 +1,12 @@
 use super::*;
-use crate::DiGraphAEL;
+use crate::DiGraphSEAL;
 use graph_types::{errors::GraphError, EdgeID, IndeterminateEdge, NodeID, Query};
 
-impl GraphEngine for DiGraphAEL {
+impl GraphEngine for DiGraphSEAL {
     type NodeIterator = PlaceholderNodeIterator;
     type NeighborIterator = PlaceholderNodeIterator;
     type EdgeIterator = PlaceholderNodeIterator;
-    type BridgeIterator = PlaceholderDirectionIterator;
+    type BridgeIterator = PlaceholderEdgeIterator;
 
     fn graph_kind(&self) -> GraphKind {
         GraphKind::Directed
@@ -59,7 +59,7 @@ impl GraphEngine for DiGraphAEL {
     }
 }
 
-impl MutableGraph for DiGraphAEL {
+impl MutableGraph for DiGraphSEAL {
     fn insert_node(&mut self, node_id: usize) -> bool {
         self.nodes.insert(node_id as u32)
     }
@@ -119,7 +119,7 @@ impl MutableGraph for DiGraphAEL {
     }
 }
 
-impl DiGraphAEL {
+impl DiGraphSEAL {
     pub(crate) fn find_edge_id(&self, from: u32, goto: u32) -> Result<EdgeID, GraphError> {
         todo!()
     }

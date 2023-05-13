@@ -1,5 +1,9 @@
-use graph_types::{Edge, EdgeInsertID, EdgeQuery, GraphEngine, GraphKind, MutableGraph, NodeRangeVisitor, NodesVisitor};
-use ndarray::{Array2, ArrayView2, ArrayViewMut2};
+use graph_types::{
+    errors::GraphError,
+    placeholder::{PlaceholderEdgeIterator, PlaceholderNodeIterator},
+    Edge, EdgeID, EdgeInsertID, EdgeQuery, GraphEngine, GraphKind, IndeterminateEdge, MutableGraph, NodeID, NodeQuery,
+    NodeRangeVisitor, NodesVisitor,
+};
 use std::{
     fmt::{Debug, Display},
     mem::size_of,
@@ -10,56 +14,49 @@ mod display;
 
 #[derive(Clone, Debug)]
 pub struct AdjacencyMatrix {
-    edges: u32,
-    degree: Range<u32>,
-    matrix: Array2<u32>,
+    matrix: Vec<Cell>,
 }
 
+struct Cell {}
+
 impl GraphEngine for AdjacencyMatrix {
+    type NodeIterator = PlaceholderNodeIterator;
+    type NeighborIterator = PlaceholderNodeIterator;
+    type EdgeIterator = PlaceholderNodeIterator;
+    type BridgeIterator = PlaceholderEdgeIterator;
+
     fn graph_kind(&self) -> GraphKind {
         GraphKind::Directed
     }
 
-    fn get_node_id(&self, node_id: usize) -> Option<usize> {
-        if node_id < self.matrix.shape()[0] { Some(node_id) } else { None }
+    fn get_node_id<Q: Into<NodeQuery>>(&self, node: Q) -> Result<NodeID, GraphError> {
+        todo!()
     }
 
     fn count_nodes(&self) -> usize {
         self.matrix.shape()[0]
     }
 
-    fn traverse_nodes(&self) -> NodesVisitor<Self> {
-        NodesVisitor::range(self, 0..self.count_nodes())
-    }
-
-    /// It will return id but id is meaningless
-    fn get_edge_id<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
-        match edge.into() {
-            EdgeQuery::EdgeID(_) => {
-                panic!("Cannot query edge id on adjacency matrix")
-            }
-            EdgeQuery::Directed(e) => {
-                if e.from < self.matrix.shape()[0] && e.goto < self.matrix.shape()[1] {
-                    Some(0)
-                }
-                else {
-                    None
-                }
-            }
-            EdgeQuery::Undirected(e) => {
-                if e.from < self.matrix.shape()[0] && e.goto < self.matrix.shape()[1] {
-                    Some(0)
-                }
-                else {
-                    None
-                }
-            }
-        }
-    }
-
-    fn traverse_edges(&self) -> NodeRangeVisitor<Self> {
+    fn traverse_nodes(&self) -> Self::NodeIterator {
         todo!()
     }
+
+    fn get_edge_id<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError> {
+        todo!()
+    }
+
+    fn traverse_edges(&self) -> Self::EdgeIterator {
+        todo!()
+    }
+
+    fn get_bridge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<IndeterminateEdge, GraphError> {
+        todo!()
+    }
+
+    fn traverse_bridges(&self) -> Self::BridgeIterator {
+        todo!()
+    }
+
     fn count_edges(&self) -> usize {
         self.edges as usize
     }
@@ -69,51 +66,9 @@ impl GraphEngine for AdjacencyMatrix {
     }
 }
 
-impl MutableGraph for AdjacencyMatrix {
-    /// It will return id but id is meaningless
-    fn insert_node(&mut self, _: usize) -> usize {
-        panic!("Cannot insert node on adjacency matrix")
-    }
-
-    fn remove_node(&mut self, _node_id: usize) {
-        todo!()
-    }
-
-    /// It means clean all edges
-    fn remove_node_with_edges(&mut self, _node_id: usize) {
-        todo!()
-    }
-    fn insert_edge<E: Edge>(&mut self, _edge: E) -> EdgeInsertID {
-        todo!()
-    }
-
-    fn insert_edge_with_nodes<E: Edge>(&mut self, _edge: E) -> EdgeInsertID {
-        todo!()
-    }
-
-    fn remove_edge<E>(&mut self, edge: E)
-    where
-        E: Into<EdgeQuery>,
-    {
-        match edge.into() {
-            EdgeQuery::EdgeID(_) => {
-                panic!("Cannot query edge id on adjacency matrix")
-            }
-            EdgeQuery::Directed(_) => {}
-            EdgeQuery::Undirected(_) => {}
-        }
-    }
-}
-
 impl AdjacencyMatrix {
     pub fn new(nodes: usize) -> Self {
-        Self { edges: 0, degree: 0..0, matrix: Array2::zeros((nodes, nodes)) }
-    }
-    pub fn get_matrix(&self) -> ArrayView2<u32> {
-        self.matrix.view()
-    }
-    pub fn mut_matrix(&mut self) -> ArrayViewMut2<u32> {
-        self.matrix.view_mut()
+        Self { matrix: vec![] }
     }
 }
 

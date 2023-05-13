@@ -1,5 +1,9 @@
 use graph_derive::Graph;
-use graph_types::{EdgeQuery, GraphEngine, GraphKind, NodeRangeVisitor, NodesVisitor};
+use graph_types::{
+    errors::GraphError,
+    placeholder::{PlaceholderEdgeIterator, PlaceholderNodeIterator},
+    EdgeID, EdgeQuery, GraphEngine, GraphKind, IndeterminateEdge, NodeID, NodeQuery, NodeRangeVisitor, NodesVisitor,
+};
 use std::mem::size_of;
 
 /// https://reference.wolfram.com/language/ref/WheelGraph.html
@@ -11,6 +15,11 @@ pub struct WheelGraph {
 }
 
 impl GraphEngine for WheelGraph {
+    type NodeIterator = PlaceholderNodeIterator;
+    type NeighborIterator = PlaceholderNodeIterator;
+    type EdgeIterator = PlaceholderNodeIterator;
+    type BridgeIterator = PlaceholderEdgeIterator;
+
     fn graph_kind(&self) -> GraphKind {
         match self.mask < 0 {
             true => GraphKind::Undirected,
@@ -18,36 +27,32 @@ impl GraphEngine for WheelGraph {
         }
     }
 
-    fn get_node_id(&self, node_id: usize) -> Option<usize> {
-        (node_id < self.count_nodes()).then_some(node_id)
+    fn get_node_id<Q: Into<NodeQuery>>(&self, node: Q) -> Result<NodeID, GraphError> {
+        todo!()
     }
 
     fn count_nodes(&self) -> usize {
         self.rank()
     }
 
-    fn traverse_nodes(&self) -> NodesVisitor<Self> {
-        NodesVisitor::range(self, 0..self.count_nodes())
+    fn traverse_nodes(&self) -> Self::NodeIterator {
+        todo!()
     }
 
-    /// Edges ids are counted from 0 to `self.count_edges() - 1`.
-    fn get_edge_id<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
-        match edge.into() {
-            EdgeQuery::EdgeID(edge_id) => (edge_id < self.count_edges()).then_some(edge_id),
-            EdgeQuery::Directed(_) => {
-                todo!()
-            }
-            EdgeQuery::Undirected(_) => match self.graph_kind() {
-                GraphKind::Directed => None,
-                GraphKind::Undirected => {
-                    todo!()
-                }
-            },
-        }
+    fn get_edge_id<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError> {
+        todo!()
     }
 
-    fn traverse_edges(&self) -> NodeRangeVisitor<Self> {
-        NodeRangeVisitor::new(self, 0..self.count_edges())
+    fn traverse_edges(&self) -> Self::EdgeIterator {
+        todo!()
+    }
+
+    fn get_bridge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<IndeterminateEdge, GraphError> {
+        todo!()
+    }
+
+    fn traverse_bridges(&self) -> Self::BridgeIterator {
+        todo!()
     }
 
     fn count_edges(&self) -> usize {

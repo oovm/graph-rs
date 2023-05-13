@@ -15,15 +15,11 @@ pub struct PlaceholderNodeIterator;
 #[derive(Copy, Clone, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct PlaceholderEdgeIterator;
 
-#[derive(Copy, Clone, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct PlaceholderDirectionIterator;
-
 impl GraphEngine for PlaceholderGraph {
     type NodeIterator = PlaceholderNodeIterator;
     type NeighborIterator = PlaceholderNodeIterator;
-    type EdgeIterator = PlaceholderEdgeIterator;
-
-    type BridgeIterator = PlaceholderDirectionIterator;
+    type EdgeIterator = PlaceholderNodeIterator;
+    type BridgeIterator = PlaceholderEdgeIterator;
 
     fn graph_kind(&self) -> GraphKind {
         unreachable!()
@@ -58,20 +54,6 @@ impl GraphEngine for PlaceholderGraph {
     }
 }
 
-impl Iterator for PlaceholderDirectionIterator {
-    type Item = IndeterminateEdge;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        unreachable!()
-    }
-}
-
-impl DoubleEndedIterator for PlaceholderDirectionIterator {
-    fn next_back(&mut self) -> Option<Self::Item> {
-        unreachable!()
-    }
-}
-
 impl MutableGraph for PlaceholderGraph {
     fn insert_node(&mut self, node_id: usize) -> bool {
         unreachable!()
@@ -97,6 +79,19 @@ impl MutableGraph for PlaceholderGraph {
     }
 }
 
+impl Iterator for PlaceholderEdgeIterator {
+    type Item = IndeterminateEdge;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        unreachable!()
+    }
+}
+impl DoubleEndedIterator for PlaceholderEdgeIterator {
+    fn next_back(&mut self) -> Option<Self::Item> {
+        unreachable!()
+    }
+}
+
 impl Iterator for PlaceholderNodeIterator {
     type Item = usize;
 
@@ -106,20 +101,6 @@ impl Iterator for PlaceholderNodeIterator {
 }
 
 impl DoubleEndedIterator for PlaceholderNodeIterator {
-    fn next_back(&mut self) -> Option<Self::Item> {
-        unreachable!()
-    }
-}
-
-impl Iterator for PlaceholderEdgeIterator {
-    type Item = usize;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        unreachable!()
-    }
-}
-
-impl DoubleEndedIterator for PlaceholderEdgeIterator {
     fn next_back(&mut self) -> Option<Self::Item> {
         unreachable!()
     }

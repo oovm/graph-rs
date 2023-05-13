@@ -1,5 +1,9 @@
-use graph_types::{Edge, GraphError, GraphResult, UndirectedEdge};
+use graph_types::{
+    errors::{GraphError, GraphResult},
+    Edge, UndirectedEdge,
+};
 use std::fmt::{Debug, Display};
+
 mod display;
 
 #[derive(Clone, Debug)]

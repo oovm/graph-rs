@@ -1,6 +1,6 @@
 use graph_types::{
     errors::GraphError,
-    placeholder::{PlaceholderDirectionIterator, PlaceholderNodeIterator},
+    placeholder::{PlaceholderEdgeIterator, PlaceholderNodeIterator},
     Edge, EdgeDirection, EdgeInsertID, EdgeQuery, GraphEngine, GraphKind, IndeterminateEdge, MutableGraph, NodeID, NodeQuery,
     NodeRangeVisitor, NodesVisitor,
 };
@@ -32,7 +32,7 @@ impl GraphEngine for AdjacencyNodeList {
     type NodeIterator = PlaceholderNodeIterator;
     type NeighborIterator = PlaceholderNodeIterator;
     type EdgeIterator = PlaceholderNodeIterator;
-    type BridgeIterator = PlaceholderDirectionIterator;
+    type BridgeIterator = PlaceholderEdgeIterator;
 
     fn graph_kind(&self) -> GraphKind {
         todo!()

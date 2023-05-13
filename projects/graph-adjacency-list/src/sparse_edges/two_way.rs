@@ -5,7 +5,7 @@ impl GraphEngine for AdjacencyEdgeList<{ GraphKind::Undirected.is_one_way() }> {
     type NodeIterator = PlaceholderNodeIterator;
     type NeighborIterator = PlaceholderNodeIterator;
     type EdgeIterator = PlaceholderNodeIterator;
-    type BridgeIterator = PlaceholderDirectionIterator;
+    type BridgeIterator = PlaceholderEdgeIterator;
 
     fn graph_kind(&self) -> GraphKind {
         GraphKind::Directed

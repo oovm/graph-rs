@@ -1,6 +1,6 @@
 use crate::utils::ShortEdge;
 use graph_types::{
-    placeholder::{PlaceholderDirectionIterator, PlaceholderEdgeIterator, PlaceholderNodeIterator},
+    placeholder::{PlaceholderEdgeIterator, PlaceholderNodeIterator},
     Edge, EdgeDirection, EdgeInsertID, EdgeQuery, GraphEngine, GraphKind, MutableGraph, NodeQuery, NodeRangeVisitor,
     NodesVisitor,
 };

@@ -1,5 +1,9 @@
 use graph_derive::Graph;
-use graph_types::{Edge, EdgeQuery, GraphEngine, GraphKind, NodeRangeVisitor, NodesVisitor};
+use graph_types::{
+    errors::GraphError,
+    placeholder::{PlaceholderEdgeIterator, PlaceholderNodeIterator},
+    Edge, EdgeID, EdgeQuery, GraphEngine, GraphKind, IndeterminateEdge, NodeID, NodeQuery, NodeRangeVisitor, NodesVisitor,
+};
 use std::mem::size_of;
 
 /// https://reference.wolfram.com/language/ref/CycleGraph.html
@@ -11,6 +15,11 @@ pub struct CycleGraph {
 }
 
 impl GraphEngine for CycleGraph {
+    type NodeIterator = PlaceholderNodeIterator;
+    type NeighborIterator = PlaceholderNodeIterator;
+    type EdgeIterator = PlaceholderNodeIterator;
+    type BridgeIterator = PlaceholderEdgeIterator;
+
     fn graph_kind(&self) -> GraphKind {
         match self.mask < 0 {
             true => GraphKind::Undirected,
@@ -18,16 +27,16 @@ impl GraphEngine for CycleGraph {
         }
     }
 
-    fn get_node_id(&self, node_id: usize) -> Option<usize> {
-        (node_id < self.count_nodes()).then_some(node_id)
+    fn get_node_id<Q: Into<NodeQuery>>(&self, node: Q) -> Result<NodeID, GraphError> {
+        todo!()
     }
 
     fn count_nodes(&self) -> usize {
         self.rank()
     }
 
-    fn traverse_nodes(&self) -> NodesVisitor<Self> {
-        NodesVisitor::range(self, 0..self.count_nodes())
+    fn traverse_nodes(&self) -> Self::NodeIterator {
+        todo!()
     }
 
     /// Numbered clockwise, if edge comes back, then edge id extra + 1.
@@ -35,41 +44,20 @@ impl GraphEngine for CycleGraph {
     /// In a indirected graph, edges ids are counted from 0 to `self.count_edges() - 1`.
     ///
     /// And in a directed graph, edges ids are counted from 0 to `self.count_edges() - 1`.
-    fn get_edge_id<E: Into<EdgeQuery>>(&self, edge: E) -> Option<usize> {
-        match edge.into() {
-            EdgeQuery::EdgeID(edge_id) => return (edge_id < self.count_edges()).then_some(edge_id),
-            EdgeQuery::Directed(v) if v.max_index() < self.count_nodes() => {
-                // if back, edge id + 1
-                let dir = if v.goto > v.from { 0 } else { 1 };
-                // adjacent nodes
-                if v.delta_index() == 1 {
-                    return Some(v.min_index() * 2 + dir);
-                }
-                // last edge
-                else if self.count_nodes() == v.delta_index() + 1 {
-                    return Some(v.max_index() * 2 + dir);
-                }
-            }
-            EdgeQuery::Undirected(v) => match self.graph_kind() {
-                GraphKind::Undirected if v.max_index() < self.count_nodes() => {
-                    // adjacent nodes
-                    if v.delta_index() == 1 {
-                        return Some(v.min_index());
-                    }
-                    // last edge
-                    else if self.count_nodes() == v.delta_index() + 1 {
-                        return Some(v.max_index());
-                    }
-                }
-                _ => {}
-            },
-            _ => {}
-        }
-        None
+    fn get_edge_id<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError> {
+        todo!()
     }
 
-    fn traverse_edges(&self) -> NodeRangeVisitor<Self> {
-        NodeRangeVisitor::new(self, 0..self.count_edges())
+    fn traverse_edges(&self) -> Self::EdgeIterator {
+        todo!()
+    }
+
+    fn get_bridge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<IndeterminateEdge, GraphError> {
+        todo!()
+    }
+
+    fn traverse_bridges(&self) -> Self::BridgeIterator {
+        todo!()
     }
 
     fn count_edges(&self) -> usize {
