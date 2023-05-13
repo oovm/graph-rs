@@ -95,9 +95,7 @@ pub trait EntryEngine<'i, V> {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn get_entry<Q: Into<Query>>(&'i self, query: Q) -> V {
-        self.try_entry(query).unwrap()
-    }
+    fn get_entry<Q: Into<Query>>(&'i self, query: Q) -> V;
     fn try_entry<Q: Into<Query>>(&'i self, query: Q) -> Result<Self::EntryRef, GraphError>;
     fn mut_entry<Q: Into<Query>>(&'i mut self, query: Q) -> Result<Self::EntryMut, GraphError>;
     fn set_entry<Q: Into<Query>>(&'i mut self, query: Q, entry: V) -> Result<(), GraphError> {

@@ -1,4 +1,4 @@
-use crate::{EdgeQuery, GraphEngine, NodeQuery};
+use crate::{GraphEngine, NodeQuery};
 use std::{
     any::type_name,
     fmt::{Debug, Formatter},
@@ -16,42 +16,63 @@ use std::{
 /// ```
 /// use graph_theory::GraphEngine;
 /// ```
-pub struct EdgesVisitor<'i, G: GraphEngine + ?Sized> {
+pub struct NodeRangeVisitor<'i, G: GraphEngine + ?Sized> {
     graph: &'i G,
-    indexer: Box<dyn DoubleEndedIterator<Item = usize>>,
+    indexer: Range<usize>,
 }
 
-impl<'i, G: GraphEngine + ?Sized> Debug for EdgesVisitor<'i, G> {
+impl<'i, G: GraphEngine + ?Sized> Debug for NodeRangeVisitor<'i, G> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let name = type_name::<G>();
         let nodes = self.graph.count_nodes();
-        f.debug_struct("EdgeVisitor").field("graph", &name).field("nodes", &nodes).finish()
+        f.debug_struct("NodeRangeVisitor").field("graph", &name).field("nodes", &nodes).finish()
     }
 }
 
-impl<'i, G> Iterator for EdgesVisitor<'i, G>
+impl<'i, G> Iterator for NodeRangeVisitor<'i, G>
 where
     G: GraphEngine + ?Sized,
 {
-    type Item = EdgeQuery;
+    type Item = NodeQuery;
 
     fn next(&mut self) -> Option<Self::Item> {
         let index = self.indexer.next()?;
-        if self.graph.has_node(NodeQuery::NodeID(index)).is_some() { Some(EdgeQuery::EdgeID(index)) } else { self.next() }
+        let query = NodeQuery::NodeID(index);
+        match self.graph.has_node(query) {
+            Some(_) => Some(query),
+            None => self.next(),
+        }
+    }
+    fn nth(&mut self, n: usize) -> Option<Self::Item> {
+        let id = self.indexer.nth(n)?;
+        let query = NodeQuery::NodeID(id);
+        let i = self.graph.has_node(query)?;
+        Some(NodeQuery::NodeID(i))
     }
 }
 
-impl<'i, G> DoubleEndedIterator for EdgesVisitor<'i, G>
+impl<'i, G> DoubleEndedIterator for NodeRangeVisitor<'i, G>
 where
     G: GraphEngine + ?Sized,
 {
     fn next_back(&mut self) -> Option<Self::Item> {
         let index = self.indexer.next_back()?;
-        if self.graph.has_node(NodeQuery::NodeID(index)).is_some() { Some(EdgeQuery::EdgeID(index)) } else { self.next_back() }
+        let query = NodeQuery::NodeID(index);
+        match self.graph.has_node(query) {
+            Some(_) => Some(query),
+            None => self.next_back(),
+        }
+    }
+
+    fn nth_back(&mut self, n: usize) -> Option<Self::Item> {
+        let id = self.indexer.nth_back(n)?;
+        let query = NodeQuery::NodeID(id);
+        let i = self.graph.has_node(query)?;
+        Some(NodeQuery::NodeID(i))
     }
 }
 
-impl<'i, G> EdgesVisitor<'i, G>
+impl<'i, G> NodeRangeVisitor<'i, G>
 where
     G: GraphEngine + ?Sized,
 {
@@ -66,7 +87,7 @@ where
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    pub fn range<R>(graph: &'i G, range: R) -> Self
+    pub fn new<R>(graph: &'i G, range: R) -> Self
     where
         R: RangeBounds<usize>,
     {
@@ -82,6 +103,6 @@ where
                 panic!("Upper bound must be specified")
             }
         };
-        Self { graph, indexer: Box::new(Range { start, end }) }
+        Self { graph, indexer: Range { start, end } }
     }
 }

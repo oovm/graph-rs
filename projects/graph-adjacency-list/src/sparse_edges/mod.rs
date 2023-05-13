@@ -1,6 +1,6 @@
 use crate::utils::ShortEdge;
 use graph_types::{
-    Edge, EdgeDirection, EdgeInsertID, EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, MutableGraph, NodesVisitor,
+    Edge, EdgeDirection, EdgeInsertID, EdgeQuery, GraphEngine, GraphKind, MutableGraph, NodeRangeVisitor, NodesVisitor,
 };
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -44,8 +44,8 @@ impl GraphEngine for AdjacencyEdgeList {
         }
     }
 
-    fn traverse_edges(&self) -> EdgesVisitor<Self> {
-        EdgesVisitor::range(self, 0..=self.count_edges())
+    fn traverse_edges(&self) -> NodeRangeVisitor<Self> {
+        NodeRangeVisitor::new(self, 0..=self.count_edges())
     }
 
     fn count_edges(&self) -> usize {

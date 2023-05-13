@@ -29,7 +29,7 @@ impl GraphEngine for EasyTableGraph {
         todo!()
     }
 
-    fn traverse_edges(&self) -> EdgesVisitor<Self> {
+    fn traverse_edges(&self) -> NodeRangeVisitor<Self> {
         todo!()
     }
 

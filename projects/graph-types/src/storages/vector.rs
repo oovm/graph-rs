@@ -26,19 +26,27 @@ where
     }
 }
 
-impl<'i, V> EntryEngine<'i, V> for ListStorage<V> {
-    type EntryRef = ();
-    type EntryMut = ();
+impl<'i, V> EntryEngine<'i, V> for ListStorage<V>
+where
+    V: Clone + 'i,
+{
+    type EntryRef = &'i V;
+    type EntryMut = &'i mut V;
+
+    fn get_entry<Q: Into<Query>>(&'i self, query: Q) -> V {
+        self.try_entry(query).unwrap().clone()
+    }
 
     fn try_entry<Q: Into<Query>>(&'i self, query: Q) -> Result<Self::EntryRef, GraphError> {
-        match query.into() {
+        let query = query.into();
+        match query {
             Query::NodeID(v) => match self.nodes.get(v) {
-                None => {}
-                Some(_) => {}
+                Some(s) => Ok(s),
+                None => Err(GraphError::not_found(query)),
             },
             Query::EdgeID(v) => match self.nodes.get(v) {
-                None => {}
-                Some(_) => {}
+                Some(s) => Ok(s),
+                None => Err(GraphError::not_found(query)),
             },
             Query::Directed(_) => Err(GraphError::custom("")),
             Query::Undirected(_) => Err(GraphError::custom("")),

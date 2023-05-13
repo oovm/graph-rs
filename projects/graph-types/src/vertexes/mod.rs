@@ -1,6 +1,8 @@
 pub mod get_iter;
 pub mod indexed;
 pub mod mut_iter;
+pub mod node_range_visitor;
+pub mod node_slice_visitor;
 
 use crate::GraphEngine;
 use std::{

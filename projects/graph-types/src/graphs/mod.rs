@@ -1,4 +1,4 @@
-use crate::{Edge, EdgeID, EdgeInsertID, EdgeQuery, EdgesVisitor, GraphKind, NodeQuery, NodesVisitor, Query};
+use crate::{Edge, EdgeID, EdgeInsertID, EdgeQuery, GraphKind, NodeQuery, NodeRangeVisitor, NodesVisitor, Query};
 
 pub mod weighted;
 use crate::vertexes::NodeDegree;

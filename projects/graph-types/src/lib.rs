@@ -15,7 +15,6 @@ mod vertexes;
 pub use crate::{
     edges::{
         actions::EdgeInsertID,
-        get_iter::EdgesVisitor,
         typed_edges::{DirectedEdge, DynamicEdge, UndirectedEdge},
         Edge, EdgeDirection, EdgeID,
     },
@@ -24,7 +23,9 @@ pub use crate::{
         EntryEngine, GraphEntry, GraphKind,
     },
     graphs::{named::NamedGraph, weighted::WeightedGraph, GraphEngine, MutableGraph},
-    vertexes::{get_iter::NodesVisitor, Node, NodeID},
+    vertexes::{
+        get_iter::NodesVisitor, node_range_visitor::NodeRangeVisitor, node_slice_visitor::NodeSliceVisitor, Node, NodeID,
+    },
 };
 
 #[cfg(feature = "wolfram_wxf")]

@@ -59,20 +59,12 @@ pub enum GraphErrorKind {
     /// GraphError::not_found(Query::edge(0));
     /// GraphError::edge_not_found(0);
     /// ```
-    NotFound { query: Query },
-
-    /// Some index is not found in storage.
-    ///
-    /// # Examples
-    ///
-    /// - edge id 0 out of range
-    ///
-    /// ```
-    /// use graph_theory::{GraphError, Query};
-    /// GraphError::not_found(Query::edge(0));
-    /// GraphError::edge_not_found(0);
-    /// ```
-    NotSupported { query: Query },
+    NotFound {
+        /// The entry type of the error.
+        entry: GraphEntry,
+        /// The entry index you want to access.
+        index: usize,
+    },
     /// Some index is out of range of storage.
     ///
     /// Max index is 5, but you query index 6.
@@ -133,11 +125,8 @@ impl Display for GraphError {
 impl Display for GraphErrorKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            GraphErrorKind::NotFound { query } => {
-                write!(f, "{query:?} not found")
-            }
-            GraphErrorKind::NotSupported { query } => {
-                write!(f, "{query:?} not found")
+            GraphErrorKind::NotFound { entry, index } => {
+                write!(f, "{entry:?} index {index} not found")
             }
             GraphErrorKind::OutOfRange { entry, index, max } => {
                 write!(f, "{entry:?} index {index} is out of range, max index is {max}")
@@ -183,7 +172,8 @@ impl GraphError {
     /// GraphError::edge_not_found(0);
     /// ```
     pub fn not_found<Q: Into<Query>>(query: Q) -> Self {
-        Self { kind: Box::new(GraphErrorKind::NotFound { query: query.into() }) }
+        let query = query.into();
+        Self { kind: Box::new(GraphErrorKind::NotFound { entry: query.entry, index: query.index }) }
     }
     /// Some index is not found in storage.
     ///
@@ -196,8 +186,22 @@ impl GraphError {
     /// GraphError::not_found(Query::edge(0));
     /// GraphError::edge_not_found(0);
     /// ```
-    pub fn not_support<Q: Into<Query>>(query: Q) -> Self {
-        Self { kind: Box::new(GraphErrorKind::NotSupported { query: query.into() }) }
+    pub fn node_not_found(id: usize) -> Self {
+        Self { kind: Box::new(GraphErrorKind::NotFound { entry: GraphEntry::Node, index: id }) }
+    }
+    /// Some index is not found in storage.
+    ///
+    /// # Examples
+    ///
+    /// - edge id 0 out of range
+    ///
+    /// ```
+    /// use graph_theory::{GraphError, Query};
+    /// GraphError::not_found(Query::edge(0));
+    /// GraphError::edge_not_found(0);
+    /// ```
+    pub fn edge_not_found(id: usize) -> Self {
+        Self { kind: Box::new(GraphErrorKind::NotFound { entry: GraphEntry::Edge, index: id }) }
     }
     /// Fill where the io error occurred.
     ///

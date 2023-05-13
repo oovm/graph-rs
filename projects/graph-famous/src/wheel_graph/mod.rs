@@ -1,5 +1,5 @@
 use graph_derive::Graph;
-use graph_types::{EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, NodesVisitor};
+use graph_types::{EdgeQuery, GraphEngine, GraphKind, NodeRangeVisitor, NodesVisitor};
 use std::mem::size_of;
 
 /// https://reference.wolfram.com/language/ref/WheelGraph.html
@@ -46,8 +46,8 @@ impl GraphEngine for WheelGraph {
         }
     }
 
-    fn traverse_edges(&self) -> EdgesVisitor<Self> {
-        EdgesVisitor::range(self, 0..self.count_edges())
+    fn traverse_edges(&self) -> NodeRangeVisitor<Self> {
+        NodeRangeVisitor::new(self, 0..self.count_edges())
     }
 
     fn count_edges(&self) -> usize {

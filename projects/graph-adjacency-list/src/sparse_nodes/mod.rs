@@ -1,5 +1,5 @@
 use graph_types::{
-    Edge, EdgeDirection, EdgeInsertID, EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, MutableGraph, NodesVisitor,
+    Edge, EdgeDirection, EdgeInsertID, EdgeQuery, GraphEngine, GraphKind, MutableGraph, NodeRangeVisitor, NodesVisitor,
 };
 use std::collections::BTreeMap;
 
@@ -46,7 +46,7 @@ impl GraphEngine for AdjacencyNodeList {
         todo!()
     }
 
-    fn traverse_edges(&self) -> EdgesVisitor<Self> {
+    fn traverse_edges(&self) -> NodeRangeVisitor<Self> {
         todo!()
     }
 

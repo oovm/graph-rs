@@ -11,7 +11,6 @@ pub mod typed_edges;
 
 mod simple;
 
-pub mod get_iter;
 pub mod mut_iter;
 
 /// used to determine the direction of an edge

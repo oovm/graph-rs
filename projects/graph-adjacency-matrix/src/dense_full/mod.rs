@@ -1,4 +1,4 @@
-use graph_types::{Edge, EdgeInsertID, EdgeQuery, EdgesVisitor, GraphEngine, GraphKind, MutableGraph, NodesVisitor};
+use graph_types::{Edge, EdgeInsertID, EdgeQuery, GraphEngine, GraphKind, MutableGraph, NodeRangeVisitor, NodesVisitor};
 use ndarray::{Array2, ArrayView2, ArrayViewMut2};
 use std::{
     fmt::{Debug, Display},
@@ -57,7 +57,7 @@ impl GraphEngine for AdjacencyMatrix {
         }
     }
 
-    fn traverse_edges(&self) -> EdgesVisitor<Self> {
+    fn traverse_edges(&self) -> NodeRangeVisitor<Self> {
         todo!()
     }
     fn count_edges(&self) -> usize {
