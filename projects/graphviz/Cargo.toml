@@ -1,5 +1,5 @@
 [package]
-name = "graphviz"
+name = "graph-vision"
 version = "0.0.0"
 authors = ["Aster <192607617@qq.com>"]
 description = "Graphviz in rust."

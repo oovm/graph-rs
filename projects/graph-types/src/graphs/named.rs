@@ -7,7 +7,7 @@ use super::*;
 /// ```
 /// use graph_theory::GraphEngine;
 /// ```
-pub trait NamedGraph: GraphEngine {
+pub trait NamedGraph<'i> {
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics
@@ -21,7 +21,7 @@ pub trait NamedGraph: GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    type NameRef: Deref<Target = str>;
+    type NameRef;
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics
@@ -35,7 +35,7 @@ pub trait NamedGraph: GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    type NameMut: DerefMut<Target = str>;
+    type NameMut;
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics
@@ -49,7 +49,7 @@ pub trait NamedGraph: GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn get_node_name<Q: Into<NodeQuery>>(&self, node: Q) -> Option<Self::NameRef>;
+    fn get_node_name<Q: Into<NodeQuery>>(&'i self, node: Q) -> Option<Self::NameRef>;
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics
@@ -63,7 +63,7 @@ pub trait NamedGraph: GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn mut_node_name<Q: Into<NodeQuery>>(&self, node: Q) -> Option<Self::NameMut>;
+    fn mut_node_name<Q: Into<NodeQuery>>(&'i mut self, node: Q) -> Option<Self::NameMut>;
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics
@@ -77,7 +77,7 @@ pub trait NamedGraph: GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn set_node_name<Q: Into<NodeQuery>>(&mut self, node: Q, name: &str);
+    fn set_node_name<Q: Into<NodeQuery>>(&'i mut self, node: Q, name: &str);
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics
@@ -91,7 +91,7 @@ pub trait NamedGraph: GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn get_edge_weight<Q: Into<EdgeQuery>>(&self, edge: Q) -> Option<Self::NameRef>;
+    fn get_edge_name<Q: Into<EdgeQuery>>(&'i self, edge: Q) -> Option<Self::NameRef>;
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics
@@ -105,7 +105,7 @@ pub trait NamedGraph: GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn mut_edge_weight<Q: Into<EdgeQuery>>(&self, edge: Q) -> Option<Self::NameMut>;
+    fn mut_edge_name<Q: Into<EdgeQuery>>(&'i mut self, edge: Q) -> Option<Self::NameMut>;
     /// Remove edge by given edge-id or start and end node-id.
     ///
     /// # Panics
@@ -119,5 +119,5 @@ pub trait NamedGraph: GraphEngine {
     /// ```
     /// use graph_theory::GraphEngine;
     /// ```
-    fn set_edge_weight<Q: Into<EdgeQuery>>(&mut self, edge: Q, weight: V);
+    fn set_edge_name<Q: Into<EdgeQuery>>(&'i mut self, edge: Q, name: &str);
 }

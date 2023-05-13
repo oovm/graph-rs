@@ -4,9 +4,10 @@
 #![doc(html_logo_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 #![doc(html_favicon_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 
-pub use graph_types::*;
+// pub use graph_types;
 
 pub mod entry_engines;
 pub mod graph_engines;
 
 mod entries;
+pub use graph_types::{errors::*, EntryEngine, GraphEngine, GraphKind};

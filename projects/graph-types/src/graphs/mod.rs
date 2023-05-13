@@ -1,4 +1,4 @@
-use crate::{Edge, EdgeID, EdgeInsertID, EdgeQuery, EdgesVisitor, GraphError, GraphKind, NodeQuery, NodesVisitor, Query};
+use crate::{Edge, EdgeID, EdgeInsertID, EdgeQuery, EdgesVisitor, GraphKind, NodeQuery, NodesVisitor, Query};
 
 pub mod weighted;
 use crate::vertexes::NodeDegree;
@@ -9,7 +9,6 @@ use std::{
     pin::Pin,
 };
 pub mod named;
-pub mod valued;
 
 /// Represent a graph storage, with a set of nodes and edges.
 ///
@@ -126,7 +125,7 @@ where
     /// let mut graph = CompleteGraph::one_way(5);
     /// assert_eq!(graph.traverse_nodes().count(), 20)
     /// ```
-    fn traverse_nodes(&self) -> NodesVisitor<Self>;
+    fn traverse_nodes(&self) -> Self::NodeIterator;
     /// Check if the edge exists, return the node id if exists.
     ///
     /// # Examples

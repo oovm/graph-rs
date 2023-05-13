@@ -6,8 +6,6 @@ use std::{
     path::Path,
 };
 
-pub mod placeholder;
-
 /// The result type alias of a graph operation, see [`GraphError`] & [`GraphErrorKind`] for more.
 ///
 /// # Examples

@@ -1,4 +1,4 @@
-use crate::{GraphEntry, GraphError, Query, ValueProvider};
+use crate::Query;
 use std::collections::BTreeMap;
 
 /// A sparse entry engine that uses a [BTreeMap] to store data.
@@ -17,29 +17,6 @@ pub struct DictStorage<T> {
 impl<T> Default for DictStorage<T> {
     fn default() -> Self {
         Self { nodes: BTreeMap::default(), edges: BTreeMap::default() }
-    }
-}
-
-// noinspection DuplicatedCode
-impl<'i, T> ValueProvider<'i, T> for DictStorage<T>
-where
-    T: 'i + Send + Sync,
-{
-    type ValueRef = &'i T;
-    type ValueMut = &'i mut T;
-
-    fn get_value(&'i self, query: Query) -> Result<Self::ValueRef, GraphError> {
-        match self.get_data(query) {
-            Some(item) => Ok(item),
-            None => Err(GraphError::not_found(query)),
-        }
-    }
-
-    fn mut_value(&'i mut self, query: Query) -> Result<Self::ValueMut, GraphError> {
-        match self.mut_data(query) {
-            Some(item) => Ok(item),
-            None => Err(GraphError::not_found(query)),
-        }
     }
 }
 

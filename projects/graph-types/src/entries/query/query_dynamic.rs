@@ -1,4 +1,4 @@
-use crate::{DirectedEdge, EdgeQuery, GraphEntry, NodeQuery, UndirectedEdge};
+use crate::{DirectedEdge, GraphEntry, UndirectedEdge};
 
 /// # Arguments
 ///

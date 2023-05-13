@@ -1,6 +1,6 @@
 #![allow(unused_variables)]
 
-use crate::{EdgeID, EdgeQuery, GraphEngine, GraphKind, NodeQuery};
+use crate::{Edge, EdgeID, EdgeInsertID, EdgeQuery, GraphEngine, GraphKind, MutableGraph, NodeQuery};
 
 /// A placeholder graph engine.
 #[derive(Copy, Clone, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -38,6 +38,27 @@ impl GraphEngine for PlaceholderGraph {
     }
     fn size_hint(&self) -> usize {
         0
+    }
+}
+
+impl MutableGraph for PlaceholderGraph {
+    fn insert_node(&mut self, node_id: usize) -> usize {
+        unreachable!()
+    }
+
+    fn remove_node_with_edges(&mut self, node_id: usize) {
+        unreachable!()
+    }
+
+    fn insert_edge_with_nodes<E: Edge>(&mut self, edge: E) -> EdgeInsertID {
+        unreachable!()
+    }
+
+    fn remove_edge<E>(&mut self, edge: E)
+    where
+        E: Into<EdgeQuery>,
+    {
+        unreachable!()
     }
 }
 

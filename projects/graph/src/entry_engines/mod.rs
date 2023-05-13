@@ -2,5 +2,5 @@
 
 mod storage;
 
-pub use self::storage::{btree::DictStorage, btree_default::DictDefault, vector::ListStorage};
 pub use crate::entries::{EntryName, EntryWeight};
+pub use graph_types::{errors::*, DictDefault, DictStorage, ListStorage};

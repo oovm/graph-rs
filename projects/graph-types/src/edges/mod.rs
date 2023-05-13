@@ -3,7 +3,7 @@ use std::{
     ops::Range,
 };
 
-use crate::{DynamicEdge, UndirectedEdge};
+use crate::DynamicEdge;
 use std::fmt::{Display, Formatter};
 
 pub mod actions;

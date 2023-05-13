@@ -6,8 +6,10 @@
 
 mod edges;
 mod entries;
-mod errors;
+pub mod errors;
 mod graphs;
+pub mod placeholder;
+pub mod storages;
 mod vertexes;
 
 pub use crate::{
@@ -19,19 +21,9 @@ pub use crate::{
     },
     entries::{
         query::{query_dynamic::Query, query_edge::EdgeQuery, query_node::NodeQuery},
-        storages::{btree::DictStorage, vector::ListStorage},
-        GraphEntry, GraphKind,
+        EntryEngine, GraphEntry, GraphKind,
     },
-    errors::{
-        placeholder::{PlaceholderEdgeIterator, PlaceholderGraph, PlaceholderNodeIterator},
-        GraphError, GraphErrorKind, GraphResult,
-    },
-    graphs::{
-        named::NamedGraph,
-        valued::{EntryEngine, ValueProvider},
-        weighted::WeightedGraph,
-        GraphEngine, MutableGraph,
-    },
+    graphs::{named::NamedGraph, weighted::WeightedGraph, GraphEngine, MutableGraph},
     vertexes::{get_iter::NodesVisitor, Node, NodeID},
 };
 
