@@ -1,11 +1,9 @@
-type NodeID = u32;
-
 // platform dependent edge
 #[repr(C)]
-#[derive(Debug)]
+#[derive(Copy, Clone, Debug)]
 pub struct ShortEdge {
-    pub from: NodeID,
-    pub goto: NodeID,
+    pub from: u32,
+    pub goto: u32,
 }
 
 impl ShortEdge {

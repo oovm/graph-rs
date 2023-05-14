@@ -11,8 +11,7 @@ edition = "2021"
 exclude = ["package.json", "tests/**"]
 
 [dependencies]
-datasize = "0.2.14"
-ndarray = "0.15.6"
+ndarray = { version = "0.15.6", optional = true }
 
 [dependencies.graph-types]
 version = "0.0.*"

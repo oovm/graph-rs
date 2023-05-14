@@ -26,15 +26,6 @@ pub struct IndeterminateEdge {
     /// The index of the node that the edge is going to.
     pub goto: usize,
 }
-#[cfg(feature = "datasize")]
-impl DataSize for IndeterminateEdge {
-    const IS_DYNAMIC: bool = false;
-    const STATIC_HEAP_SIZE: usize = 0;
-
-    fn estimate_heap_size(&self) -> usize {
-        self.from.estimate_heap_size() + self.goto.estimate_heap_size()
-    }
-}
 
 impl Display for IndeterminateEdge {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {

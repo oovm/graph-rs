@@ -1,7 +1,4 @@
 use super::*;
-use crate::AdjacencyMatrixAllBridges;
-use graph_types::iterators::BridgeRange;
-use std::slice::Iter;
 
 impl<'a> GraphEngine<'a> for DiGraphAM {
     type NeighborIterator = PlaceholderNodeIterator;
@@ -26,7 +23,7 @@ impl<'a> GraphEngine<'a> for DiGraphAM {
         self.rank
     }
 
-    fn all_neighbors(&'a self, node: usize) -> Self::NeighborIterator {
+    fn all_neighbors(&'a self, node: NodeID) -> Self::NeighborIterator {
         todo!()
     }
     fn get_outgoing(&'a self, node: NodeID) -> Self::NeighborIterator {
@@ -61,9 +58,7 @@ impl<'a> GraphEngine<'a> for DiGraphAM {
     }
 
     fn size_hint(&self) -> usize {
-        size_of::<Self>()
-            + self.edges.capacity() * size_of::<IndeterminateEdge>()
-            + self.matrix.capacity() * size_of::<AdjacencyCell>()
+        self.get_size()
     }
 }
 
@@ -72,11 +67,17 @@ impl DiGraphAM {
     pub fn new(nodes: usize, edges: usize) -> Self {
         Self {
             rank: nodes,
-            edges: vec![IndeterminateEdge { from: 0, goto: 0 }; edges],
+            edges: vec![AdjacencyEdge::default(); edges],
             matrix: vec![AdjacencyCell::default(); nodes * nodes],
+            max_degree: 0,
         }
     }
     fn find_first_edge(&self, start: u32, end: u32) -> Result<EdgeID, GraphError> {
         todo!()
+    }
+    fn index_by_edge(&self, start: usize, end: usize) -> Result<usize, GraphError> {
+        Query::check_node_range(start, self.rank)?;
+        Query::check_node_range(end, self.rank)?;
+        Ok(start * self.rank + end)
     }
 }

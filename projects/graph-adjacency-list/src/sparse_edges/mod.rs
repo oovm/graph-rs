@@ -1,8 +1,7 @@
 use crate::utils::ShortEdge;
 use graph_types::{
     placeholder::{PlaceholderEdgeIterator, PlaceholderNodeIterator},
-    Edge, EdgeDirection, EdgeInsertID, EdgeQuery, GraphEngine, GraphKind, MutableGraph, NodeQuery, NodeRangeVisitor,
-    NodesVisitor,
+    Edge, EdgeDirection, EdgeInsertID, EdgeQuery, GraphEngine, GraphKind, MutableGraph, NodeRangeVisitor, NodesVisitor,
 };
 use std::collections::{BTreeMap, BTreeSet};
 

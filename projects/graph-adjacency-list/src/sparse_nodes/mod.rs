@@ -1,7 +1,7 @@
 use graph_types::{
     errors::GraphError,
     placeholder::{PlaceholderEdgeIterator, PlaceholderNodeIterator},
-    Edge, EdgeDirection, EdgeInsertID, EdgeQuery, GraphEngine, GraphKind, IndeterminateEdge, MutableGraph, NodeID, NodeQuery,
+    Edge, EdgeDirection, EdgeInsertID, EdgeQuery, GraphEngine, GraphKind, IndeterminateEdge, MutableGraph, NodeID,
     NodeRangeVisitor, NodesVisitor,
 };
 use std::collections::BTreeMap;
@@ -28,11 +28,12 @@ impl Default for AdjacencyNodeList {
     }
 }
 
-impl GraphEngine for AdjacencyNodeList {
-    type NodeTraverser = PlaceholderNodeIterator;
+impl<'a> GraphEngine<'a> for AdjacencyNodeList {
     type NeighborIterator = PlaceholderNodeIterator;
-    type EdgeTraverser = PlaceholderNodeIterator;
     type BridgeIterator = PlaceholderEdgeIterator;
+    type NodeTraverser = PlaceholderNodeIterator;
+    type EdgeTraverser = PlaceholderNodeIterator;
+    type BridgeTraverser = PlaceholderEdgeIterator;
 
     fn graph_kind(&self) -> GraphKind {
         todo!()
@@ -46,7 +47,11 @@ impl GraphEngine for AdjacencyNodeList {
         todo!()
     }
 
-    fn get_edge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<graph_types::EdgeID, GraphError> {
+    fn all_neighbors(&'a self, node: NodeID) -> Self::NeighborIterator {
+        todo!()
+    }
+
+    fn get_edge(&self, edge: graph_types::EdgeID) -> Result<graph_types::EdgeID, GraphError> {
         todo!()
     }
 
@@ -54,7 +59,11 @@ impl GraphEngine for AdjacencyNodeList {
         todo!()
     }
 
-    fn get_bridges<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<IndeterminateEdge, GraphError> {
+    fn get_bridge(&self, edge: graph_types::EdgeID) -> Result<IndeterminateEdge, GraphError> {
+        todo!()
+    }
+
+    fn get_bridges(&'a self, from: NodeID, goto: NodeID) -> Self::BridgeIterator {
         todo!()
     }
 

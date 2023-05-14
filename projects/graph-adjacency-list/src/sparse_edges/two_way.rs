@@ -1,11 +1,13 @@
 use super::*;
+use crate::UnGraphSEAL;
 use graph_types::{errors::GraphError, EdgeID, IndeterminateEdge, NodeID};
 
-impl GraphEngine for AdjacencyEdgeList<{ GraphKind::Undirected.is_one_way() }> {
-    type NodeTraverser = PlaceholderNodeIterator;
+impl<'a> GraphEngine<'a> for UnGraphSEAL {
     type NeighborIterator = PlaceholderNodeIterator;
-    type EdgeTraverser = PlaceholderNodeIterator;
     type BridgeIterator = PlaceholderEdgeIterator;
+    type NodeTraverser = PlaceholderNodeIterator;
+    type EdgeTraverser = PlaceholderNodeIterator;
+    type BridgeTraverser = PlaceholderEdgeIterator;
 
     fn graph_kind(&self) -> GraphKind {
         GraphKind::Directed
@@ -19,7 +21,11 @@ impl GraphEngine for AdjacencyEdgeList<{ GraphKind::Undirected.is_one_way() }> {
         todo!()
     }
 
-    fn get_edge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError> {
+    fn all_neighbors(&'a self, node: NodeID) -> Self::NeighborIterator {
+        todo!()
+    }
+
+    fn get_edge(&self, edge: EdgeID) -> Result<EdgeID, GraphError> {
         todo!()
     }
 
@@ -27,7 +33,11 @@ impl GraphEngine for AdjacencyEdgeList<{ GraphKind::Undirected.is_one_way() }> {
         todo!()
     }
 
-    fn get_bridges<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<IndeterminateEdge, GraphError> {
+    fn get_bridge(&self, edge: EdgeID) -> Result<IndeterminateEdge, GraphError> {
+        todo!()
+    }
+
+    fn get_bridges(&'a self, from: NodeID, goto: NodeID) -> Self::BridgeIterator {
         todo!()
     }
 
@@ -36,7 +46,7 @@ impl GraphEngine for AdjacencyEdgeList<{ GraphKind::Undirected.is_one_way() }> {
     }
 }
 
-impl MutableGraph for AdjacencyEdgeList<{ GraphKind::Undirected.is_one_way() }> {
+impl MutableGraph for UnGraphSEAL {
     fn insert_node(&mut self, node_id: usize) -> bool {
         todo!()
     }
@@ -94,7 +104,7 @@ impl MutableGraph for AdjacencyEdgeList<{ GraphKind::Undirected.is_one_way() }> 
     }
 }
 
-impl AdjacencyEdgeList<{ GraphKind::Undirected.is_one_way() }> {
+impl UnGraphSEAL {
     pub(crate) fn insert_one_way_edge(&mut self, start: usize, end: usize) -> usize {
         let id = self.edges.len() as u32 + 1;
         self.edges.insert(id, ShortEdge::new(start, end));

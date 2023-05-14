@@ -174,7 +174,7 @@ where
     fn count_edges(&'a self) -> usize {
         self.all_edges().count()
     }
-    fn get_bridge(&self, edge: NodeID) -> Result<IndeterminateEdge, GraphError>;
+    fn get_bridge(&self, edge: EdgeID) -> Result<IndeterminateEdge, GraphError>;
     /// Give all edges matching the start and end points
     ///
     /// # Examples

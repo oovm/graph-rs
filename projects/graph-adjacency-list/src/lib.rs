@@ -4,12 +4,12 @@
 #![doc(html_logo_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 #![doc(html_favicon_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 
+mod iters;
 mod sparse_edges;
 mod sparse_nodes;
 pub(crate) mod utils;
 
-pub use sparse_edges::AdjacencyEdgeList;
-pub use sparse_nodes::AdjacencyNodeList;
+pub use crate::{iters::AdjacencyEdgeAllNodes, sparse_edges::AdjacencyEdgeList, sparse_nodes::AdjacencyNodeList};
 
 /// Sparse, edge-first, adjacency list-based directed graph.
 pub type DiGraphSEAL = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_one_way() }>;

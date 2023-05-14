@@ -1,56 +1,46 @@
 use super::*;
-use crate::DiGraphSEAL;
+use crate::{
+    iters::{AdjacencyEdgeAllEdges, AdjacencyEdgeAllNodes},
+    DiGraphSEAL,
+};
 use graph_types::{errors::GraphError, EdgeID, IndeterminateEdge, NodeID, Query};
 
-impl GraphEngine for DiGraphSEAL {
-    type NodeTraverser = PlaceholderNodeIterator;
+impl<'a> GraphEngine<'a> for DiGraphSEAL {
     type NeighborIterator = PlaceholderNodeIterator;
-    type EdgeTraverser = PlaceholderNodeIterator;
     type BridgeIterator = PlaceholderEdgeIterator;
+    type NodeTraverser = AdjacencyEdgeAllNodes<'a>;
+    type EdgeTraverser = AdjacencyEdgeAllEdges<'a>;
+    type BridgeTraverser = PlaceholderEdgeIterator;
 
     fn graph_kind(&self) -> GraphKind {
         GraphKind::Directed
     }
 
     fn get_node(&self, node: NodeID) -> Result<NodeID, GraphError> {
-        match node.into() {
-            NodeQuery::NodeID(v) => {
-                if self.nodes.contains(&(v as u32)) {
-                    Ok(v)
-                }
-                else {
-                    Err(GraphError::not_found(Query::NodeID(v)))
-                }
-            }
-        }
+        if self.nodes.contains(&(node as u32)) { Ok(node) } else { Err(GraphError::not_found(Query::NodeID(node))) }
     }
 
-    fn all_nodes(&self) -> Self::NodeTraverser {
+    fn all_nodes(&'a self) -> Self::NodeTraverser {
+        AdjacencyEdgeAllNodes::new(&self.nodes)
+    }
+
+    fn all_neighbors(&'a self, node: NodeID) -> Self::NeighborIterator {
         todo!()
     }
 
-    fn get_edge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError> {
-        let query = edge.into();
-        match query {
-            EdgeQuery::EdgeID(v) => {
-                if self.edges.contains_key(&(v as u32)) {
-                    Ok(v)
-                }
-                else {
-                    Err(GraphError::not_found(Query::EdgeID(v)))
-                }
-            }
-            EdgeQuery::Dynamic(v) => self.find_edge_id(v.from as u32, v.goto as u32),
-            EdgeQuery::Directed(v) => self.find_edge_id(v.from as u32, v.goto as u32),
-            EdgeQuery::Undirected(v) => v.as_unsupported(),
-        }
+    fn get_edge(&self, edge: EdgeID) -> Result<EdgeID, GraphError> {
+        if self.edges.contains_key(&(edge as u32)) { Ok(edge) } else { Err(GraphError::not_found(Query::EdgeID(edge))) }
     }
 
-    fn all_edges(&self) -> Self::EdgeTraverser {
+    fn all_edges(&'a self) -> Self::EdgeTraverser {
+        AdjacencyEdgeAllEdges::new(&self.edges)
+    }
+
+    fn get_bridge(&self, edge: EdgeID) -> Result<IndeterminateEdge, GraphError> {
         todo!()
     }
 
-    fn get_bridges<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<IndeterminateEdge, GraphError> {
+    fn get_bridges(&'a self, from: NodeID, goto: NodeID) -> Self::BridgeIterator {
         todo!()
     }
 
