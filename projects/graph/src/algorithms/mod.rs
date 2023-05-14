@@ -1,6 +1,6 @@
 use fixedbitset::FixedBitSet;
 use graph_types::{errors::GraphError, GraphEngine, GraphKind, VisitOrder};
-use std::collections::VecDeque;
+use std::{borrow::Cow, collections::VecDeque};
 
 mod bread_first_search;
 mod depth_first_search;
@@ -24,7 +24,7 @@ where
 }
 
 pub struct DirectedAcyclicGraph<'a, G: GraphEngine<'a>> {
-    graph: &'a G,
+    graph: Cow<'a, G>,
     topological_order: Vec<u32>,
 }
 
@@ -60,9 +60,6 @@ where
                 }
             }
         }
-        Ok(Self { graph, topological_order })
-    }
-    pub unsafe fn new_unchecked(graph: &'a G) -> Self {
-        Self { graph }
+        Ok(Self { graph: Cow::Borrowed(graph), topological_order })
     }
 }
