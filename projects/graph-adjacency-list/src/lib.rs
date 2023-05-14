@@ -18,9 +18,9 @@ pub use crate::{
 };
 
 /// Sparse adjacency list, edge-first directed graph
-pub type DiGraphAED = AdjacencyEdgeDict<{ graph_types::GraphKind::Directed.is_one_way() }>;
+pub type DiGraphAED = AdjacencyEdgeDict<{ graph_types::GraphKind::Directed as u8 }>;
 /// Sparse adjacency list, edge-first undirected graph
-pub type UnGraphAED = AdjacencyEdgeDict<{ graph_types::GraphKind::Directed.is_two_way() }>;
+pub type UnGraphAED = AdjacencyEdgeDict<{ graph_types::GraphKind::Undirected as u8 }>;
 /// Sparse adjacency list, node-first directed graph
 pub type DiGraphAND = AdjacencyNodeDict<{ graph_types::GraphKind::Directed.is_one_way() }>;
 /// Sparse adjacency list, node-first undirected graph

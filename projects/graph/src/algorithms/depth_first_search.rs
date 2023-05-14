@@ -1,5 +1,5 @@
 use super::*;
-pub type DepthFirstSearcher<'a, G> = ConnectedNodes<'a, G, { VisitOrder::DepthFirst as u8 }>;
+pub type DepthFirstSearcher<'a, G> = ConnectedWalker<'a, G, { VisitOrder::DepthFirst as u8 }>;
 
 pub fn dfs<'a, G>(graph: &'a G, start_node: usize) -> DepthFirstSearcher<'a, G>
 where

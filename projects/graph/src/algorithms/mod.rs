@@ -1,40 +1,68 @@
 use fixedbitset::FixedBitSet;
-use graph_types::{GraphEngine, VisitOrder};
+use graph_types::{errors::GraphError, GraphEngine, GraphKind, VisitOrder};
 use std::collections::VecDeque;
-mod breadth_first_search;
+
+mod bread_first_search;
 mod depth_first_search;
-mod topological_sort;
+mod topological_search;
 
 pub use self::{
-    breadth_first_search::{bfs, BreadthFirstSearcher},
+    bread_first_search::{bfs, BreadthFirstSearcher},
     depth_first_search::{dfs, DepthFirstSearcher},
+    topological_search::{topological_sort, TopologicalSearcher},
 };
 
+/// A connected nodes iterator, contains a large number of node queries, make sure you are using a node-first graph.
 #[derive(Debug)]
-pub struct ConnectedNodes<'a, G, const MODE: u8>
+pub struct ConnectedWalker<'a, G, const MODE: u8>
 where
     G: GraphEngine<'a>,
 {
-    graph: &'a G,
-    visited: FixedBitSet,
-    queue: VecDeque<u32>,
+    pub(crate) graph: &'a G,
+    pub(crate) visited: FixedBitSet,
+    pub(crate) queue: VecDeque<u32>,
 }
 
-pub type TopologicalSearcher<'a, G> = ConnectedNodes<'a, G, { VisitOrder::Topological as u8 }>;
+pub struct DirectedAcyclicGraph<'a, G: GraphEngine<'a>> {
+    graph: &'a G,
+    topological_order: Vec<u32>,
+}
 
-impl<'a, G> Iterator for TopologicalSearcher<'a, G>
+impl<'a, G> DirectedAcyclicGraph<'a, G>
 where
     G: GraphEngine<'a>,
 {
-    type Item = usize;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        while let Some(node) = self.queue.pop_front() {
-            if !self.visited.put(node as usize) {
-                self.queue.extend(self.graph.neighbors(node));
-                return Some(node as usize);
+    pub fn new(graph: &'a G) -> Result<Self, GraphError> {
+        match graph.graph_kind() {
+            GraphKind::Directed => {}
+            GraphKind::Undirected => {
+                return Err(GraphError::custom("Graph must be directed"));
             }
         }
-        None
+        // check acyclic
+        let mut visited = FixedBitSet::with_capacity(graph.count_nodes());
+        let mut queue = VecDeque::new();
+        let mut topological_order = Vec::new();
+        for node in 0..graph.count_nodes() {
+            if visited.contains(node) {
+                continue;
+            }
+            visited.insert(node);
+            queue.push_back(node as u32);
+            while let Some(node) = queue.pop_front() {
+                topological_order.push(node);
+                for neighbor in graph.all_outgoing(node as usize) {
+                    if visited.contains(neighbor) {
+                        return Err(GraphError::custom("Graph must be acyclic"));
+                    }
+                    visited.insert(neighbor);
+                    queue.push_back(neighbor as u32);
+                }
+            }
+        }
+        Ok(Self { graph, topological_order })
+    }
+    pub unsafe fn new_unchecked(graph: &'a G) -> Self {
+        Self { graph }
     }
 }

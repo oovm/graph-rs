@@ -11,7 +11,7 @@ mod two_way;
 
 #[doc = include_str!("AdjacencyEdgeList.html")]
 #[derive(Debug)]
-pub struct AdjacencyEdgeDict<const ONE_WAY: bool> {
+pub struct AdjacencyEdgeDict<const MODE: u8> {
     nodes: BTreeSet<u32>,
     edges: BTreeMap<u32, ShortEdge>,
 }

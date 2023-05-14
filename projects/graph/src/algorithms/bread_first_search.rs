@@ -1,6 +1,6 @@
 use super::*;
 
-pub type BreadthFirstSearcher<'a, G> = ConnectedNodes<'a, G, { VisitOrder::BreadthFirst as u8 }>;
+pub type BreadthFirstSearcher<'a, G> = ConnectedWalker<'a, G, { VisitOrder::BreadthFirst as u8 }>;
 pub fn bfs<'a, G>(graph: &'a G, start_node: usize) -> BreadthFirstSearcher<'a, G>
 where
     G: GraphEngine<'a>,
