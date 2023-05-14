@@ -1,5 +1,4 @@
 use super::*;
-use crate::GraphEntry;
 
 /// A sparse entry engine that uses a [BTreeMap] to store data.
 ///

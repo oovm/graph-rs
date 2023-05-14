@@ -1,8 +1,8 @@
 #![allow(unused_variables)]
 
 use crate::{
-    edges::typed_edges::IndeterminateEdge, errors::GraphError, DirectedEdge, Edge, EdgeID, EdgeInsertID, EdgeQuery,
-    GraphEngine, GraphKind, MutableGraph, NodeID,
+    edges::typed_edges::IndeterminateEdge, errors::GraphError, Edge, EdgeID, EdgeInsertID, EdgeQuery, GraphEngine, GraphKind,
+    MutableGraph, NodeID,
 };
 
 /// A placeholder graph engine.

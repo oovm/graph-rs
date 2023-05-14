@@ -3,7 +3,6 @@ use crate::{Edge, EdgeID, EdgeInsertID, EdgeQuery, GraphKind, NodeID};
 pub mod weighted;
 use crate::{edges::typed_edges::IndeterminateEdge, errors::GraphError, vertexes::NodeDegree};
 use std::{
-    future::Future,
     mem::size_of,
     ops::{Deref, DerefMut},
 };

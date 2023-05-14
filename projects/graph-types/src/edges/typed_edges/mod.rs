@@ -27,9 +27,9 @@ pub struct IndeterminateEdge {
     pub goto: usize,
 }
 
-impl Display for IndeterminateEdge {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        todo!()
+impl IndeterminateEdge {
+    pub const fn new(from: usize, goto: usize) -> IndeterminateEdge {
+        Self { from, goto }
     }
 }
 
@@ -45,16 +45,6 @@ impl Edge for IndeterminateEdge {
     fn rhs(&self) -> usize {
         todo!()
     }
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct DynamicEdge {
-    /// The direction of the edge.
-    pub bidi: EdgeDirection,
-    /// The index of the node that the edge is coming from.
-    pub from: usize,
-    /// The index of the node that the edge is going to.
-    pub goto: usize,
 }
 
 /// [DirectedEdge](https://reference.wolfram.com/language/ref/DirectedEdge.html)
@@ -101,20 +91,6 @@ impl UndirectedEdge {
     /// Returns the edge as a directed edge, with the smaller index as the `from` node.
     pub fn as_unsupported<T>(&self) -> Result<T, GraphError> {
         Err(GraphError::not_support(Query::Undirected(*self)))
-    }
-}
-
-impl Edge for DynamicEdge {
-    fn direction(&self) -> EdgeDirection {
-        self.bidi
-    }
-
-    fn lhs(&self) -> usize {
-        self.from
-    }
-
-    fn rhs(&self) -> usize {
-        self.goto
     }
 }
 

@@ -3,7 +3,6 @@ use std::{
     ops::Range,
 };
 
-use crate::DynamicEdge;
 use std::fmt::{Display, Formatter};
 
 pub mod actions;
@@ -84,11 +83,6 @@ pub trait Edge: Display {
     /// ```
     fn delta_index(&self) -> usize {
         self.max_index() - self.min_index()
-    }
-
-    /// Creates a new edge with the indices swapped.
-    fn as_dynamic(&self) -> DynamicEdge {
-        DynamicEdge { bidi: self.direction(), from: self.lhs(), goto: self.rhs() }
     }
 }
 

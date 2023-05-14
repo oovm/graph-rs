@@ -16,6 +16,13 @@ pub type NodeID = usize;
 /// used to determine the direction of an edge
 
 #[derive(Copy, Clone, Debug)]
+pub enum NodeNeighborFilter {
+    InComing,
+    OutGoing,
+    Both,
+}
+
+#[derive(Copy, Clone, Debug)]
 pub enum NodeDegree {
     Directed {
         /// used to determine the direction of an edge

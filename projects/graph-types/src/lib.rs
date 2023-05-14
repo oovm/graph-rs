@@ -18,7 +18,7 @@ mod vertexes;
 pub use crate::{
     edges::{
         actions::EdgeInsertID,
-        typed_edges::{DirectedEdge, DynamicEdge, IndeterminateEdge, UndirectedEdge},
+        typed_edges::{DirectedEdge, IndeterminateEdge, UndirectedEdge},
         Edge, EdgeDirection, EdgeID,
     },
     entries::{

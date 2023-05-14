@@ -1,5 +1,4 @@
 use crate::{errors::GraphError, EntryEngine, Query};
-use std::ops::{Deref, DerefMut};
 
 mod btree;
 mod btree_default;

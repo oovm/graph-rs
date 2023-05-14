@@ -1,8 +1,8 @@
 use super::*;
-use crate::UnGraphSEAL;
+use crate::UnGraphAED;
 use graph_types::{errors::GraphError, EdgeID, IndeterminateEdge, NodeID};
 
-impl<'a> GraphEngine<'a> for UnGraphSEAL {
+impl<'a> GraphEngine<'a> for UnGraphAED {
     type NeighborIterator = PlaceholderNodeIterator;
     type BridgeIterator = PlaceholderEdgeIterator;
     type NodeTraverser = PlaceholderNodeIterator;
@@ -46,7 +46,7 @@ impl<'a> GraphEngine<'a> for UnGraphSEAL {
     }
 }
 
-impl MutableGraph for UnGraphSEAL {
+impl MutableGraph for UnGraphAED {
     fn insert_node(&mut self, node_id: usize) -> bool {
         todo!()
     }
@@ -104,7 +104,7 @@ impl MutableGraph for UnGraphSEAL {
     }
 }
 
-impl UnGraphSEAL {
+impl UnGraphAED {
     pub(crate) fn insert_one_way_edge(&mut self, start: usize, end: usize) -> usize {
         let id = self.edges.len() as u32 + 1;
         self.edges.insert(id, ShortEdge::new(start, end));

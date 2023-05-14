@@ -1,16 +1,16 @@
 use super::*;
 use crate::{
-    iters::{AdjacencyEdgeAllEdges, AdjacencyEdgeAllNodes},
-    DiGraphSEAL,
+    DiGraphAED, EdgeFirstAllBridges, EdgeFirstAllEdges, EdgeFirstAllNodes, EdgeFirstFindBridges, EdgeFirstFindNeighbors,
 };
+
 use graph_types::{errors::GraphError, EdgeID, IndeterminateEdge, NodeID, Query};
 
-impl<'a> GraphEngine<'a> for DiGraphSEAL {
-    type NeighborIterator = PlaceholderNodeIterator;
-    type BridgeIterator = PlaceholderEdgeIterator;
-    type NodeTraverser = AdjacencyEdgeAllNodes<'a>;
-    type EdgeTraverser = AdjacencyEdgeAllEdges<'a>;
-    type BridgeTraverser = PlaceholderEdgeIterator;
+impl<'a> GraphEngine<'a> for DiGraphAED {
+    type NeighborIterator = EdgeFirstFindNeighbors<'a>;
+    type BridgeIterator = EdgeFirstFindBridges<'a>;
+    type NodeTraverser = EdgeFirstAllNodes<'a>;
+    type EdgeTraverser = EdgeFirstAllEdges<'a>;
+    type BridgeTraverser = EdgeFirstAllBridges<'a>;
 
     fn graph_kind(&self) -> GraphKind {
         GraphKind::Directed
@@ -21,10 +21,17 @@ impl<'a> GraphEngine<'a> for DiGraphSEAL {
     }
 
     fn all_nodes(&'a self) -> Self::NodeTraverser {
-        AdjacencyEdgeAllNodes::new(&self.nodes)
+        EdgeFirstAllNodes { nodes: self.nodes.iter() }
     }
 
     fn all_neighbors(&'a self, node: NodeID) -> Self::NeighborIterator {
+        EdgeFirstFindNeighbors { edges: self.edges.iter(), target: node as u32 }
+    }
+
+    fn get_outgoing(&'a self, node: NodeID) -> Self::NeighborIterator {
+        todo!()
+    }
+    fn get_incoming(&'a self, node: NodeID) -> Self::NeighborIterator {
         todo!()
     }
 
@@ -33,23 +40,26 @@ impl<'a> GraphEngine<'a> for DiGraphSEAL {
     }
 
     fn all_edges(&'a self) -> Self::EdgeTraverser {
-        AdjacencyEdgeAllEdges::new(&self.edges)
+        EdgeFirstAllEdges { edges: self.edges.iter() }
     }
 
     fn get_bridge(&self, edge: EdgeID) -> Result<IndeterminateEdge, GraphError> {
-        todo!()
+        match self.edges.get(&(edge as u32)) {
+            Some(s) => Ok(s.as_indeterminate()),
+            None => Err(GraphError::not_found(Query::EdgeID(edge))),
+        }
     }
 
     fn get_bridges(&'a self, from: NodeID, goto: NodeID) -> Self::BridgeIterator {
-        todo!()
+        EdgeFirstFindBridges { edges: self.edges.iter(), target: ShortEdge::new(from, goto) }
     }
 
-    fn all_bridges(&self) -> Self::BridgeIterator {
-        todo!()
+    fn all_bridges(&'a self) -> Self::BridgeTraverser {
+        EdgeFirstAllBridges { edges: self.edges.iter() }
     }
 }
 
-impl MutableGraph for DiGraphSEAL {
+impl MutableGraph for DiGraphAED {
     fn insert_node(&mut self, node_id: usize) -> bool {
         self.nodes.insert(node_id as u32)
     }
@@ -109,7 +119,7 @@ impl MutableGraph for DiGraphSEAL {
     }
 }
 
-impl DiGraphSEAL {
+impl DiGraphAED {
     pub(crate) fn find_edge_id(&self, from: u32, goto: u32) -> Result<EdgeID, GraphError> {
         todo!()
     }

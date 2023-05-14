@@ -6,11 +6,12 @@ use graph_types::{
 use std::collections::{BTreeMap, BTreeSet};
 
 mod one_way;
+pub mod one_way_iter;
 mod two_way;
 
 #[doc = include_str!("AdjacencyEdgeList.html")]
 #[derive(Debug)]
-pub struct AdjacencyEdgeList<const ONE_WAY: bool> {
+pub struct AdjacencyEdgeDict<const ONE_WAY: bool> {
     nodes: BTreeSet<u32>,
     edges: BTreeMap<u32, ShortEdge>,
 }

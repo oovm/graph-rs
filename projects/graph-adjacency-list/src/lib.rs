@@ -9,22 +9,24 @@ mod sparse_edges;
 mod sparse_nodes;
 pub(crate) mod utils;
 
-pub use crate::{iters::AdjacencyEdgeAllNodes, sparse_edges::AdjacencyEdgeList, sparse_nodes::AdjacencyNodeList};
+pub use crate::{
+    sparse_edges::{one_way_iter::*, AdjacencyEdgeDict},
+    sparse_nodes::AdjacencyNodeList,
+};
 
-/// Sparse, edge-first, adjacency list-based directed graph.
-pub type DiGraphSEAL = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_one_way() }>;
-/// Sparse, node-first, adjacency list-based undirected graph.
-pub type UnGraphSEAL = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_two_way() }>;
-/// Sparse, node-first, adjacency list-based directed graph.
-pub type DiGraphSNAL = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_one_way() }>;
-/// Sparse, node-first, adjacency list-based undirected graph.
-pub type UnGraphSNAL = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_two_way() }>;
-
-/// Dense, node-first, incidence matrix-based directed graph.
-pub type DiGraphDNIM = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_one_way() }>;
-/// Dense, node-first, incidence matrix-based undirected graph.
-pub type UnGraphDNIM = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_two_way() }>;
-/// Compressed sparse row based directed graph.
-pub type DiGraphCSR = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_one_way() }>;
-/// Compressed sparse row based undirected graph.
-pub type UnGraphCSR = AdjacencyEdgeList<{ graph_types::GraphKind::Directed.is_two_way() }>;
+/// Sparse adjacency list, edge-first directed graph
+pub type DiGraphAED = AdjacencyEdgeDict<{ graph_types::GraphKind::Directed.is_one_way() }>;
+/// Sparse adjacency list, edge-first undirected graph
+pub type UnGraphAED = AdjacencyEdgeDict<{ graph_types::GraphKind::Directed.is_two_way() }>;
+/// Sparse adjacency list, node-first directed graph
+pub type DiGraphAND = AdjacencyEdgeDict<{ graph_types::GraphKind::Directed.is_one_way() }>;
+/// Sparse adjacency list, node-first undirected graph
+pub type UnGraphAND = AdjacencyEdgeDict<{ graph_types::GraphKind::Directed.is_two_way() }>;
+/// Dense adjacency list, edge-first directed graph
+pub type DiGraphAEL = AdjacencyEdgeDict<{ graph_types::GraphKind::Directed.is_one_way() }>;
+/// Dense adjacency list, edge-first undirected graph
+pub type UnGraphAEL = AdjacencyEdgeDict<{ graph_types::GraphKind::Directed.is_two_way() }>;
+/// Dense adjacency list, node-first directed graph
+pub type DiGraphANL = AdjacencyEdgeDict<{ graph_types::GraphKind::Directed.is_one_way() }>;
+/// Dense adjacency list, node-first undirected graph
+pub type UnGraphANL = AdjacencyEdgeDict<{ graph_types::GraphKind::Directed.is_two_way() }>;
