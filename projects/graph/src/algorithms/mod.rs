@@ -1,63 +1,39 @@
 use fixedbitset::FixedBitSet;
-use graph_types::GraphEngine;
+use graph_types::{GraphEngine, VisitOrder};
 use std::collections::VecDeque;
+mod breadth_first_search;
+mod depth_first_search;
+mod topological_sort;
 
-pub struct ConnectedSearcher<'a, G, const DepthFirst: bool>
+pub use self::{
+    breadth_first_search::{bfs, BreadthFirstSearcher},
+    depth_first_search::{dfs, DepthFirstSearcher},
+};
+
+#[derive(Debug)]
+pub struct ConnectedNodes<'a, G, const MODE: u8>
 where
-    G: GraphEngine,
+    G: GraphEngine<'a>,
 {
     graph: &'a G,
     visited: FixedBitSet,
     queue: VecDeque<u32>,
 }
 
-pub type DFSSearcher<'a, G> = ConnectedSearcher<'a, G, { SearchOrder::DepthFirst.is_dfs() }>;
-pub type BFSSearcher<'a, G> = ConnectedSearcher<'a, G, { SearchOrder::BreadthFirst.is_dfs() }>;
+pub type TopologicalSearcher<'a, G> = ConnectedNodes<'a, G, { VisitOrder::Topological as u8 }>;
 
-#[derive(Clone, Copy, Debug)]
-pub enum SearchOrder {
-    DepthFirst,
-    BreadthFirst,
-}
-
-impl SearchOrder {
-    pub fn is_dfs(self) -> bool {
-        matches!(self, Self::DepthFirst)
-    }
-    pub fn is_bfs(self) -> bool {
-        matches!(self, Self::BreadthFirst)
-    }
-}
-
-impl<'a, G: GraphEngine> ConnectedSearcher<'a, G> {
-    pub fn dfs(graph: &'a G, start_node: usize) -> Self {
-        let mut visited = FixedBitSet::with_capacity(graph.node_count());
-        visited.insert(start_node);
-        let mut queue = VecDeque::new();
-        queue.push_back(start_node as u32);
-        Self { graph, visited, queue, order: SearchOrder::DepthFirst }
-    }
-    pub fn bfs(graph: &'a G, start_node: usize) -> Self {
-        let mut visited = FixedBitSet::with_capacity(graph.node_count());
-        visited.insert(start_node);
-        let mut queue = VecDeque::new();
-        queue.push_back(start_node as u32);
-        Self { graph, visited, queue, order: SearchOrder::BreadthFirst }
-    }
-}
-
-impl<'a, G: GraphEngine> Iterator for ConnectedSearcher<'a, G> {
+impl<'a, G> Iterator for TopologicalSearcher<'a, G>
+where
+    G: GraphEngine<'a>,
+{
     type Item = usize;
 
     fn next(&mut self) -> Option<Self::Item> {
         while let Some(node) = self.queue.pop_front() {
-            for edge in self.graph.edges(node) {
-                if !self.visited.contains(edge.target as usize) {
-                    self.visited.insert(edge.target as usize);
-                    self.queue.push_back(edge.target);
-                }
+            if !self.visited.put(node as usize) {
+                self.queue.extend(self.graph.neighbors(node));
+                return Some(node as usize);
             }
-            return Some(node as usize);
         }
         None
     }

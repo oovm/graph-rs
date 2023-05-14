@@ -2,7 +2,7 @@ use graph_derive::Graph;
 use graph_types::{
     errors::GraphError,
     placeholder::{PlaceholderEdgeIterator, PlaceholderNodeIterator},
-    EdgeID, EdgeQuery, GraphEngine, GraphKind, IndeterminateEdge, NodeID, NodeQuery, NodeRangeVisitor, NodesVisitor,
+    EdgeID, EdgeQuery, GraphEngine, GraphKind, IndeterminateEdge, NodeID,
 };
 use std::mem::size_of;
 
@@ -14,11 +14,12 @@ pub struct StarGraph {
     mask: i32,
 }
 
-impl GraphEngine for StarGraph {
-    type NodeTraverser = PlaceholderNodeIterator;
+impl<'a> GraphEngine<'a> for StarGraph {
     type NeighborIterator = PlaceholderNodeIterator;
-    type EdgeTraverser = PlaceholderNodeIterator;
     type BridgeIterator = PlaceholderEdgeIterator;
+    type NodeTraverser = PlaceholderNodeIterator;
+    type EdgeTraverser = PlaceholderNodeIterator;
+    type BridgeTraverser = PlaceholderEdgeIterator;
 
     fn graph_kind(&self) -> GraphKind {
         match self.mask < 0 {
@@ -31,27 +32,23 @@ impl GraphEngine for StarGraph {
         todo!()
     }
 
-    fn count_nodes(&self) -> usize {
-        self.rank()
-    }
-
     fn all_nodes(&self) -> Self::NodeTraverser {
         todo!()
     }
 
-    fn get_edge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError> {
+    fn count_nodes(&self) -> usize {
+        self.rank()
+    }
+
+    fn all_neighbors(&'a self, node: NodeID) -> Self::NeighborIterator {
         todo!()
     }
 
-    fn all_edges(&self) -> Self::EdgeTraverser {
+    fn get_edge(&self, edge: EdgeID) -> Result<EdgeID, GraphError> {
         todo!()
     }
 
-    fn get_bridges<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<IndeterminateEdge, GraphError> {
-        todo!()
-    }
-
-    fn all_bridges(&self) -> Self::BridgeIterator {
+    fn all_edges(&'a self) -> Self::EdgeTraverser {
         todo!()
     }
 
@@ -60,6 +57,18 @@ impl GraphEngine for StarGraph {
             GraphKind::Directed => self.rank(),
             GraphKind::Undirected => self.rank() * 2,
         }
+    }
+
+    fn get_bridge(&self, edge: EdgeID) -> Result<IndeterminateEdge, GraphError> {
+        todo!()
+    }
+
+    fn get_bridges(&'a self, from: NodeID, goto: NodeID) -> Self::BridgeIterator {
+        todo!()
+    }
+
+    fn all_bridges(&self) -> Self::BridgeIterator {
+        todo!()
     }
 
     /// Takes O(1) space, in fact it's always takes 32 bits.

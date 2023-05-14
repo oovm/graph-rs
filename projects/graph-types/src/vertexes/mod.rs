@@ -13,13 +13,32 @@ use std::{
 
 /// used to determine the direction of an edge
 pub type NodeID = usize;
-/// used to determine the direction of an edge
 
-#[derive(Copy, Clone, Debug)]
+/// used to determine the direction of an edge
+#[repr(u8)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum NodeNeighborFilter {
-    InComing,
-    OutGoing,
-    Both,
+    Both = 0,
+    /// used to determine the direction of an edge
+    InComing = 1,
+    /// used to determine the direction of an edge
+    OutGoing = 2,
+}
+
+/// used to determine the direction of an edge
+#[repr(u8)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum VisitOrder {
+    /// used to determine the direction of an edge
+    Topological = 0,
+    /// used to determine the direction of an edge
+    DepthFirst = 1,
+    /// used to determine the direction of an edge
+    BreadthFirst = 2,
+    /// used to determine the direction of an edge
+    PreOrder = 3,
+    /// used to determine the direction of an edge
+    PostOrder = 4,
 }
 
 #[derive(Copy, Clone, Debug)]

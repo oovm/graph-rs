@@ -28,6 +28,7 @@ pub use crate::{
     graphs::{named::NamedGraph, weighted::WeightedGraph, GraphEngine, MutableGraph},
     vertexes::{
         get_iter::NodesVisitor, node_range_visitor::NodeRangeVisitor, node_slice_visitor::NodeSliceVisitor, Node, NodeID,
+        VisitOrder,
     },
 };
 

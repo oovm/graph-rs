@@ -2,7 +2,7 @@ use graph_derive::Graph;
 use graph_types::{
     errors::GraphError,
     placeholder::{PlaceholderEdgeIterator, PlaceholderNodeIterator},
-    Edge, EdgeID, EdgeQuery, GraphEngine, GraphKind, IndeterminateEdge, NodeID, NodeQuery, NodeRangeVisitor, NodesVisitor,
+    Edge, EdgeID, EdgeQuery, GraphEngine, GraphKind, IndeterminateEdge, NodeID,
 };
 use std::mem::size_of;
 
@@ -26,11 +26,12 @@ pub struct CompleteGraph {
     mask: i32,
 }
 
-impl GraphEngine for CompleteGraph {
-    type NodeTraverser = PlaceholderNodeIterator;
+impl<'a> GraphEngine<'a> for CompleteGraph {
     type NeighborIterator = PlaceholderNodeIterator;
-    type EdgeTraverser = PlaceholderNodeIterator;
     type BridgeIterator = PlaceholderEdgeIterator;
+    type NodeTraverser = PlaceholderNodeIterator;
+    type EdgeTraverser = PlaceholderNodeIterator;
+    type BridgeTraverser = PlaceholderEdgeIterator;
 
     fn graph_kind(&self) -> GraphKind {
         match self.mask < 0 {
@@ -43,15 +44,19 @@ impl GraphEngine for CompleteGraph {
         todo!()
     }
 
-    fn count_nodes(&self) -> usize {
-        self.rank()
-    }
-
     fn all_nodes(&self) -> Self::NodeTraverser {
         todo!()
     }
 
-    fn get_edge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError> {
+    fn count_nodes(&self) -> usize {
+        self.rank()
+    }
+
+    fn all_neighbors(&'a self, node: NodeID) -> Self::NeighborIterator {
+        todo!()
+    }
+
+    fn get_edge(&self, edge: EdgeID) -> Result<EdgeID, GraphError> {
         todo!()
     }
 
@@ -59,17 +64,21 @@ impl GraphEngine for CompleteGraph {
         todo!()
     }
 
-    fn get_bridges<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<IndeterminateEdge, GraphError> {
+    fn count_edges(&self) -> usize {
+        let rank = self.mask as usize;
+        rank * (rank - 1) * 2
+    }
+
+    fn get_bridge(&self, edge: EdgeID) -> Result<IndeterminateEdge, GraphError> {
+        todo!()
+    }
+
+    fn get_bridges(&'a self, from: NodeID, goto: NodeID) -> Self::BridgeIterator {
         todo!()
     }
 
     fn all_bridges(&self) -> Self::BridgeIterator {
         todo!()
-    }
-
-    fn count_edges(&self) -> usize {
-        let rank = self.mask as usize;
-        rank * (rank - 1) * 2
     }
 
     /// Takes O(1) space, in fact it's always takes 32 bits.
@@ -115,7 +124,7 @@ impl CompleteGraph {
         Self { mask: -(rank as i32) }
     }
     /// Check if the given graph is a complete graph, and if so, return it.
-    pub fn check<G: GraphEngine>(graph: &G) -> Option<Self> {
+    pub fn check<'a, G: GraphEngine<'a>>(graph: &'a G) -> Option<Self> {
         let nodes = graph.count_nodes();
         let edges = graph.count_edges();
         if edges == nodes * (nodes - 1) {
@@ -133,17 +142,17 @@ impl CompleteGraph {
 }
 
 /// Add nodes degree is rank -1
-fn is_directed<G>(graph: &G, rank: usize) -> bool
+fn is_directed<'a, G>(graph: &'a G, rank: usize) -> bool
 where
-    G: GraphEngine,
+    G: GraphEngine<'a>,
 {
     let _ = (graph, rank);
     todo!()
 }
 
-fn is_undirected<G>(graph: &G) -> bool
+fn is_undirected<'a, G>(graph: &'a G) -> bool
 where
-    G: GraphEngine,
+    G: GraphEngine<'a>,
 {
     let _ = (graph,);
     todo!()

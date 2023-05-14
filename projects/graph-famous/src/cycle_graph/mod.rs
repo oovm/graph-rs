@@ -2,7 +2,7 @@ use graph_derive::Graph;
 use graph_types::{
     errors::GraphError,
     placeholder::{PlaceholderEdgeIterator, PlaceholderNodeIterator},
-    Edge, EdgeID, EdgeQuery, GraphEngine, GraphKind, IndeterminateEdge, NodeID, NodeQuery, NodeRangeVisitor, NodesVisitor,
+    Edge, EdgeID, EdgeQuery, GraphEngine, GraphKind, IndeterminateEdge, NodeID,
 };
 use std::mem::size_of;
 
@@ -14,11 +14,12 @@ pub struct CycleGraph {
     mask: i32,
 }
 
-impl GraphEngine for CycleGraph {
-    type NodeTraverser = PlaceholderNodeIterator;
+impl<'a> GraphEngine<'a> for CycleGraph {
     type NeighborIterator = PlaceholderNodeIterator;
-    type EdgeTraverser = PlaceholderNodeIterator;
     type BridgeIterator = PlaceholderEdgeIterator;
+    type NodeTraverser = PlaceholderNodeIterator;
+    type EdgeTraverser = PlaceholderNodeIterator;
+    type BridgeTraverser = PlaceholderEdgeIterator;
 
     fn graph_kind(&self) -> GraphKind {
         match self.mask < 0 {
@@ -31,32 +32,23 @@ impl GraphEngine for CycleGraph {
         todo!()
     }
 
-    fn count_nodes(&self) -> usize {
-        self.rank()
-    }
-
     fn all_nodes(&self) -> Self::NodeTraverser {
         todo!()
     }
 
-    /// Numbered clockwise, if edge comes back, then edge id extra + 1.
-    ///
-    /// In a indirected graph, edges ids are counted from 0 to `self.count_edges() - 1`.
-    ///
-    /// And in a directed graph, edges ids are counted from 0 to `self.count_edges() - 1`.
-    fn get_edge<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<EdgeID, GraphError> {
+    fn count_nodes(&self) -> usize {
+        self.rank()
+    }
+
+    fn all_neighbors(&'a self, node: NodeID) -> Self::NeighborIterator {
         todo!()
     }
 
-    fn all_edges(&self) -> Self::EdgeTraverser {
+    fn get_edge(&self, edge: EdgeID) -> Result<EdgeID, GraphError> {
         todo!()
     }
 
-    fn get_bridges<Q: Into<EdgeQuery>>(&self, edge: Q) -> Result<IndeterminateEdge, GraphError> {
-        todo!()
-    }
-
-    fn all_bridges(&self) -> Self::BridgeIterator {
+    fn all_edges(&'a self) -> Self::EdgeTraverser {
         todo!()
     }
 
@@ -65,6 +57,24 @@ impl GraphEngine for CycleGraph {
             GraphKind::Directed => self.rank(),
             GraphKind::Undirected => self.rank() * 2,
         }
+    }
+
+    fn get_bridge(&self, edge: EdgeID) -> Result<IndeterminateEdge, GraphError> {
+        todo!()
+    }
+
+    fn get_bridges(&'a self, from: NodeID, goto: NodeID) -> Self::BridgeIterator {
+        todo!()
+    }
+
+    /// Numbered clockwise, if edge comes back, then edge id extra + 1.
+    ///
+    /// In a indirected graph, edges ids are counted from 0 to `self.count_edges() - 1`.
+    ///
+    /// And in a directed graph, edges ids are counted from 0 to `self.count_edges() - 1`.
+
+    fn all_bridges(&self) -> Self::BridgeIterator {
+        todo!()
     }
 
     /// Takes O(1) space, in fact it's always takes 32 bits.
