@@ -6,6 +6,7 @@
 
 // pub use graph_types;
 
+pub mod algorithms;
 pub mod entry_engines;
 pub mod graph_engines;
 

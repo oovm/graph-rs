@@ -26,10 +26,10 @@ impl<'a> GraphEngine<'a> for DiGraphAM {
     fn all_neighbors(&'a self, node: NodeID) -> Self::NeighborIterator {
         todo!()
     }
-    fn get_outgoing(&'a self, node: NodeID) -> Self::NeighborIterator {
+    fn all_outgoing(&'a self, node: NodeID) -> Self::NeighborIterator {
         todo!()
     }
-    fn get_incoming(&'a self, node: NodeID) -> Self::NeighborIterator {
+    fn all_incoming(&'a self, node: NodeID) -> Self::NeighborIterator {
         todo!()
     }
 

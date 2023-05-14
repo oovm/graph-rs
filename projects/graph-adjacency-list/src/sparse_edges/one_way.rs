@@ -28,10 +28,10 @@ impl<'a> GraphEngine<'a> for DiGraphAED {
         EdgeFirstFindNeighbors { edges: self.edges.iter(), target: node as u32 }
     }
 
-    fn get_outgoing(&'a self, node: NodeID) -> Self::NeighborIterator {
+    fn all_outgoing(&'a self, node: NodeID) -> Self::NeighborIterator {
         todo!()
     }
-    fn get_incoming(&'a self, node: NodeID) -> Self::NeighborIterator {
+    fn all_incoming(&'a self, node: NodeID) -> Self::NeighborIterator {
         todo!()
     }
 

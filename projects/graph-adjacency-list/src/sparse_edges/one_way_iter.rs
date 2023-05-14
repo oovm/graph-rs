@@ -6,6 +6,7 @@ use std::collections::{btree_map, btree_set, btree_set::Iter, BTreeMap, BTreeSet
 pub struct EdgeFirstAllNodes<'i> {
     pub(crate) nodes: btree_set::Iter<'i, u32>,
 }
+
 #[derive(Debug)]
 pub struct EdgeFirstAllEdges<'i> {
     pub(crate) edges: btree_map::Iter<'i, u32, ShortEdge>,

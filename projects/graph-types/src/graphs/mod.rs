@@ -21,11 +21,14 @@ pub trait GraphEngine<'a>
 where
     Self: Sized,
 {
-    /// According to a given vertex, find all neighbor nodes
+    /// According to a given vertex, find all neighbor nodes.
+    /// See more in [Self::all_neighbors], [Self::all_incoming], [Self::all_outgoing].
     type NeighborIterator: DoubleEndedIterator<Item = NodeID>;
     /// An iterator over the edges.
     type BridgeIterator: DoubleEndedIterator<Item = IndeterminateEdge>;
-    /// An iterator over the nodes.
+    /// Traverse all nodes in the graph,
+    /// note that this traversal is neither BFS nor DFS, but the most friendly traversal to the data structure.
+    /// See more in [Self::all_nodes].
     type NodeTraverser: DoubleEndedIterator<Item = NodeID>;
     /// An iterator over the edges.
     type EdgeTraverser: DoubleEndedIterator<Item = EdgeID>;
@@ -42,7 +45,6 @@ where
     /// assert_eq!(CompleteGraph::one_way(5).get_node(6), false);
     /// ```
     fn graph_kind(&self) -> GraphKind;
-
     /// Check if the node exists, return the node id if exists.
     ///
     /// # Examples
@@ -53,7 +55,9 @@ where
     /// assert_eq!(CompleteGraph::one_way(5).get_node(6), false);
     /// ```
     fn get_node(&self, node: NodeID) -> Result<NodeID, GraphError>;
-    /// Traverse all nodes in the graph.
+    /// Traverse all nodes in the entire graph in the most friendly way to the data structure, and the order of this traversal is arbitrary.
+    ///
+    ///
     ///
     /// # Examples
     ///
@@ -74,46 +78,49 @@ where
     fn count_nodes(&'a self) -> usize {
         self.all_nodes().count()
     }
-    /// Check if the node exists, return the node id if exists.
+    /// Given a vertex, return all adjacent nodes.
+    ///
     ///
     /// Return [None] if the node does not exist.
     ///
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// assert_eq!(CompleteGraph::one_way(5).count_nodes(), 5);
+    /// use graph_theory::{graph_engines::UnGraphAND, GraphEngine};
+    /// let graph = UnGraphAND::default();
+    /// assert_eq!(graph.all_neighbors(5).count(), 5);
     /// ```
     fn all_neighbors(&'a self, node: NodeID) -> Self::NeighborIterator;
-    /// Find all vertices ending at a given point
+    /// Given a vertex as the starting point, return the ids corresponding to all ending points.
     ///
-    /// Return [None] if the node does not exist.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// assert_eq!(CompleteGraph::one_way(5).count_nodes(), 5);
-    /// ```
-    fn get_outgoing(&'a self, node: NodeID) -> Self::NeighborIterator {
-        debug_assert!(self.graph_kind() == GraphKind::Undirected);
-        self.all_neighbors(node)
-    }
-    /// Check if the node exists, return the node id if exists.
-    ///
-    /// Return [None] if the node does not exist.
+    /// In an undirected graph, it is equivalent to calling [Self::all_neighbors].
     ///
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::{graph_engines::CompleteGraph, GraphEngine};
-    /// assert_eq!(CompleteGraph::one_way(5).count_nodes(), 5);
+    /// use graph_theory::{graph_engines::UnGraphAND, GraphEngine};
+    /// let graph = UnGraphAND::default();
+    /// assert_eq!(graph.all_outgoing(5).count(), 5);
     /// ```
-    fn get_incoming(&'a self, node: NodeID) -> Self::NeighborIterator {
+    fn all_outgoing(&'a self, node: NodeID) -> Self::NeighborIterator {
         debug_assert!(self.graph_kind() == GraphKind::Undirected);
         self.all_neighbors(node)
     }
-
+    /// Given a vertex as the ending point, return the ids corresponding to all starting points.
+    ///
+    /// In an undirected graph, it is equivalent to calling [Self::all_neighbors].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use graph_theory::{graph_engines::UnGraphAND, GraphEngine};
+    /// let graph = UnGraphAND::default();
+    /// assert_eq!(graph.all_incoming(5).count(), 5);
+    /// ```
+    fn all_incoming(&'a self, node: NodeID) -> Self::NeighborIterator {
+        debug_assert!(self.graph_kind() == GraphKind::Undirected);
+        self.all_neighbors(node)
+    }
     /// Check if the node exists, return the node id if exists.
     ///
     /// Return [None] if the node does not exist.
@@ -127,7 +134,7 @@ where
     fn count_degree(&'a self, node: NodeID) -> NodeDegree {
         match self.graph_kind() {
             GraphKind::Directed => {
-                NodeDegree::Directed { in_coming: self.get_incoming(node).count(), out_going: self.get_outgoing(node).count() }
+                NodeDegree::Directed { in_coming: self.all_incoming(node).count(), out_going: self.all_outgoing(node).count() }
             }
             GraphKind::Undirected => NodeDegree::Undirected { total: self.all_neighbors(node).count() },
         }
@@ -147,7 +154,7 @@ where
     /// assert_eq!(CompleteGraph::one_way(5).get_node(6), false);
     /// ```
     fn get_edge(&self, edge: EdgeID) -> Result<EdgeID, GraphError>;
-    /// Get the edges of the graph.
+    /// Traverse all edges in the entire graph in the most friendly way to the data structure, the order of traversal is arbitrary.
     ///
     ///
     /// ```
@@ -208,8 +215,8 @@ pub trait MutableGraph: for<'a> GraphEngine<'a> {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::{graph_engines::AdjacencyNodeList, GraphEngine};
-    /// let mut graph = AdjacencyNodeList::default();
+    /// use graph_theory::{graph_engines::AdjacencyNodeDict, GraphEngine};
+    /// let mut graph = AdjacencyNodeDict::default();
     /// assert_eq!(graph.count_nodes(), 0);
     /// graph.insert_node(5);
     /// assert_eq!(graph.count_nodes(), 1);
@@ -220,8 +227,8 @@ pub trait MutableGraph: for<'a> GraphEngine<'a> {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::{graph_engines::AdjacencyNodeList, GraphEngine};
-    /// let mut graph = AdjacencyNodeList::default();
+    /// use graph_theory::{graph_engines::AdjacencyNodeDict, GraphEngine};
+    /// let mut graph = AdjacencyNodeDict::default();
     /// assert_eq!(graph.count_nodes(), 0);
     /// graph.insert_node(5);
     /// assert_eq!(graph.count_nodes(), 1);
@@ -240,8 +247,8 @@ pub trait MutableGraph: for<'a> GraphEngine<'a> {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::{graph_engines::AdjacencyNodeList, GraphEngine};
-    /// let mut graph = AdjacencyNodeList::default();
+    /// use graph_theory::{graph_engines::AdjacencyNodeDict, GraphEngine};
+    /// let mut graph = AdjacencyNodeDict::default();
     /// assert_eq!(graph.count_nodes(), 0);
     /// graph.insert_node(5);
     /// assert_eq!(graph.count_nodes(), 1);
@@ -254,8 +261,8 @@ pub trait MutableGraph: for<'a> GraphEngine<'a> {
     /// # Examples
     ///
     /// ```
-    /// use graph_theory::{graph_engines::AdjacencyNodeList, GraphEngine};
-    /// let mut graph = AdjacencyNodeList::default();
+    /// use graph_theory::{graph_engines::AdjacencyNodeDict, GraphEngine};
+    /// let mut graph = AdjacencyNodeDict::default();
     /// assert_eq!(graph.count_nodes(), 0);
     /// graph.insert_node(5);
     /// assert_eq!(graph.count_nodes(), 1);

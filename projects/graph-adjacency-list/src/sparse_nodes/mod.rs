@@ -1,3 +1,4 @@
+use crate::DiGraphAND;
 use graph_types::{
     errors::GraphError,
     placeholder::{PlaceholderEdgeIterator, PlaceholderNodeIterator},
@@ -12,7 +13,7 @@ type EndNodeID = u32;
 
 #[doc = include_str!("AdjacencyNodeList.html")]
 #[derive(Debug)]
-pub struct AdjacencyNodeList {
+pub struct AdjacencyNodeDict<const ONE_WAY: bool> {
     head_nodes: BTreeMap<StartNodeID, NodeNeighbors>,
     last_edge: EdgeID,
 }
@@ -22,13 +23,13 @@ struct NodeNeighbors {
     end_nodes: BTreeMap<EdgeID, EndNodeID>,
 }
 
-impl Default for AdjacencyNodeList {
+impl Default for DiGraphAND {
     fn default() -> Self {
         Self { head_nodes: BTreeMap::new(), last_edge: 0 }
     }
 }
 
-impl<'a> GraphEngine<'a> for AdjacencyNodeList {
+impl<'a> GraphEngine<'a> for DiGraphAND {
     type NeighborIterator = PlaceholderNodeIterator;
     type BridgeIterator = PlaceholderEdgeIterator;
     type NodeTraverser = PlaceholderNodeIterator;
@@ -72,7 +73,7 @@ impl<'a> GraphEngine<'a> for AdjacencyNodeList {
     }
 }
 
-impl MutableGraph for AdjacencyNodeList {
+impl MutableGraph for DiGraphAND {
     fn insert_node(&mut self, node_id: usize) -> bool {
         let id = node_id as u32;
         self.head_nodes.entry(id).or_insert_with(|| NodeNeighbors { end_nodes: BTreeMap::new() });
@@ -142,7 +143,7 @@ impl MutableGraph for AdjacencyNodeList {
     }
 }
 
-impl AdjacencyNodeList {
+impl DiGraphAND {
     /// The low level interface for inserting a directed edge
     pub(crate) fn insert_directed_edge(&mut self, from: u32, goto: u32) -> usize {
         self.last_edge += 1;
